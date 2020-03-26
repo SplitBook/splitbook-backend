@@ -1,6 +1,9 @@
-require('dotenv').config();
 const express = require('express');
 const routes = require('./routes');
+const Msg = require('./commons/Messages');
+
+require('dotenv').config();
+require('./database');
 
 const app = express();
 
