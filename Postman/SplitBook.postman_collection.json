@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "9ad08e2d-151f-4fe1-a6f5-a39e0aa09120",
+		"name": "SplitBook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Handbooks",
+			"item": [
+				{
+					"name": "Add Handbook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"isbn\":\"978-972-47-5485-7\",\n\t\"name\":\"Matemática A - 12º Ano - Volume 3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/handbooks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"handbooks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Handbooks",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/handbooks/19",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"handbooks",
+								"19"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Index Handbooks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/handbooks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"handbooks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Handbook",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"isbn\":\"122\",\n\t\"name\":\"Novo Matemática\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/handbooks/20",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"handbooks",
+								"20"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6a3959e7-eb9e-4cc6-91fb-32a3913e88fa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7c398b27-8d6a-44b7-99ce-33c64fcf089b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "3857560d-781e-4c50-912f-ba867fe75fbb",
+			"key": "URL",
+			"value": "http://localhost:8085",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
