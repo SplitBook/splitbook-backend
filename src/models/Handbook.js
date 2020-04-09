@@ -5,9 +5,14 @@ class Handbook extends Model {
         super.init({
             isbn: DataTypes.STRING,
             name: DataTypes.STRING,
+            author: DataTypes.STRING,
+            active: DataTypes.BOOLEAN,
         }, {
-            sequelize
+            sequelize,
+            paranoid: true,
         });
+
+        this.removeAttribute('id');
     }
 }
 

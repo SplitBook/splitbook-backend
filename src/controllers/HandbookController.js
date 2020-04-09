@@ -8,10 +8,10 @@ module.exports = {
   },
 
   async store(req, res) {
-    const { isbn, name } = req.body;
+    const { isbn, name, author } = req.body;
 
     try {
-      const handbook = await Handbook.create({ isbn, name });
+      const handbook = await Handbook.create({ isbn, name, author });
 
       return res.json(handbook);
     } catch {
