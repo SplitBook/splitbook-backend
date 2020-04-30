@@ -2,20 +2,32 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('handbooks', {
-      isbn: {
+    return queryInterface.createTable('teachers', {
+      id: {
         primaryKey: true,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
+        autoIncrement: true,
       },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      author: {
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      photo: {
         type: Sequelize.STRING,
         allowNull: true,
+      },
+      phone: {
+        type: Sequelize.STRING(12),
+        allowNull: true,
+      },
+      date_of_birth: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -23,7 +35,6 @@ module.exports = {
       },
       updated_at: {
         type: Sequelize.DATE,
-
         allowNull: false,
       },
       deleted_at: {
@@ -38,6 +49,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('handbooks');
+    return queryInterface.dropTable('teachers');
   },
 };
