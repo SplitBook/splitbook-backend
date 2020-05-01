@@ -2,24 +2,18 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('handbooks', {
-      isbn: {
+    return queryInterface.createTable('requisitions', {
+      id: {
         primaryKey: true,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
+        autoIncrement: true,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      publishing_company: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      cover: {
-        type: Sequelize.STRING,
-        allowNull: true,
+      state_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'requisition_states', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
       },
       created_at: {
         type: Sequelize.DATE,
@@ -41,6 +35,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('handbooks');
+    return queryInterface.dropTable('requisitions');
   },
 };
