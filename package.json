@@ -12,15 +12,13 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "pg": "^7.18.2",
-    "pg-hstore": "^2.3.3",
-    "sequelize": "^6.0.0-beta.5"
+    "knex": "^0.21.1",
+    "pg": "^7.18.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "nodemon": "^2.0.2",
-    "sequelize-cli": "^5.5.1"
+    "nodemon": "^2.0.2"
   }
 }

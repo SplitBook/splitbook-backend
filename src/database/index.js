@@ -1,10 +1,4 @@
-const Sequelize = require('sequelize');
-const dbConfig = require('../config/database');
+const dbConfig = require('../../knexfile');
+const knex = require('sequelize')(dbConfig['development']);
 
-const Handbook = require('../models/Handbook');
-
-const connection = new Sequelize(dbConfig);
-
-Handbook.init(connection);
-
-module.exports = connection;
+module.exports = knex;
