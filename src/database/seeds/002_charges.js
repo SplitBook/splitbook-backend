@@ -1,4 +1,4 @@
-const charges = require('../../commons/enums/EnumCharges');
+const charges = require('../../utils/enums/EnumCharges');
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries

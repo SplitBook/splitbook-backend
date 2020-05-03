@@ -1,17 +1,21 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('requisitions', (table) => {
-    table.increments('id');
+const { onUpdateTrigger } = require('../../../knexfile');
 
-    table.integer('state_id').unsigned().notNullable();
+exports.up = async function (knex) {
+  return knex.schema
+    .createTable('requisitions', (table) => {
+      table.increments('id');
 
-    table.foreign('state_id').references('requisition_states.id');
+      table.integer('state_id').unsigned().notNullable();
 
-    table.timestamps(true, true);
-    table.timestamp('deleted_at');
-    table.boolean('active').defaultTo(true);
-  });
+      table.foreign('state_id').references('requisition_states.id');
+
+      table.timestamps(true, true);
+      table.timestamp('deleted_at');
+      table.boolean('active').defaultTo(true);
+    })
+    .then(() => knex.raw(onUpdateTrigger('requisitions')));
 };
 
-exports.down = function (knex) {
+exports.down = async function (knex) {
   return knex.schema.dropTable('requisitions');
 };

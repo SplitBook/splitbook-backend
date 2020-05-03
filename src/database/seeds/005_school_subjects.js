@@ -1,4 +1,4 @@
-const schoolSubjects = require('../../commons/enums/EnumSchoolSubjects');
+const schoolSubjects = require('../../utils/enums/EnumSchoolSubjects');
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries

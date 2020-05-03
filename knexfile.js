@@ -17,4 +17,12 @@ module.exports = {
       directory: path.resolve(__dirname, 'src', 'database', 'seeds'),
     },
   },
+
+  onUpdateTrigger: (table) =>
+    `
+    Create TRIGGER ${table}_updated_at
+    BEFORE UPDATE ON ${table}
+    FOR EACH ROW
+    EXECUTE PROCEDURE on_update_timestamp();
+    `,
 };

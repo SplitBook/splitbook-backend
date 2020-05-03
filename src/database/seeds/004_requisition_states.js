@@ -1,4 +1,4 @@
-const requisitionStates = require('../../commons/enums/EnumRequisitonStates');
+const requisitionStates = require('../../utils/enums/EnumRequisitonStates');
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries
