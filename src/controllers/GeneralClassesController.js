@@ -6,13 +6,13 @@ module.exports = {
     const classes = await knex('general_classes')
       .select('*')
       .whereNull('deleted_at')
-      .orderBy('class');
+      .orderBy('id');
 
     return res.json(classes);
   },
 
   async store(req, res, next) {
-    const { generalClass } = req.body;
+    const generalClass = req.body.class;
 
     try {
       await knex('general_classes').insert({ class: generalClass });

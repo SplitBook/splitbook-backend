@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     .createTable('users', (table) => {
       table.increments('id');
       table.string('username');
-      table.string('email').notNullable().unique(); //Cannot Change Email on Edit User
+      table.string('email').notNullable(); //Cannot Change Email on Edit User
       table.string('password').notNullable();
       table.boolean('email_confirmed').defaultTo(false);
       table
@@ -17,6 +17,8 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
+
+      table.unique(['email', 'deleted_at']);
     })
     .then(() => knex.raw(onUpdateTrigger('users')));
 };

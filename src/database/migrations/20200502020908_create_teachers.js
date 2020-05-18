@@ -11,13 +11,14 @@ exports.up = async function (knex) {
       table
         .integer('user_id')
         .unsigned()
-        .unique()
         .references('users.id')
         .onDelete('RESTRICT');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
+
+      table.unique(['user_id', 'deleted_at']);
     })
     .then(() => knex.raw(onUpdateTrigger('teachers')));
 };

@@ -4,7 +4,7 @@ exports.up = async function (knex) {
   return knex.schema
     .createTable('requisitions', (table) => {
       table.increments('id');
-      table.integer('school_enrollment_id').unsigned().notNullable().unique();
+      table.integer('school_enrollment_id').unsigned().notNullable();
 
       table.integer('state_id').unsigned().notNullable();
 
@@ -14,6 +14,8 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
+
+      table.unique(['school_enrollment_id', 'deleted_at']);
     })
     .then(() => knex.raw(onUpdateTrigger('requisitions')));
 };

@@ -20,6 +20,10 @@ const RequisitionStatesValidator = require('../validators/RequisitionStatesValid
 const SchoolSubjectsValidator = require('../validators/SchoolSubjectsValidator');
 const BooksValidator = require('../validators/BooksValidator');
 const UsersValidator = require('../validators/UsersValidator');
+const GuardiansValidator = require('../validators/GuardiansValidator');
+const TeachersValidator = require('../validators/TeachersValidator');
+const StudentsValidator = require('../validators/StudentsValidator');
+const ClassesValidator = require('../validators/ClassesValidator');
 
 const routes = express.Router();
 
@@ -117,28 +121,56 @@ routes.post('/users', UsersValidator.insert, UsersController.store);
 routes.put('/users/:id', UsersValidator.update, UsersController.update);
 routes.delete('/users/:id', UsersValidator.delete, UsersController.delete);
 
-// Guardians - VALIDATORS
+// Guardians
 routes.get('/guardians', GuardiansController.index);
-routes.post('/guardians', GuardiansController.store);
-routes.put('/guardians/:id', GuardiansController.update);
-routes.delete('/guardians/:id', GuardiansController.delete);
+routes.post('/guardians', GuardiansValidator.insert, GuardiansController.store);
+routes.put(
+  '/guardians/:id',
+  GuardiansValidator.update,
+  GuardiansController.update
+);
+routes.delete(
+  '/guardians/:id',
+  GuardiansValidator.delete,
+  GuardiansController.delete
+);
 
-// Teachers - VALIDATORS
+// Teachers
 routes.get('/teachers', TeachersController.index);
-routes.post('/teachers', TeachersController.store);
-routes.put('/teachers/:id', TeachersController.update);
-routes.delete('/teachers/:id', TeachersController.delete);
+routes.post('/teachers', TeachersValidator.insert, TeachersController.store);
+routes.put(
+  '/teachers/:id',
+  TeachersValidator.update,
+  TeachersController.update
+);
+routes.delete(
+  '/teachers/:id',
+  TeachersValidator.delete,
+  TeachersController.delete
+);
 
-// Students - VALIDATORS
+// Students
 routes.get('/students', StudentsController.index);
-routes.post('/students', StudentsController.store);
-routes.put('/students/:id', StudentsController.update);
-routes.delete('/students/:id', StudentsController.delete);
+routes.post('/students', StudentsValidator.insert, StudentsController.store);
+routes.put(
+  '/students/:id',
+  StudentsValidator.update,
+  StudentsController.update
+);
+routes.delete(
+  '/students/:id',
+  StudentsValidator.delete,
+  StudentsController.delete
+);
 
-// Classes - VALIDATORS
+// Classes
 routes.get('/classes', ClassesController.index);
-routes.post('/classes', ClassesController.store);
-routes.put('/classes/:id', ClassesController.update);
-routes.delete('/classes/:id', ClassesController.delete);
+routes.post('/classes', ClassesValidator.insert, ClassesController.store);
+routes.put('/classes/:id', ClassesValidator.update, ClassesController.update);
+routes.delete(
+  '/classes/:id',
+  ClassesValidator.delete,
+  ClassesController.delete
+);
 
 module.exports = routes;

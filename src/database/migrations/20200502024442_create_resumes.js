@@ -9,8 +9,6 @@ exports.up = async function (knex) {
       table.integer('class_id').unsigned();
       table.integer('school_year_id').unsigned();
 
-      table.unique(['school_subject_id', 'class_id', 'school_year_id']);
-
       table
         .foreign(['school_year_id', 'class_id'])
         .references(['school_year_id', 'class_id'])
@@ -21,6 +19,13 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
+
+      table.unique([
+        'school_subject_id',
+        'class_id',
+        'school_year_id',
+        'deleted_at',
+      ]);
     })
     .then(() => knex.raw(onUpdateTrigger('resumes')));
 };

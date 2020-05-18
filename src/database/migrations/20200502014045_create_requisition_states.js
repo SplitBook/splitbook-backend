@@ -4,11 +4,13 @@ exports.up = async function (knex) {
   return knex.schema
     .createTable('requisition_states', (table) => {
       table.increments('id');
-      table.string('state').notNullable().unique();
+      table.string('state').notNullable();
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
+
+      table.unique(['state', 'deleted_at']);
     })
     .then(() => knex.raw(onUpdateTrigger('requisition_states')));
 };

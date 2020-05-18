@@ -3,9 +3,9 @@ const { celebrate, Joi, Segments } = require('celebrate');
 module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      isbn: Joi.string().required().max(15),
-      name: Joi.string().required(),
-      publishing_company: Joi.string(),
+      isbn: Joi.string().trim().required().max(15),
+      name: Joi.string().trim().required(),
+      publishing_company: Joi.string().trim(),
       cover: Joi.string(),
       active: Joi.boolean().default(true),
       subject_id: Joi.number().integer().min(1),
@@ -14,8 +14,8 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().required(),
-      publishing_company: Joi.string(),
+      name: Joi.string().trim().required(),
+      publishing_company: Joi.string().trim(),
       cover: Joi.string(),
       active: Joi.boolean().default(true),
       subject_id: Joi.number().integer().min(1),

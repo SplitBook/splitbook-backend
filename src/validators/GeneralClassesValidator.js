@@ -3,14 +3,14 @@ const { celebrate, Joi, Segments } = require('celebrate');
 module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      class: Joi.string().required(),
+      class: Joi.string().trim().required(),
       active: Joi.boolean().default(true),
     }),
   }),
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      class: Joi.string().required(),
+      class: Joi.string().trim().required(),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

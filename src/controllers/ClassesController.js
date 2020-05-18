@@ -40,6 +40,8 @@ module.exports = {
   },
 
   async delete(req, res) {
+    const { class_id, school_year_id, head_class_id } = req.body;
+
     const result = await knex('classes')
       .update({ deleted_at: new Date() })
       .where({ class_id, head_class_id })

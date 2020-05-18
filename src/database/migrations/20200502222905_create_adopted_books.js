@@ -7,9 +7,6 @@ exports.up = async function (knex) {
       table.integer('resume_id').unsigned();
       table.string('book_isbn');
 
-      // TODO Unique constraint resume_id && book_id
-      table.unique(['resume_id', 'book_isbn']);
-
       table.foreign(['resume_id']).references(['id']).inTable('resumes');
 
       table.foreign('book_isbn').references('books.isbn');
@@ -17,6 +14,8 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
+
+      table.unique(['resume_id', 'book_isbn', 'deleted_at']);
     })
     .then(() => knex.raw(onUpdateTrigger('adopted_books')));
 };

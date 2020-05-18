@@ -4,6 +4,7 @@ module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       school_year: Joi.string()
+        .trim()
         .pattern(new RegExp(/(\d{4}\/\d{4})$/))
         .required(),
       active: Joi.boolean().default(true),
@@ -13,6 +14,7 @@ module.exports = {
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       school_year: Joi.string()
+        .trim()
         .pattern(new RegExp(/(\d{4}\/\d{4})$/))
         .required(),
       active: Joi.boolean().default(true),
