@@ -3,11 +3,13 @@ const { onUpdateTrigger } = require('../../../knexfile');
 exports.up = async function (knex) {
   return knex.schema
     .createTable('resumes', (table) => {
+      table.increments('id');
+
       table.integer('school_subject_id').unsigned();
       table.integer('class_id').unsigned();
       table.integer('school_year_id').unsigned();
 
-      table.primary(['school_subject_id', 'class_id', 'school_year_id']);
+      table.unique(['school_subject_id', 'class_id', 'school_year_id']);
 
       table
         .foreign(['school_year_id', 'class_id'])

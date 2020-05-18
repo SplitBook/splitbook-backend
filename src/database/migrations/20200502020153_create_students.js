@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     .createTable('students', (table) => {
       table.increments('id');
       table.string('name').notNullable();
-      table.string('numero', 7).notNullable().unique();
+      table.string('number', 7).notNullable().unique();
       table.string('photo');
       table.date('born_date');
 

@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     .createTable('users', (table) => {
       table.increments('id');
       table.string('username');
-      table.string('email').notNullable().unique();
+      table.string('email').notNullable().unique(); //Cannot Change Email on Edit User
       table.string('password').notNullable();
       table
         .integer('charge_id')

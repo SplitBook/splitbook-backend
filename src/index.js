@@ -1,6 +1,6 @@
 const express = require('express');
 const routes = require('./routes');
-const Msg = require('./commons/Messages');
+const { errors } = require('celebrate');
 
 require('dotenv').config();
 require('./database');
@@ -9,6 +9,7 @@ const app = express();
 
 app.use(express.json());
 app.use(routes);
+app.use(errors());
 
 app.listen(process.env.PORT || 8085, () => {
   console.log(
