@@ -7,6 +7,7 @@ exports.up = async function (knex) {
       table.string('username');
       table.string('email').notNullable().unique(); //Cannot Change Email on Edit User
       table.string('password').notNullable();
+      table.boolean('email_confirmed').defaultTo(false);
       table
         .integer('charge_id')
         .unsigned()

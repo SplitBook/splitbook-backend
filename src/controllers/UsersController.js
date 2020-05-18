@@ -1,14 +1,25 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { encript } = require('../utils/PasswordUtils');
 
 module.exports = {
   async index(req, res, next) {
     const users = await knex('users')
-      .select(
-        'id, username, email, charge_id, created_at, updated_at, deleted_at, active'
-      )
-      .whereNull('deleted_at')
-      .orderBy('id');
+      .select([
+        'users.id',
+        'username',
+        'email',
+        'charge_id',
+        'charge',
+        'email_confirmed',
+        'users.created_at',
+        'users.updated_at',
+        'users.deleted_at',
+        'users.active',
+      ])
+      .innerJoin('charges', 'charges.id', '=', 'users.charge_id')
+      .whereNull('users.deleted_at')
+      .orderBy('users.id');
 
     return res.json(users);
   },
@@ -17,7 +28,9 @@ module.exports = {
     const { username, email, charge_id } = req.body;
 
     try {
-      await knex('users').insert({ username, email, charge_id });
+      const password = await encript('null');
+
+      await knex('users').insert({ username, email, charge_id, password });
       return res.status(201).send();
     } catch (err) {
       return res.status(406).json(err);

@@ -1,25 +1,25 @@
 const express = require('express');
 
 // const HandbookController = require('./controllers/HandbookController');
-const SchoolYearsController = require('./controllers/SchoolYearsController');
-const ChargesController = require('./controllers/ChargesController');
-const GeneralClassesController = require('./controllers/GeneralClassesController');
-const RequisitionStatesController = require('./controllers/RequisitionStatesController');
-const SchoolSubjectsController = require('./controllers/SchoolSubjectsController');
-const BooksController = require('./controllers/BooksController');
-const UsersController = require('./controllers/UsersController');
-const GuardiansController = require('./controllers/GuardiansController');
-const TeachersController = require('./controllers/TeachersController');
-const StudentsController = require('./controllers/StudentsController');
-const ClassesController = require('./controllers/ClassesController');
+const SchoolYearsController = require('../controllers/SchoolYearsController');
+const ChargesController = require('../controllers/ChargesController');
+const GeneralClassesController = require('../controllers/GeneralClassesController');
+const RequisitionStatesController = require('../controllers/RequisitionStatesController');
+const SchoolSubjectsController = require('../controllers/SchoolSubjectsController');
+const BooksController = require('../controllers/BooksController');
+const UsersController = require('../controllers/UsersController');
+const GuardiansController = require('../controllers/GuardiansController');
+const TeachersController = require('../controllers/TeachersController');
+const StudentsController = require('../controllers/StudentsController');
+const ClassesController = require('../controllers/ClassesController');
 
-const SchoolYearsValidator = require('./validators/SchoolYearsValidator');
-const ChargesValidator = require('./validators/ChargesValidator');
-const GeneralClassesValidator = require('./validators/GeneralClassesValidator');
-const RequisitionStatesValidator = require('./validators/RequisitionStatesValidator');
-const SchoolSubjectsValidator = require('./validators/SchoolSubjectsValidator');
-const BooksValidator = require('./validators/BooksValidator');
-const UsersValidator = require('./validators/UsersValidator');
+const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
+const ChargesValidator = require('../validators/ChargesValidator');
+const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
+const RequisitionStatesValidator = require('../validators/RequisitionStatesValidator');
+const SchoolSubjectsValidator = require('../validators/SchoolSubjectsValidator');
+const BooksValidator = require('../validators/BooksValidator');
+const UsersValidator = require('../validators/UsersValidator');
 
 const routes = express.Router();
 
