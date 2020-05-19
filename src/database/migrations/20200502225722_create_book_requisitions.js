@@ -19,7 +19,14 @@ exports.up = async function (knex) {
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
     })
-    .then(() => knex.raw(onUpdateTrigger('book_requisitions')));
+    .then(() =>
+      knex.raw(
+        onUpdateTrigger('book_requisitions', [
+          'adopted_book_id',
+          'requisition_id',
+        ])
+      )
+    );
 };
 
 exports.down = async function (knex) {

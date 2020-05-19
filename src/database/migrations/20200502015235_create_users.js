@@ -3,16 +3,12 @@ const { onUpdateTrigger } = require('../../../knexfile');
 exports.up = async function (knex) {
   return knex.schema
     .createTable('users', (table) => {
-      table.increments('id');
+      table.string('id', 10).primary();
       table.string('username');
       table.string('email').notNullable(); //Cannot Change Email on Edit User
       table.string('password').notNullable();
       table.boolean('email_confirmed').defaultTo(false);
-      table
-        .integer('charge_id')
-        .unsigned()
-        .references('charges.id')
-        .onDelete('RESTRICT');
+      table.integer('charge_id').unsigned().references('charges.id');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');

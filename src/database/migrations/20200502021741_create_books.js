@@ -7,17 +7,14 @@ exports.up = async function (knex) {
       table.string('name').notNullable();
       table.string('publishing_company');
       table.string('cover');
-      table
-        .integer('subject_id')
-        .unsigned()
-        .references('school_subjects.id')
-        .onDelete('RESTRICT');
+      table.integer('subject_id').unsigned().references('school_subjects.id');
+      // .onDelete('RESTRICT');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
     })
-    .then(() => knex.raw(onUpdateTrigger('books')));
+    .then(() => knex.raw(onUpdateTrigger('books', 'isbn')));
 };
 
 exports.down = async function (knex) {

@@ -8,11 +8,8 @@ exports.up = async function (knex) {
       table.string('phone');
       table.string('photo');
       table.date('born_date');
-      table
-        .integer('user_id')
-        .unsigned()
-        .references('users.id')
-        .onDelete('RESTRICT');
+      table.string('user_id', 10).unsigned().references('users.id');
+      // .onDelete('RESTRICT');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');

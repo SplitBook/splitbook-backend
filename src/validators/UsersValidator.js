@@ -17,13 +17,13 @@ module.exports = {
       charge_id: Joi.number().integer().min(1),
     }),
     [Segments.PARAMS]: Joi.object({
-      id: Joi.number().integer().min(1).required(),
+      id: Joi.string().length(10).required(),
     }),
   }),
 
   delete: celebrate({
     [Segments.PARAMS]: Joi.object({
-      id: Joi.number().integer().min(1).required(),
+      id: Joi.string().length(10).required(),
     }),
   }),
 };

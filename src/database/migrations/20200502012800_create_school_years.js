@@ -16,5 +16,5 @@ exports.up = async function (knex) {
 };
 
 exports.down = async function (knex) {
-  return knex.schema.dropTable('school_years');
+  return knex.schema.dropTable('school_years', 'id');
 };

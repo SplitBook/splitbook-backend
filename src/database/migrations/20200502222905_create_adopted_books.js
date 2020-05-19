@@ -5,17 +5,17 @@ exports.up = async function (knex) {
     .createTable('adopted_books', (table) => {
       table.increments('id');
       table.integer('resume_id').unsigned();
-      table.string('book_isbn');
+      table.string('book_isbn', 15);
 
-      table.foreign(['resume_id']).references(['id']).inTable('resumes');
+      table.foreign('resume_id').references('id').inTable('resumes');
 
-      table.foreign('book_isbn').references('books.isbn');
+      table.foreign('book_isbn').references('isbn').inTable('books');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
 
-      table.unique(['resume_id', 'book_isbn', 'deleted_at']);
+      // table.unique(['resume_id', 'book_isbn', 'deleted_at']);
     })
     .then(() => knex.raw(onUpdateTrigger('adopted_books')));
 };
