@@ -4,7 +4,7 @@ module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       username: Joi.string().trim(),
-      email: Joi.string().trim().required(),
+      email: Joi.string().email().trim().required(),
       active: Joi.boolean().default(true),
       phone: Joi.string().trim(),
       born_date: Joi.date().less('now'),
@@ -14,7 +14,7 @@ module.exports = {
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       username: Joi.string().trim(),
-      email: Joi.string().trim().required(),
+      email: Joi.string().email().trim().required(),
       active: Joi.boolean().default(true),
       phone: Joi.string().trim(),
       born_date: Joi.date().less('now'),

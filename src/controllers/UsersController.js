@@ -1,4 +1,6 @@
 const knex = require('../database');
+const { sendEmail } = require('../email');
+const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
@@ -43,7 +45,8 @@ module.exports = {
         photo,
       });
 
-      //TODO : Send email to set password
+      sendEmail(email, EnumEmailTypes.REGISTER);
+
       return res.status(201).send();
     } catch (err) {
       return res.status(406).json(err);
@@ -61,25 +64,25 @@ module.exports = {
     if (delete_photo && photo === undefined) photo = null;
 
     try {
-      return res
-        .status(
-          await softUpdate('users', id, {
-            username,
-            password,
-            active,
-            email,
-            born_date,
-            phone,
-            photo,
-            email_confirmed: false,
-          })
-        )
-        .send();
+      const status = await softUpdate('users', id, {
+        username,
+        password,
+        active,
+        email,
+        born_date,
+        phone,
+        photo,
+        email_confirmed: false,
+      });
+
+      if (status === 204) {
+        sendEmail(email, EnumEmailTypes.USER_CHANGE);
+      }
+
+      return res.status(status).send();
     } catch (err) {
       return res.status(406).json(err);
     }
-
-    // TODO : After update send email to recover password
   },
 
   async delete(req, res) {

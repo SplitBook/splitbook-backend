@@ -1,6 +1,8 @@
 const knex = require('../database');
 const { validatePassword, encript } = require('../utils/PasswordUtils');
 const { generate, decode } = require('../utils/TokenUtils');
+const { sendEmail } = require('../email');
+const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
 
 module.exports = {
   async login(req, res, next) {
@@ -78,5 +80,26 @@ module.exports = {
     } catch (err) {
       return res.status(401).json({ error: 'Invalid token.' });
     }
+  },
+
+  async recoverPassword(req, res) {
+    const { change_password } = req.query;
+    const { email } = req.body;
+
+    const [user] = await knex('users')
+      .where('email', email)
+      .whereNull('deleted_at');
+
+    if (user) {
+      if (change_password) {
+        sendEmail(email, EnumEmailTypes.CHANGE_PASSWORD);
+      } else {
+        sendEmail(email, EnumEmailTypes.RECOVER_PASSWORD);
+      }
+
+      return res.status(202).json({ success: `Email sent to ${email}.` });
+    }
+
+    return res.status(404).json({ error: 'User not found.' });
   },
 };
