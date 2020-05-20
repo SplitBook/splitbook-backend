@@ -12,10 +12,10 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { name, phone, photo, born_date } = req.body;
+    const { name, user_id } = req.body;
 
     try {
-      await knex('teachers').insert({ name, phone, numero, photo, born_date });
+      await knex('teachers').insert({ name, user_id });
       return res.status(201).send();
     } catch (err) {
       return res.status(406).json(err);
@@ -24,19 +24,20 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { name, phone, photo, born_date, active } = req.body;
-
-    return res
-      .status(
-        await softUpdate('teachers', id, {
-          name,
-          phone,
-          photo,
-          born_date,
-          active,
-        })
-      )
-      .send();
+    const { name, user_id, active } = req.body;
+    try {
+      return res
+        .status(
+          await softUpdate('teachers', id, {
+            name,
+            user_id,
+            active,
+          })
+        )
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {

@@ -1,4 +1,8 @@
 const express = require('express');
+const path = require('path');
+const multer = require('multer');
+
+const multerImagesConfig = require('../config/multerImagesConfig');
 
 // const HandbookController = require('./controllers/HandbookController');
 const SchoolYearsController = require('../controllers/SchoolYearsController');
@@ -26,6 +30,11 @@ const StudentsValidator = require('../validators/StudentsValidator');
 const ClassesValidator = require('../validators/ClassesValidator');
 
 const routes = express.Router();
+
+routes.use(
+  '/images',
+  express.static(path.resolve(__dirname, '..', '..', 'tmp', 'uploads'))
+);
 
 // School Years
 routes.get('/school-years', SchoolYearsController.index);
@@ -111,14 +120,34 @@ routes.delete(
 
 // Books
 routes.get('/books', BooksController.index);
-routes.post('/books', BooksValidator.insert, BooksController.store);
-routes.put('/books/:id', BooksValidator.update, BooksController.update);
-routes.delete('/books/:id', BooksValidator.delete, BooksController.delete);
+routes.post(
+  '/books',
+  multer(multerImagesConfig).single('cover'),
+  BooksValidator.insert,
+  BooksController.store
+);
+routes.put(
+  '/books/:isbn',
+  multer(multerImagesConfig).single('cover'),
+  BooksValidator.update,
+  BooksController.update
+);
+routes.delete('/books/:isbn', BooksValidator.delete, BooksController.delete);
 
 // Users
 routes.get('/users', UsersController.index);
-routes.post('/users', UsersValidator.insert, UsersController.store);
-routes.put('/users/:id', UsersValidator.update, UsersController.update);
+routes.post(
+  '/users',
+  multer(multerImagesConfig).single('photo'),
+  UsersValidator.insert,
+  UsersController.store
+);
+routes.put(
+  '/users/:id',
+  multer(multerImagesConfig).single('photo'),
+  UsersValidator.update,
+  UsersController.update
+);
 routes.delete('/users/:id', UsersValidator.delete, UsersController.delete);
 
 // Guardians

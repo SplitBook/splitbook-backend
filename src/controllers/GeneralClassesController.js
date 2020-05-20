@@ -27,11 +27,18 @@ module.exports = {
     const { active } = req.body;
     const generalClass = req.body['class'];
 
-    return res
-      .status(
-        await softUpdate('general_classes', id, { class: generalClass, active })
-      )
-      .send();
+    try {
+      return res
+        .status(
+          await softUpdate('general_classes', id, {
+            class: generalClass,
+            active,
+          })
+        )
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {

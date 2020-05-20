@@ -1,4 +1,4 @@
-const { decode } = require('../utils/tokenUtils');
+const { decode } = require('../utils/TokenUtils');
 
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;

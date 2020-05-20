@@ -9,9 +9,12 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
-
-      table.unique(['state', 'deleted_at']);
     })
+    .then(() =>
+      knex.raw(
+        'ALTER TABLE requisition_states ADD CONSTRAINT UQ_requisition_states UNIQUE (state, deleted_at);'
+      )
+    )
     .then(() => knex.raw(onUpdateTrigger('requisition_states')));
 };
 

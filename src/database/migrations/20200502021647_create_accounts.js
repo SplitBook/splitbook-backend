@@ -3,27 +3,27 @@ const EnumCharges = require('../../utils/enums/EnumCharges');
 
 exports.up = async function (knex) {
   return knex.schema
-    .createTable('teachers', (table) => {
+    .createTable('accounts', (table) => {
       table.increments('id');
       table.string('name').notNullable();
       table.string('user_id', 10).unsigned().references('users.id');
+      // .onDelete('RESTRICT');
       table
-        .enu('charge', [EnumCharges.TEACHER])
+        .enu('charge', [EnumCharges.ADMIN, EnumCharges.SECRETARY])
         .notNullable()
-        .defaultTo(EnumCharges.TEACHER); // .onDelete('RESTRICT');
-
+        .defaultTo(EnumCharges.SECRETARY);
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
     })
     .then(() =>
       knex.raw(
-        'ALTER TABLE teachers ADD CONSTRAINT UQ_teachers UNIQUE (user_id, deleted_at);'
+        'ALTER TABLE accounts ADD CONSTRAINT UQ_accounts UNIQUE (user_id, deleted_at);'
       )
     )
-    .then(() => knex.raw(onUpdateTrigger('teachers')));
+    .then(() => knex.raw(onUpdateTrigger('accounts')));
 };
 
 exports.down = async function (knex) {
-  return knex.schema.dropTable('teachers');
+  return knex.schema.dropTable('accounts');
 };

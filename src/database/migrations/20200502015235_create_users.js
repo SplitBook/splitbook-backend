@@ -8,14 +8,20 @@ exports.up = async function (knex) {
       table.string('email').notNullable(); //Cannot Change Email on Edit User
       table.string('password').notNullable();
       table.boolean('email_confirmed').defaultTo(false);
-      table.integer('charge_id').unsigned().references('charges.id');
+      table.string('phone');
+      table.string('photo');
+      table.date('born_date');
+      // table.integer('charge_id').unsigned().references('charges.id');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
-
-      table.unique(['email', 'deleted_at']);
     })
+    .then(() =>
+      knex.raw(
+        'ALTER TABLE users ADD CONSTRAINT UQ_users UNIQUE (email, deleted_at);'
+      )
+    )
     .then(() => knex.raw(onUpdateTrigger('users')));
 };
 

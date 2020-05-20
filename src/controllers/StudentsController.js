@@ -26,16 +26,20 @@ module.exports = {
     const { id } = req.params;
     const { name, photo, born_date, active } = req.body;
 
-    return res
-      .status(
-        await softUpdate('students', id, {
-          name,
-          photo,
-          born_date,
-          active,
-        })
-      )
-      .send();
+    try {
+      return res
+        .status(
+          await softUpdate('students', id, {
+            name,
+            photo,
+            born_date,
+            active,
+          })
+        )
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {

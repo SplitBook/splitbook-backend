@@ -14,9 +14,12 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
-
-      // table.unique(['resume_id', 'book_isbn', 'deleted_at']);
     })
+    .then(() =>
+      knex.raw(
+        'ALTER TABLE adopted_books ADD CONSTRAINT UQ_adopted_books UNIQUE (book_isbn, resume_id, deleted_at);'
+      )
+    )
     .then(() => knex.raw(onUpdateTrigger('adopted_books')));
 };
 

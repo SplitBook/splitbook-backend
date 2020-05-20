@@ -20,6 +20,9 @@ module.exports = {
       active: Joi.boolean().default(true),
       subject_id: Joi.number().integer().min(1),
     }),
+    [Segments.QUERY]: Joi.object({
+      delete_cover: Joi.boolean().default(false),
+    }),
     [Segments.PARAMS]: Joi.object({
       isbn: Joi.string().required(),
     }),

@@ -10,15 +10,15 @@ module.exports = {
         'users.id',
         'username',
         'email',
-        'charge_id',
-        'charge',
+        'photo',
+        'phone',
+        'born_date',
         'email_confirmed',
         'users.created_at',
         'users.updated_at',
         'users.deleted_at',
         'users.active',
       ])
-      .innerJoin('charges', 'charges.id', '=', 'users.charge_id')
       .whereNull('users.deleted_at')
       .orderBy('users.id');
 
@@ -26,13 +26,24 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { username, email, charge_id } = req.body;
+    const { username, email, born_date, phone } = req.body;
+    const photo = req.file ? req.file.filename : undefined;
 
     try {
       const id = generateId();
       const password = await encript('null');
 
-      await knex('users').insert({ id, username, email, charge_id, password });
+      await knex('users').insert({
+        id,
+        username,
+        email,
+        password,
+        born_date,
+        phone,
+        photo,
+      });
+
+      //TODO : Send email to set password
       return res.status(201).send();
     } catch (err) {
       return res.status(406).json(err);
@@ -41,21 +52,34 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { username, charge_id, active } = req.body;
+    const { delete_photo } = req.query;
+    const { username, email, phone, born_date, active } = req.body;
+    let photo = req.file ? req.file.filename : undefined;
 
     const password = await encript('null');
 
-    return res
-      .status(
-        await softUpdate('users', id, {
-          username,
-          password,
-          charge_id,
-          active,
-          email_confirmed: false,
-        })
-      )
-      .send();
+    if (delete_photo && photo === undefined) photo = null;
+
+    try {
+      return res
+        .status(
+          await softUpdate('users', id, {
+            username,
+            password,
+            active,
+            email,
+            born_date,
+            phone,
+            photo,
+            email_confirmed: false,
+          })
+        )
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
+
+    // TODO : After update send email to recover password
   },
 
   async delete(req, res) {

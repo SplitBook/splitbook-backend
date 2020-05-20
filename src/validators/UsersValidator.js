@@ -6,18 +6,24 @@ module.exports = {
       username: Joi.string().trim(),
       email: Joi.string().trim().required(),
       active: Joi.boolean().default(true),
-      charge_id: Joi.number().integer().min(1),
+      phone: Joi.string().trim(),
+      born_date: Joi.date().less('now'),
     }),
   }),
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       username: Joi.string().trim(),
+      email: Joi.string().trim().required(),
       active: Joi.boolean().default(true),
-      charge_id: Joi.number().integer().min(1),
+      phone: Joi.string().trim(),
+      born_date: Joi.date().less('now'),
     }),
     [Segments.PARAMS]: Joi.object({
       id: Joi.string().length(10).required(),
+    }),
+    [Segments.QUERY]: Joi.object({
+      delete_photo: Joi.boolean().default(false),
     }),
   }),
 

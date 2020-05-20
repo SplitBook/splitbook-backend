@@ -19,14 +19,12 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
-
-      table.unique([
-        'school_subject_id',
-        'class_id',
-        'school_year_id',
-        'deleted_at',
-      ]);
     })
+    .then(() =>
+      knex.raw(
+        'ALTER TABLE resumes ADD CONSTRAINT UQ_resumes UNIQUE (school_subject_id, class_id, school_year_id, deleted_at);'
+      )
+    )
     .then(() => knex.raw(onUpdateTrigger('resumes')));
 };
 

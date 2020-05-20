@@ -12,9 +12,12 @@ exports.up = async function (knex) {
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
-
-      table.unique(['number', 'deleted_at']);
     })
+    .then(() =>
+      knex.raw(
+        'ALTER TABLE students ADD CONSTRAINT UQ_students UNIQUE (number, deleted_at);'
+      )
+    )
     .then(() => knex.raw(onUpdateTrigger('students')));
 };
 

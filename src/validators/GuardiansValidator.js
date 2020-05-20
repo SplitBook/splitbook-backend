@@ -4,8 +4,7 @@ module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim().required(),
-      phone: Joi.string().trim(),
-      born_date: Joi.date().less('now'),
+      user_id: Joi.string().length(10),
       active: Joi.boolean().default(true),
     }),
   }),
@@ -13,8 +12,7 @@ module.exports = {
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim().required(),
-      phone: Joi.string().trim(),
-      born_date: Joi.date().less('now'),
+      user_id: Joi.string().length(10),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

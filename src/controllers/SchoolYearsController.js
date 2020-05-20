@@ -26,9 +26,13 @@ module.exports = {
     const { id } = req.params;
     const { school_year, active } = req.body;
 
-    return res
-      .status(await softUpdate('school_years', id, { school_year, active }))
-      .send();
+    try {
+      return res
+        .status(await softUpdate('school_years', id, { school_year, active }))
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {

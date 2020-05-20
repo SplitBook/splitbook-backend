@@ -6,22 +6,24 @@ module.exports = {
     const books = await knex('books')
       .select('*')
       .whereNull('deleted_at')
-      .orderBy('book');
+      .orderBy('name');
 
     return res.json(books);
   },
 
   async store(req, res, next) {
-    const { name, isbn, publishing_company, cover, subject_id } = req.body;
+    const { name, isbn, publishing_company, subject_id } = req.body;
+    const cover = req.file ? req.file.filename : undefined;
 
     try {
       await knex('books').insert({
         name,
         isbn,
         publishing_company,
-        cover,
         subject_id,
+        cover,
       });
+
       return res.status(201).send();
     } catch (err) {
       return res.status(406).json(err);
@@ -30,24 +32,37 @@ module.exports = {
 
   async update(req, res) {
     const { isbn } = req.params;
-    const { name, publishing_company, cover, subject_id, active } = req.body;
+    const { delete_cover } = req.query;
+    const { name, publishing_company, subject_id, active } = req.body;
+    let cover = req.file ? req.file.filename : undefined;
 
-    return res
-      .status(
-        await softUpdate('books', isbn, {
-          name,
-          publishing_company,
-          cover,
-          subject_id,
-          active,
-        })
-      )
-      .send();
+    if (delete_cover && cover === undefined) cover = null;
+
+    try {
+      return res
+        .status(
+          await softUpdate(
+            'books',
+            isbn,
+            {
+              name,
+              publishing_company,
+              cover,
+              subject_id,
+              active,
+            },
+            'isbn'
+          )
+        )
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {
     const { isbn } = req.params;
 
-    return res.status(await softDelete('books', isbn)).send();
+    return res.status(await softDelete('books', isbn, 'isbn')).send();
   },
 };

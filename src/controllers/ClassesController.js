@@ -1,5 +1,4 @@
 const knex = require('../database');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 
 module.exports = {
   async index(req, res, next) {
@@ -25,33 +24,40 @@ module.exports = {
   async update(req, res) {
     const { class_id, school_year_id, head_class_id } = req.body;
 
-    const result = await knex('classes')
-      .update({ head_class_id })
-      .where({ class_id, school_year_id })
-      .whereNull('deleted_at');
+    try {
+      const result = await knex('classes')
+        .update({ head_class_id, updated_at: new Date() })
+        .where({ class_id, school_year_id })
+        .whereNull('deleted_at');
 
-    if (result > 0) {
-      result = 202;
-    } else {
-      result = 404;
+      if (result > 0) {
+        result = 202;
+      } else {
+        result = 404;
+      }
+      return res.status(result).send();
+    } catch (err) {
+      return res.status(406).json(err);
     }
-
-    return res.status(result).send();
   },
 
   async delete(req, res) {
-    const { class_id, school_year_id, head_class_id } = req.body;
+    const { class_id, school_year_id } = req.body;
 
-    const result = await knex('classes')
-      .update({ deleted_at: new Date() })
-      .where({ class_id, head_class_id })
-      .whereNull('deleted_at');
+    try {
+      const result = await knex('classes')
+        .update({ deleted_at: new Date() })
+        .where({ class_id, school_year_id })
+        .whereNull('deleted_at');
 
-    if (result > 0) {
-      result = 204;
-    } else {
-      result = 404;
+      if (result > 0) {
+        result = 204;
+      } else {
+        result = 404;
+      }
+      return res.status(result).send();
+    } catch (err) {
+      return res.status(500).json(err);
     }
-    return res.status(result).send();
   },
 };

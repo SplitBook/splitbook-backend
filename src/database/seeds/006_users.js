@@ -1,21 +1,33 @@
 const { encript } = require('../../utils/PasswordUtils');
 const { generateId } = require('../../utils/UserUtils');
+const EnumCharges = require('../../utils/enums/EnumCharges');
 
-exports.seed = function (knex) {
+exports.seed = async function (knex) {
   // Deletes ALL existing entries
+  const id = await generateId();
+  const password = await encript('admin');
+
   return knex('users')
     .del()
     .then(async function () {
-      const id = await generateId();
-      const password = await encript('admin');
-
       // Inserts seed entries
       return knex('users').insert({
         id,
         username: 'Admin',
         email: 'admin@splitbook.com',
+        email_confirmed: true,
         password,
-        charge_id: 1,
       });
-    });
+    })
+    .then(() =>
+      knex('accounts')
+        .del()
+        .then(() => {
+          return knex('accounts').insert({
+            user_id: id,
+            name: 'Administrador',
+            charge: 'sss',
+          });
+        })
+    );
 };

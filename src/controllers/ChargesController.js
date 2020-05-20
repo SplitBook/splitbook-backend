@@ -26,9 +26,13 @@ module.exports = {
     const { id } = req.params;
     const { charge, active } = req.body;
 
-    return res
-      .status(await softUpdate('charges', id, { charge, active }))
-      .send();
+    try {
+      return res
+        .status(await softUpdate('charges', id, { charge, active }))
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {

@@ -25,12 +25,15 @@ module.exports = {
   async update(req, res) {
     const { id } = req.params;
     const { school_subject, active } = req.body;
-
-    return res
-      .status(
-        await softUpdate('school_subjects', id, { school_subject, active })
-      )
-      .send();
+    try {
+      return res
+        .status(
+          await softUpdate('school_subjects', id, { school_subject, active })
+        )
+        .send();
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async delete(req, res) {

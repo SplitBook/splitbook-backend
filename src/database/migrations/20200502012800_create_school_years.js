@@ -10,8 +10,13 @@ exports.up = async function (knex) {
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
 
-      table.unique(['school_year', 'deleted_at']);
+      // table.unique(['school_year', 'deleted_at']);
     })
+    .then(() =>
+      knex.raw(
+        'ALTER TABLE school_years ADD CONSTRAINT UQ_school_years UNIQUE (school_year, deleted_at);'
+      )
+    )
     .then(() => knex.raw(onUpdateTrigger('school_years')));
 };
 

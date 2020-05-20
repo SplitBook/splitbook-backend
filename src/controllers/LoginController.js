@@ -8,9 +8,8 @@ module.exports = {
 
     const [user] = await knex('users')
       .where('email', email)
-      .whereNull('users.deleted_at')
-      .select(['users.*', 'charge'])
-      .innerJoin('charges', 'charges.id', '=', 'users.charge_id');
+      .whereNull('deleted_at')
+      .select('*');
 
     const isPasswordValid = await validatePassword(password, user.password);
 
@@ -18,10 +17,24 @@ module.exports = {
       // TODO - Return information needed for user
       user.password = undefined;
 
+      user.profiles = await knex('accounts')
+        .where('user_id', user.id)
+        .whereNull('deleted_at')
+        .union([
+          knex('guardians')
+            .where('user_id', user.id)
+            .whereNull('deleted_at')
+            .select('*'),
+          knex('teachers')
+            .where('user_id', user.id)
+            .whereNull('deleted_at')
+            .select('*'),
+        ]);
+
+      // user.profiles = [account, teacher, guardian].filter((elm) => elm);
+
       const token = generate({
         user_id: user.user_id,
-        charge: user.charge,
-        charge_id: user.charge_id,
       });
 
       return res.json({ user, token });
