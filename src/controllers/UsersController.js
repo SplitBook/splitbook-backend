@@ -1,9 +1,10 @@
 const knex = require('../database');
-const { sendEmail } = require('../email');
 const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
+const { sendEmail } = require('../email');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
+const { generate, decode, EnumTokenTypes } = require('../utils/TokenUtils');
 
 module.exports = {
   async index(req, res, next) {
@@ -45,7 +46,15 @@ module.exports = {
         photo,
       });
 
-      sendEmail(email, EnumEmailTypes.REGISTER);
+      const token = generate(
+        {
+          email,
+        },
+        EnumTokenTypes.EMAIL,
+        '3 days'
+      );
+
+      sendEmail(email, EnumEmailTypes.REGISTER, { token });
 
       return res.status(201).send();
     } catch (err) {
@@ -63,6 +72,14 @@ module.exports = {
 
     if (delete_photo && photo === undefined) photo = null;
 
+    const token = generate(
+      {
+        email,
+      },
+      EnumTokenTypes.EMAIL,
+      '3 days'
+    );
+
     try {
       const status = await softUpdate('users', id, {
         username,
@@ -75,8 +92,8 @@ module.exports = {
         email_confirmed: false,
       });
 
-      if (status === 204) {
-        sendEmail(email, EnumEmailTypes.USER_CHANGE);
+      if (status === 202) {
+        sendEmail(email, EnumEmailTypes.USER_CHANGE, { token });
       }
 
       return res.status(status).send();

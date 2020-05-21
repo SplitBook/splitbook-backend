@@ -1,8 +1,6 @@
 const knex = require('../database');
-const { validatePassword, encript } = require('../utils/PasswordUtils');
-const { generate, decode } = require('../utils/TokenUtils');
-const { sendEmail } = require('../email');
-const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
+const { validatePassword } = require('../utils/PasswordUtils');
+const { generate } = require('../utils/TokenUtils');
 
 module.exports = {
   async login(req, res, next) {
@@ -16,7 +14,6 @@ module.exports = {
     const isPasswordValid = await validatePassword(password, user.password);
 
     if (user && user.email_confirmed && isPasswordValid) {
-      // TODO - Return information needed for user
       user.password = undefined;
 
       user.profiles = await knex('accounts')
@@ -33,10 +30,11 @@ module.exports = {
             .select('*'),
         ]);
 
-      // user.profiles = [account, teacher, guardian].filter((elm) => elm);
+      user.charges = user.profiles.map((elm) => elm.charge);
 
       const token = generate({
-        user_id: user.user_id,
+        user_id: user.id,
+        charges: user.charges,
       });
 
       return res.json({ user, token });
@@ -45,61 +43,46 @@ module.exports = {
     return res.status(403).json({ error: 'Email or password invalid.' });
   },
 
-  async register(req, res, next) {
-    const { token } = req.query;
-    const { password } = req.body;
+  // async register(req, res, next) {
+  //   const { token } = req.query;
+  //   const { password } = req.body;
 
-    try {
-      const { email } = decode(token);
+  //   try {
+  //     const { user_id, type } = decode(token);
 
-      if (email === undefined || email === null) {
-        return res.status(406).json({ error: 'Invalid token' });
-      }
+  //     if (
+  //       user_id === undefined ||
+  //       user_id === null ||
+  //       type === undefined ||
+  //       type === null ||
+  //       type !== EnumTokenTypes.EMAIL
+  //     ) {
+  //       return res.status(406).json({ error: 'Invalid token' });
+  //     }
 
-      const [user] = await knex('users')
-        .where('email', email)
-        .whereNull('deleted_at')
-        .select('*');
+  //     const [user] = await knex('users')
+  //       .where('id', user_id)
+  //       .whereNull('deleted_at')
+  //       .select('*');
 
-      if (user) {
-        if (!user.email_confirmed) {
-          user.password = await encript(password);
+  //     if (user) {
+  //       if (!user.email_confirmed) {
+  //         user.password = await encript(password);
 
-          await knex('users').where('id', user.id).update({
-            email_confirmed: true,
-            password: user.password,
-          });
+  //         await knex('users').where('id', user.id).update({
+  //           email_confirmed: true,
+  //           password: user.password,
+  //         });
 
-          return res.status(204).send();
-        }
+  //         return res.status(204).send();
+  //       }
 
-        return res.status(203).json({ success: 'Password already setted' });
-      }
+  //       return res.status(203).json({ success: 'Password already setted' });
+  //     }
 
-      return res.status(404).json({ error: 'User not found' });
-    } catch (err) {
-      return res.status(401).json({ error: 'Invalid token.' });
-    }
-  },
-
-  async recoverPassword(req, res) {
-    const { change_password } = req.query;
-    const { email } = req.body;
-
-    const [user] = await knex('users')
-      .where('email', email)
-      .whereNull('deleted_at');
-
-    if (user) {
-      if (change_password) {
-        sendEmail(email, EnumEmailTypes.CHANGE_PASSWORD);
-      } else {
-        sendEmail(email, EnumEmailTypes.RECOVER_PASSWORD);
-      }
-
-      return res.status(202).json({ success: `Email sent to ${email}.` });
-    }
-
-    return res.status(404).json({ error: 'User not found.' });
-  },
+  //     return res.status(404).json({ error: 'User not found' });
+  //   } catch (err) {
+  //     return res.status(401).json({ error: 'Invalid token.' });
+  //   }
+  // },
 };

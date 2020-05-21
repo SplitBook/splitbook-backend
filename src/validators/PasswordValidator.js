@@ -1,14 +1,15 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
 module.exports = {
-  login: celebrate({
-    [Segments.BODY]: Joi.object().keys({
+  recoverPassword: celebrate({
+    [Segments.BODY]: Joi.object({
       email: Joi.string().email().trim().required(),
-      password: Joi.string().required(),
+    }),
+    [Segments.QUERY]: Joi.object({
+      change_password: Joi.boolean().default(false),
     }),
   }),
-
-  register: celebrate({
+  changePassword: celebrate({
     [Segments.BODY]: Joi.object({
       password: Joi.string().required(),
     }),

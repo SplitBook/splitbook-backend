@@ -1,4 +1,4 @@
-const { decode } = require('../utils/TokenUtils');
+const { decode, EnumTokenTypes } = require('../utils/TokenUtils');
 
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -21,9 +21,12 @@ module.exports = async (req, res, next) => {
   try {
     const decoded = decode(token);
 
-    req.user_id = decoded.id;
-    req.charge_id = decoded.charge_id;
-    req.charge = decoded.charge;
+    if (decoded.type !== EnumTokenTypes.LOGIN) {
+      return res.status(401).send({ error: 'Invalid token.' });
+    }
+
+    req.user_id = decoded.user_id;
+    req.charges = decoded.charges;
 
     return next();
   } catch (err) {
