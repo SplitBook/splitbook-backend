@@ -54,15 +54,15 @@ routes.delete(
   SchoolYearsController.delete
 );
 
-// Charges
-routes.get('/charges', ChargesController.index);
-routes.post('/charges', ChargesValidator.insert, ChargesController.store);
-routes.put('/charges/:id', ChargesValidator.update, ChargesController.update);
-routes.delete(
-  '/charges/:id',
-  ChargesValidator.delete,
-  ChargesController.delete
-);
+// Charges - Out of Code
+// routes.get('/charges', ChargesController.index);
+// routes.post('/charges', ChargesValidator.insert, ChargesController.store);
+// routes.put('/charges/:id', ChargesValidator.update, ChargesController.update);
+// routes.delete(
+//   '/charges/:id',
+//   ChargesValidator.delete,
+//   ChargesController.delete
+// );
 
 // General Classes
 routes.get('/general-classes', GeneralClassesController.index);

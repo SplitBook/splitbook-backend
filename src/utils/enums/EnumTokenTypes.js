@@ -1,6 +1,6 @@
-const charges = {
+const tokenTypes = {
   LOGIN: 'lg',
   EMAIL: 'em',
 };
 
-module.exports = charges;
+module.exports = tokenTypes;

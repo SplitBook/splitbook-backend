@@ -1,10 +1,9 @@
 const knex = require('../database');
-const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
-const { sendEmail } = require('../email');
+const Queue = require('../stack');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
-const { generate, decode, EnumTokenTypes } = require('../utils/TokenUtils');
+const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
 
 module.exports = {
   async index(req, res, next) {
@@ -54,8 +53,10 @@ module.exports = {
         '3 days'
       );
 
-      sendEmail(email, EnumEmailTypes.REGISTER, { token });
-
+      await Queue.add(Queue.EnumQueuesTypes.REGISTER_MAIL, {
+        to: email,
+        properties: { token },
+      });
       return res.status(201).send();
     } catch (err) {
       return res.status(406).json(err);
@@ -93,7 +94,10 @@ module.exports = {
       });
 
       if (status === 202) {
-        sendEmail(email, EnumEmailTypes.USER_CHANGE, { token });
+        await Queue.add(Queue.EnumQueuesTypes.USER_CHANGE_MAIL, {
+          to: email,
+          properties: { token },
+        });
       }
 
       return res.status(status).send();

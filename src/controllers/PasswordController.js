@@ -1,7 +1,6 @@
 const knex = require('../database');
-const { sendEmail } = require('../email');
-const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
-const { decode, EnumTokenTypes } = require('../utils/TokenUtils');
+const Queue = require('../stack');
+const { decode, generate, EnumTokenTypes } = require('../utils/TokenUtils');
 const { encript } = require('../utils/PasswordUtils');
 
 module.exports = {
@@ -23,9 +22,15 @@ module.exports = {
       );
 
       if (change_password) {
-        sendEmail(email, EnumEmailTypes.CHANGE_PASSWORD, { token });
+        await Queue.add(Queue.EnumQueuesTypes.CHANGE_PASSWORD_MAIL, {
+          to: email,
+          properties: { token },
+        });
       } else {
-        sendEmail(email, EnumEmailTypes.RECOVER_PASSWORD, { token });
+        await Queue.add(Queue.EnumQueuesTypes.RECOVER_PASSWORD_MAIL, {
+          to: email,
+          properties: { token },
+        });
       }
 
       return res.status(202).json({ success: `Email sent to ${email}.` });

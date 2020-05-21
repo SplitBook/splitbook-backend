@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const pug = require('pug');
 const nodemailerConfig = require('../config/nodemailerConfig');
 const path = require('path');
+const EnumEmailTypes = require('../utils/enums/EnumEmailTypes');
 
 const configuration =
   process.env.NODE_ENV === 'test'
@@ -33,4 +34,4 @@ const sendEmail = function (to, emailType, properties = {}) {
   });
 };
 
-module.exports = { sendEmail };
+module.exports = { sendEmail, EnumEmailTypes };
