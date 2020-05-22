@@ -16,4 +16,12 @@ module.exports = {
       token: Joi.string().required(),
     }),
   }),
+
+  profile: celebrate({
+    [Segments.BODY]: Joi.object({
+      token: Joi.string().required(),
+      profile_id: Joi.number().integer().min(1).required(),
+      charge: Joi.string().trim().required(),
+    }),
+  }),
 };

@@ -1,11 +1,5 @@
-const RegisterMail = require('./RegisterMail');
-const ChangePasswordMail = require('./ChangePasswordMail');
-const RecoverPasswordMail = require('./RecoverPasswordMail');
-const UserChangeMail = require('./UserChangeMail');
+const SendMail = require('./SendMail');
 
 module.exports = {
-  RegisterMail,
-  ChangePasswordMail,
-  RecoverPasswordMail,
-  UserChangeMail,
+  SendMail,
 };

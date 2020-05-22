@@ -1,9 +1,8 @@
 const charges = {
-  GUARDIAN: 'Encarregado de Educação',
-  TEACHER: 'Professor',
-  ADMIN: 'Administrador',
-  HEAD_CLASS: 'Diretor de Turma',
-  SECRETARY: 'Secretário',
+  GUARDIAN: { table: 'guardians', charge: 'Encarregado de Educação' },
+  TEACHER: { table: 'teachers', charge: 'Professor' },
+  ADMIN: { table: 'accounts', charge: 'Administrador' },
+  SECRETARY: { table: 'accounts', charge: 'Docente' },
 };
 
 module.exports = charges;

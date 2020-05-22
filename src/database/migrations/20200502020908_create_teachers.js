@@ -8,9 +8,9 @@ exports.up = async function (knex) {
       table.string('name').notNullable();
       table.string('user_id', 10).unsigned().references('users.id');
       table
-        .enu('charge', [EnumCharges.TEACHER])
+        .enu('charge', [EnumCharges.TEACHER.charge])
         .notNullable()
-        .defaultTo(EnumCharges.TEACHER); // .onDelete('RESTRICT');
+        .defaultTo(EnumCharges.TEACHER.charge); // .onDelete('RESTRICT');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
@@ -20,8 +20,7 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE teachers ADD CONSTRAINT UQ_teachers UNIQUE (user_id, deleted_at);'
       )
-    )
-    .then(() => knex.raw(onUpdateTrigger('teachers')));
+    );
 };
 
 exports.down = async function (knex) {

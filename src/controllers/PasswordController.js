@@ -2,6 +2,7 @@ const knex = require('../database');
 const Queue = require('../stack');
 const { decode, generate, EnumTokenTypes } = require('../utils/TokenUtils');
 const { encript } = require('../utils/PasswordUtils');
+const { EnumEmailTypes } = require('../email');
 
 module.exports = {
   async recoverPassword(req, res) {
@@ -22,13 +23,15 @@ module.exports = {
       );
 
       if (change_password) {
-        await Queue.add(Queue.EnumQueuesTypes.CHANGE_PASSWORD_MAIL, {
+        await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,
+          emailType: EnumEmailTypes.CHANGE_PASSWORD,
           properties: { token },
         });
       } else {
-        await Queue.add(Queue.EnumQueuesTypes.RECOVER_PASSWORD_MAIL, {
+        await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,
+          emailType: EnumEmailTypes.RECOVER_PASSWORD,
           properties: { token },
         });
       }
@@ -53,7 +56,7 @@ module.exports = {
         type === null ||
         type !== EnumTokenTypes.EMAIL
       ) {
-        return res.status(406).json({ error: 'Invalid token' });
+        return res.status(401).json({ error: 'Invalid token' });
       }
 
       const [user] = await knex('users')

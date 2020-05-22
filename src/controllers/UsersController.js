@@ -4,6 +4,7 @@ const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
 const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
+const { EnumEmailTypes } = require('../email');
 
 module.exports = {
   async index(req, res, next) {
@@ -53,8 +54,9 @@ module.exports = {
         '3 days'
       );
 
-      await Queue.add(Queue.EnumQueuesTypes.REGISTER_MAIL, {
+      await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
         to: email,
+        emailType: EnumEmailTypes.REGISTER,
         properties: { token },
       });
       return res.status(201).send();
@@ -94,8 +96,9 @@ module.exports = {
       });
 
       if (status === 202) {
-        await Queue.add(Queue.EnumQueuesTypes.USER_CHANGE_MAIL, {
+        await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,
+          emailType: EnumEmailTypes.USER_CHANGE,
           properties: { token },
         });
       }

@@ -9,9 +9,9 @@ exports.up = async function (knex) {
       table.string('user_id', 10).unsigned().references('users.id');
       // .onDelete('RESTRICT');
       table
-        .enu('charge', [EnumCharges.ADMIN, EnumCharges.SECRETARY])
+        .enu('charge', [EnumCharges.ADMIN.charge, EnumCharges.SECRETARY.charge])
         .notNullable()
-        .defaultTo(EnumCharges.SECRETARY);
+        .defaultTo(EnumCharges.SECRETARY.charge);
       table.timestamps(true, true);
       table.timestamp('deleted_at');
       table.boolean('active').defaultTo(true);
@@ -20,8 +20,7 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE accounts ADD CONSTRAINT UQ_accounts UNIQUE (user_id, deleted_at);'
       )
-    )
-    .then(() => knex.raw(onUpdateTrigger('accounts')));
+    );
 };
 
 exports.down = async function (knex) {

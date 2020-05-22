@@ -11,7 +11,6 @@ exports.up = async function (knex) {
       table.string('phone');
       table.string('photo');
       table.date('born_date');
-      // table.integer('charge_id').unsigned().references('charges.id');
 
       table.timestamps(true, true);
       table.timestamp('deleted_at');
@@ -21,8 +20,7 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE users ADD CONSTRAINT UQ_users UNIQUE (email, deleted_at);'
       )
-    )
-    .then(() => knex.raw(onUpdateTrigger('users')));
+    );
 };
 
 exports.down = async function (knex) {

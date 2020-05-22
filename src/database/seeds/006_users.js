@@ -26,7 +26,7 @@ exports.seed = async function (knex) {
           return knex('accounts').insert({
             user_id: id,
             name: 'Administrador',
-            charge: 'sss',
+            charge: EnumCharges.ADMIN.charge,
           });
         })
     );

@@ -1,6 +1,7 @@
 const knex = require('../database');
 const { validatePassword } = require('../utils/PasswordUtils');
-const { generate } = require('../utils/TokenUtils');
+const { generate, decode, EnumTokenTypes } = require('../utils/TokenUtils');
+const EnumCharges = require('../utils/enums/EnumCharges');
 
 module.exports = {
   async login(req, res, next) {
@@ -30,17 +31,48 @@ module.exports = {
             .select('*'),
         ]);
 
-      user.charges = user.profiles.map((elm) => elm.charge);
-
       const token = generate({
         user_id: user.id,
-        charges: user.charges,
       });
 
       return res.json({ user, token });
     }
 
     return res.status(403).json({ error: 'Email or password invalid.' });
+  },
+
+  async profile(req, res, next) {
+    const { token, charge, profile_id } = req.body;
+
+    try {
+      const { user_id, type } = decode(token);
+
+      if (type !== EnumTokenTypes.LOGIN) {
+        return res.status(401).json({ error: 'Invalid token.' });
+      }
+
+      const { table } = Object.values(EnumCharges).find(
+        (chargeObject) => chargeObject.charge === charge
+      );
+
+      const [profile] = await knex(table)
+        .where({ id: profile_id, user_id })
+        .whereNull('deleted_at');
+
+      if (profile) {
+        const profileToken = generate({
+          user_id,
+          profile_id,
+          charge,
+        });
+
+        return res.json({ token: profileToken, user_id, profile_id, charge });
+      }
+
+      return res.status(404).json({ error: 'Profile not found.' });
+    } catch (err) {
+      return res.status(401).json({ error: 'Invalid token.' });
+    }
   },
 
   // async register(req, res, next) {

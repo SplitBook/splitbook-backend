@@ -24,8 +24,7 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE resumes ADD CONSTRAINT UQ_resumes UNIQUE (school_subject_id, class_id, school_year_id, deleted_at);'
       )
-    )
-    .then(() => knex.raw(onUpdateTrigger('resumes')));
+    );
 };
 
 exports.down = async function (knex) {

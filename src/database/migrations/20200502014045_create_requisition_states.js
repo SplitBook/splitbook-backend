@@ -14,8 +14,7 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE requisition_states ADD CONSTRAINT UQ_requisition_states UNIQUE (state, deleted_at);'
       )
-    )
-    .then(() => knex.raw(onUpdateTrigger('requisition_states')));
+    );
 };
 
 exports.down = async function (knex) {
