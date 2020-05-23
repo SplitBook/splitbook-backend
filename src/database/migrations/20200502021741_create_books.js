@@ -1,5 +1,3 @@
-const { onUpdateTrigger } = require('../../../knexfile');
-
 exports.up = async function (knex) {
   return knex.schema.createTable('books', (table) => {
     table.string('isbn', 15).primary();
@@ -7,6 +5,8 @@ exports.up = async function (knex) {
     table.string('publishing_company');
     table.string('cover');
     table.integer('subject_id').unsigned().references('school_subjects.id');
+    table.string('code', 5).notNullable();
+
     // .onDelete('RESTRICT');
 
     table.timestamps(true, true);

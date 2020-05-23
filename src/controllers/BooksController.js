@@ -12,7 +12,7 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { name, isbn, publishing_company, subject_id } = req.body;
+    const { name, isbn, publishing_company, subject_id, code } = req.body;
     const cover = req.file ? req.file.filename : undefined;
 
     try {
@@ -22,6 +22,7 @@ module.exports = {
         publishing_company,
         subject_id,
         cover,
+        code,
       });
 
       return res.status(201).send();
@@ -33,7 +34,7 @@ module.exports = {
   async update(req, res) {
     const { isbn } = req.params;
     const { delete_cover } = req.query;
-    const { name, publishing_company, subject_id, active } = req.body;
+    const { name, publishing_company, subject_id, active, code } = req.body;
     let cover = req.file ? req.file.filename : undefined;
 
     if (delete_cover && cover === undefined) cover = null;
@@ -50,6 +51,7 @@ module.exports = {
               cover,
               subject_id,
               active,
+              code,
             },
             'isbn'
           )

@@ -1,4 +1,3 @@
-const { onUpdateTrigger } = require('../../../knexfile');
 const EnumCharges = require('../../utils/enums/EnumCharges');
 
 exports.up = async function (knex) {

@@ -1,5 +1,3 @@
-const { onUpdateTrigger } = require('../../../knexfile');
-
 exports.up = async function (knex) {
   return knex.schema
     .createTable('requisition_states', (table) => {

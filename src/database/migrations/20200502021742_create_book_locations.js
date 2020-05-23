@@ -1,7 +1,7 @@
 exports.up = async function (knex) {
-  return knex.schema.createTable('school_subjects', (table) => {
+  return knex.schema.createTable('book_locations', (table) => {
     table.increments('id');
-    table.string('school_subject').notNullable();
+    table.string('location').notNullable();
 
     table.timestamps(true, true);
     table.timestamp('deleted_at');
@@ -10,5 +10,5 @@ exports.up = async function (knex) {
 };
 
 exports.down = async function (knex) {
-  return knex.schema.dropTable('school_subjects');
+  return knex.schema.dropTable('book_locations');
 };

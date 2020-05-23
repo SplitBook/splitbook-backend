@@ -1,5 +1,3 @@
-const { onUpdateTrigger } = require('../../../knexfile');
-
 exports.up = async function (knex) {
   return knex.schema.createTable('classes', (table) => {
     table.integer('school_year_id').unsigned().references('school_years.id');
