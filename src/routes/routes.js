@@ -19,6 +19,13 @@ const BookLocationsController = require('../controllers/BookLocationsController'
 const BookStatesController = require('../controllers/BookStatesController');
 const PhysicalBooksController = require('../controllers/PhysicalBooksController');
 const ResumesController = require('../controllers/ResumesController');
+const AdoptedBooksController = require('../controllers/AdoptedBooksController');
+const SchoolEnrollmentsController = require('../controllers/SchoolEnrollmentsController');
+const RequisitionsController = require('../controllers/RequisitionsController');
+const BookRequisitionsController = require('../controllers/BookRequisitionsController');
+const RequisitionsPhysicalBookController = require('../controllers/RequisitionsPhysicalBookController');
+const DeliveriesController = require('../controllers/DeliveriesController');
+const ReturnsController = require('../controllers/ReturnsController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -34,6 +41,13 @@ const BookLocationsValidator = require('../validators/BookLocationsValidator');
 const BookStatesValidator = require('../validators/BookStatesValidator');
 const PhysicalBooksValidator = require('../validators/PhysicalBooksValidator');
 const ResumesValidator = require('../validators/ResumesValidator');
+const AdoptedBooksValidator = require('../validators/AdoptedBooksValidator');
+const SchoolEnrollmentsValidator = require('../validators/SchoolEnrollmentsValidator');
+const RequisitionsValidator = require('../validators/RequisitionsValidator');
+const BookRequisitionsValidator = require('../validators/BookRequisitionsValidator');
+const RequisitionsPhysicalBookValidator = require('../validators/RequisitionsPhysicalBookValidator');
+const DeliveriesValidator = require('../validators/DeliveriesValidator');
+const ReturnsValidator = require('../validators/ReturnsValidator');
 
 const routes = express.Router();
 
@@ -260,6 +274,127 @@ routes.delete(
   '/resumes/:id',
   ResumesValidator.delete,
   ResumesController.delete
+);
+
+// Adopted Books
+routes.get('/adopted-books', AdoptedBooksController.index);
+routes.post(
+  '/adopted-books',
+  AdoptedBooksValidator.insert,
+  AdoptedBooksController.store
+);
+routes.put(
+  '/adopted-books/:id',
+  AdoptedBooksValidator.update,
+  AdoptedBooksController.update
+);
+routes.delete(
+  '/adopted-books/:id',
+  AdoptedBooksValidator.delete,
+  AdoptedBooksController.delete
+);
+
+// School Enrollments
+routes.get('/school-enrollments', SchoolEnrollmentsController.index);
+routes.post(
+  '/school-enrollments',
+  SchoolEnrollmentsValidator.insert,
+  SchoolEnrollmentsController.store
+);
+routes.put(
+  '/school-enrollments/:id',
+  SchoolEnrollmentsValidator.update,
+  SchoolEnrollmentsController.update
+);
+routes.delete(
+  '/school-enrollments/:id',
+  SchoolEnrollmentsValidator.delete,
+  SchoolEnrollmentsController.delete
+);
+
+// Requisitions
+routes.get('/requisitions', RequisitionsController.index);
+routes.post(
+  '/requisitions',
+  RequisitionsValidator.insert,
+  RequisitionsController.store
+);
+routes.put(
+  '/requisitions/:id',
+  RequisitionsValidator.update,
+  RequisitionsController.update
+);
+routes.delete(
+  '/requisitions/:id',
+  RequisitionsValidator.delete,
+  RequisitionsController.delete
+);
+
+// Book Requisitions
+routes.get('/book-requisitions', BookRequisitionsController.index);
+routes.post(
+  '/book-requisitions',
+  BookRequisitionsValidator.insert,
+  BookRequisitionsController.store
+);
+routes.put(
+  '/book-requisitions/:id',
+  BookRequisitionsValidator.update,
+  BookRequisitionsController.update
+);
+routes.delete(
+  '/book-requisitions/:id',
+  BookRequisitionsValidator.delete,
+  BookRequisitionsController.delete
+);
+
+// Book Requisitions
+routes.get(
+  '/requisitions-physical-book',
+  RequisitionsPhysicalBookController.index
+);
+routes.post(
+  '/requisitions-physical-book',
+  RequisitionsPhysicalBookValidator.insert,
+  RequisitionsPhysicalBookController.store
+);
+routes.put(
+  '/requisitions-physical-book/:id',
+  RequisitionsPhysicalBookValidator.update,
+  RequisitionsPhysicalBookController.update
+);
+routes.delete(
+  '/requisitions-physical-book/:id',
+  RequisitionsPhysicalBookValidator.delete,
+  RequisitionsPhysicalBookController.delete
+);
+
+// Deliveries
+routes.get('/deliveries', DeliveriesController.index);
+routes.post(
+  '/deliveries',
+  DeliveriesValidator.insert,
+  DeliveriesController.store
+);
+routes.put(
+  '/deliveries/:id',
+  DeliveriesValidator.update,
+  DeliveriesController.update
+);
+routes.delete(
+  '/deliveries/:id',
+  DeliveriesValidator.delete,
+  DeliveriesController.delete
+);
+
+// Returns
+routes.get('/returns', ReturnsController.index);
+routes.post('/returns', ReturnsValidator.insert, ReturnsController.store);
+routes.put('/returns/:id', ReturnsValidator.update, ReturnsController.update);
+routes.delete(
+  '/returns/:id',
+  ReturnsValidator.delete,
+  ReturnsController.delete
 );
 
 module.exports = routes;
