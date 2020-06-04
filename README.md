@@ -32,4 +32,4 @@
   - `docker start mssql-server`
   - `docker start redis-server`
 
-- Run `npm start`
+* Run `npm start`
