@@ -15,13 +15,14 @@
 
   ### IMPORTANT
 
-  - Set _collate_ as case sensitive
+  **Set _collate_ as case sensitive**
 
 - Set environment variables on _.env_ file
 
 - Run **knex migrations** and **default seeds**
-  `npx knex migrate:latest`
-  `npx knex seed:run`
+
+  - `npx knex migrate:latest`
+  - `npx knex seed:run`
 
 - Run`npm start`
 
