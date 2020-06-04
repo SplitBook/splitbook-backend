@@ -12,30 +12,32 @@ module.exports = {
       .whereNull('deleted_at')
       .select('*');
 
-    const isPasswordValid = await validatePassword(password, user.password);
+    if (user) {
+      const isPasswordValid = await validatePassword(password, user.password);
 
-    if (user && user.email_confirmed && isPasswordValid) {
-      user.password = undefined;
+      if (user.email_confirmed && isPasswordValid) {
+        user.password = undefined;
 
-      user.profiles = await knex('accounts')
-        .where('user_id', user.id)
-        .whereNull('deleted_at')
-        .union([
-          knex('guardians')
-            .where('user_id', user.id)
-            .whereNull('deleted_at')
-            .select('*'),
-          knex('teachers')
-            .where('user_id', user.id)
-            .whereNull('deleted_at')
-            .select('*'),
-        ]);
+        user.profiles = await knex('accounts')
+          .where('user_id', user.id)
+          .whereNull('deleted_at')
+          .union([
+            knex('guardians')
+              .where('user_id', user.id)
+              .whereNull('deleted_at')
+              .select('*'),
+            knex('teachers')
+              .where('user_id', user.id)
+              .whereNull('deleted_at')
+              .select('*'),
+          ]);
 
-      const token = generate({
-        user_id: user.id,
-      });
+        const token = generate({
+          user_id: user.id,
+        });
 
-      return res.json({ user, token });
+        return res.json({ user, token });
+      }
     }
 
     return res.status(403).json({ error: 'Email or password invalid.' });

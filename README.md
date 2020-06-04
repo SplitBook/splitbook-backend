@@ -11,13 +11,24 @@
 - Run npm install
   `npm install`
 
-- Create database on SQL Server (Example: **CREATE DATABASE split_book**)
+- Create database on SQL Server
+  _IMPORTANT_ - Set **collate** as case sensitive
+  (Example: **CREATE DATABASE split_book COLLATE SQL_Latin1_General_CP1_CS_AS**)
 
 - Set environment variables on _.env_ file
 
 - Run **knex migrations** and **default seeds**
   `npx knex migrate:latest`
   `npx knex seed:run`
+
+- Run npm start
+  `npm start`
+
+## Run
+
+- Start docker contatiners
+  `docker start mssql-server`
+  `docker start redis-server`
 
 - Run npm start
   `npm start`
