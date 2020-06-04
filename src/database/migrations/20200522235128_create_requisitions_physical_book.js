@@ -2,7 +2,7 @@ exports.up = async function (knex) {
   return knex.schema
     .createTable('requisitions_physical_book', (table) => {
       table.increments('id');
-      table.string('physical_book_id', 11).notNullable();
+      table.string('physical_book_id', 12).notNullable();
       table.integer('book_requisition_id').unsigned().notNullable();
       table.date('delivery_date');
       table.date('return_date');

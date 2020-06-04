@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+    api:
+        build: .
+        command: npm start
+        container_name: api
+        ports: 
+            - 8085:8085
+        links: 
+            - redis
+            - mssql
+
+        depends_on: 
+            - mssql
+            - redis
+        restart: always
+    mssql:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        container_name: mssql-server
+        volumes:
+            - mssql-data:/var/opt/mssql/data
+        ports: 
+            - 1433:1433
+        environment:
+            - ACCEPT_EULA=Y
+            - "SA_PASSWORD=${DATABASE_PASSWORD}"
+        restart: always
+    redis:
+        image: redis:alpine
+        container_name: redis-server
+        restart: always
+        ports:
+            - 6379:6379
+volumes: 
+    mssql-data:
+
+

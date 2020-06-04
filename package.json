@@ -1,8 +1,9 @@
 {
   "name": "SplitBook",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
+    "start": "npm-run-all -p start:*",
     "start:server": "node src/server.js",
     "start:queue": "node src/queue.js",
     "dev": "npm-run-all -p dev:*",
