@@ -15,8 +15,11 @@ module.exports = {
     const { state } = req.body;
 
     try {
-      await knex('requisition_states').insert({ state });
-      return res.status(201).send();
+      const [requisitionState] = await knex('requisition_states')
+        .insert({ state })
+        .returning('*');
+
+      return res.json(requisitionState);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -26,10 +29,13 @@ module.exports = {
     const { id } = req.params;
     const { state, active } = req.body;
 
+    const { statusCode, data } = await softUpdate('requisition_states', id, {
+      state,
+      active,
+    });
+
     try {
-      return res
-        .status(await softUpdate('requisition_states', id, { state, active }))
-        .send();
+      return res.status(statusCode).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

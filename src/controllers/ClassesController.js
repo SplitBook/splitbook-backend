@@ -14,8 +14,11 @@ module.exports = {
     const { class_id, school_year_id, head_class_id } = req.body;
 
     try {
-      await knex('classes').insert({ class_id, school_year_id, head_class_id });
-      return res.status(201).send();
+      const [classObject] = await knex('classes')
+        .insert({ class_id, school_year_id, head_class_id })
+        .returning('*');
+
+      return res.json(classObject);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -23,19 +26,21 @@ module.exports = {
 
   async update(req, res) {
     const { class_id, school_year_id, head_class_id } = req.body;
+    let result;
 
     try {
-      const result = await knex('classes')
+      const [data] = await knex('classes')
         .update({ head_class_id, updated_at: new Date() })
         .where({ class_id, school_year_id })
-        .whereNull('deleted_at');
+        .whereNull('deleted_at')
+        .returning('*');
 
-      if (result > 0) {
+      if (data) {
         result = 202;
       } else {
         result = 404;
       }
-      return res.status(result).send();
+      return res.status(result).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

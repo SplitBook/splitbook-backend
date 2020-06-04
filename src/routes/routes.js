@@ -6,7 +6,6 @@ const multerImagesConfig = require('../config/multerImagesConfig');
 
 // const HandbookController = require('./controllers/HandbookController');
 const SchoolYearsController = require('../controllers/SchoolYearsController');
-const ChargesController = require('../controllers/ChargesController');
 const GeneralClassesController = require('../controllers/GeneralClassesController');
 const RequisitionStatesController = require('../controllers/RequisitionStatesController');
 const SchoolSubjectsController = require('../controllers/SchoolSubjectsController');
@@ -16,9 +15,12 @@ const GuardiansController = require('../controllers/GuardiansController');
 const TeachersController = require('../controllers/TeachersController');
 const StudentsController = require('../controllers/StudentsController');
 const ClassesController = require('../controllers/ClassesController');
+const BookLocationsController = require('../controllers/BookLocationsController');
+const BookStatesController = require('../controllers/BookStatesController');
+const PhysicalBooksController = require('../controllers/PhysicalBooksController');
+const ResumesController = require('../controllers/ResumesController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
-const ChargesValidator = require('../validators/ChargesValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
 const RequisitionStatesValidator = require('../validators/RequisitionStatesValidator');
 const SchoolSubjectsValidator = require('../validators/SchoolSubjectsValidator');
@@ -28,6 +30,10 @@ const GuardiansValidator = require('../validators/GuardiansValidator');
 const TeachersValidator = require('../validators/TeachersValidator');
 const StudentsValidator = require('../validators/StudentsValidator');
 const ClassesValidator = require('../validators/ClassesValidator');
+const BookLocationsValidator = require('../validators/BookLocationsValidator');
+const BookStatesValidator = require('../validators/BookStatesValidator');
+const PhysicalBooksValidator = require('../validators/PhysicalBooksValidator');
+const ResumesValidator = require('../validators/ResumesValidator');
 
 const routes = express.Router();
 
@@ -53,16 +59,6 @@ routes.delete(
   SchoolYearsValidator.delete,
   SchoolYearsController.delete
 );
-
-// Charges - Out of Code
-// routes.get('/charges', ChargesController.index);
-// routes.post('/charges', ChargesValidator.insert, ChargesController.store);
-// routes.put('/charges/:id', ChargesValidator.update, ChargesController.update);
-// routes.delete(
-//   '/charges/:id',
-//   ChargesValidator.delete,
-//   ChargesController.delete
-// );
 
 // General Classes
 routes.get('/general-classes', GeneralClassesController.index);
@@ -200,6 +196,70 @@ routes.delete(
   '/classes/:id',
   ClassesValidator.delete,
   ClassesController.delete
+);
+
+// Book Locations
+routes.get('/book-locations', BookLocationsController.index);
+routes.post(
+  '/book-locations',
+  BookLocationsValidator.insert,
+  BookLocationsController.store
+);
+routes.put(
+  '/book-locations/:id',
+  BookLocationsValidator.update,
+  BookLocationsController.update
+);
+routes.delete(
+  '/book-locations/:id',
+  BookLocationsValidator.delete,
+  BookLocationsController.delete
+);
+
+// Book States
+routes.get('/book-states', BookStatesController.index);
+routes.post(
+  '/book-states',
+  BookStatesValidator.insert,
+  BookStatesController.store
+);
+routes.put(
+  '/book-states/:id',
+  BookStatesValidator.update,
+  BookStatesController.update
+);
+routes.delete(
+  '/book-states/:id',
+  BookStatesValidator.delete,
+  BookStatesController.delete
+);
+
+// Physical Books
+routes.get('/physical-books', PhysicalBooksController.index);
+routes.post(
+  '/physical-books',
+  PhysicalBooksValidator.insert,
+  PhysicalBooksController.store
+);
+routes.put(
+  '/physical-books/:id',
+  PhysicalBooksValidator.update,
+  PhysicalBooksController.update
+);
+routes.delete(
+  '/physical-books/:id',
+  PhysicalBooksValidator.delete,
+  PhysicalBooksController.delete
+);
+
+// Resumes
+routes.get('/resumes', ResumesController.index);
+routes.post('/resumes', ResumesValidator.insert, ResumesController.store);
+routes.put('/resumes/:id', ResumesValidator.update, ResumesController.update);
+routes.delete(
+  '/resumes/:id',
+  ResumesValidator.delete,
+  ResumesController.delete
 );
 
 module.exports = routes;

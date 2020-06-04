@@ -15,8 +15,11 @@ module.exports = {
     const { charge } = req.body;
 
     try {
-      await knex('charges').insert({ charge });
-      return res.status(201).send();
+      const [chargeObject] = await knex('charges')
+        .insert({ charge })
+        .returning('*');
+
+      return res.json(chargeObject);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -27,9 +30,12 @@ module.exports = {
     const { charge, active } = req.body;
 
     try {
-      return res
-        .status(await softUpdate('charges', id, { charge, active }))
-        .send();
+      const { statusCode, data } = await softUpdate('charges', id, {
+        charge,
+        active,
+      });
+
+      return res.status(statusCode).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

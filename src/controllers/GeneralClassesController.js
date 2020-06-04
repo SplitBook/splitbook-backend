@@ -15,8 +15,11 @@ module.exports = {
     const generalClass = req.body.class;
 
     try {
-      await knex('general_classes').insert({ class: generalClass });
-      return res.status(201).send();
+      const [generalClassObject] = await knex('general_classes')
+        .insert({ class: generalClass })
+        .returning('*');
+
+      return res.json(generalClassObject);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -28,14 +31,12 @@ module.exports = {
     const generalClass = req.body['class'];
 
     try {
-      return res
-        .status(
-          await softUpdate('general_classes', id, {
-            class: generalClass,
-            active,
-          })
-        )
-        .send();
+      const { statusCode, data } = await softUpdate('general_classes', id, {
+        class: generalClass,
+        active,
+      });
+
+      return res.status(statusCode).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

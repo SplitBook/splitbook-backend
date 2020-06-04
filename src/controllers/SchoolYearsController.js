@@ -15,8 +15,11 @@ module.exports = {
     const { school_year } = req.body;
 
     try {
-      await knex('school_years').insert({ school_year });
-      return res.status(201).send();
+      const [schoolYear] = await knex('school_years')
+        .insert({ school_year })
+        .returning('*');
+
+      return res.json(schoolYear);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -27,9 +30,12 @@ module.exports = {
     const { school_year, active } = req.body;
 
     try {
-      return res
-        .status(await softUpdate('school_years', id, { school_year, active }))
-        .send();
+      const { statusCode, data } = await softUpdate('school_years', id, {
+        school_year,
+        active,
+      });
+
+      return res.status(statusCode).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

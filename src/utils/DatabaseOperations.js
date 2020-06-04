@@ -30,15 +30,16 @@ const softDelete = async (tableName, id, column_id = 'id') => {
 const softUpdate = async (tableName, id, attributes, column_id = 'id') => {
   attributes.updated_at = new Date();
 
-  const result = await knex(tableName)
+  const [data] = await knex(tableName)
     .update(attributes)
     .where({ [column_id]: id })
-    .whereNull('deleted_at');
+    .whereNull('deleted_at')
+    .returning('*');
 
-  if (result > 0) {
-    return 202;
+  if (data) {
+    return { statusCode: 202, data };
   } else {
-    return 404;
+    return { statusCode: 404, data: { error: 'Not Found' } };
   }
 };
 

@@ -3,23 +3,23 @@ const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 
 module.exports = {
   async index(req, res, next) {
-    const school_subjects = await knex('school_subjects')
+    const book_states = await knex('book_states')
       .select('*')
       .whereNull('deleted_at')
-      .orderBy('school_subject');
+      .orderBy('state');
 
-    return res.json(school_subjects);
+    return res.json(book_states);
   },
 
   async store(req, res, next) {
-    const { school_subject } = req.body;
+    const { state } = req.body;
 
     try {
-      const [schoolSubject] = await knex('school_subjects')
-        .insert({ school_subject })
+      const [bookState] = await knex('book_states')
+        .insert({ state })
         .returning('*');
 
-      return res.json(schoolSubject);
+      return res.json(bookState);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -27,10 +27,11 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { school_subject, active } = req.body;
+    const { state, active } = req.body;
+
     try {
-      const { statusCode, data } = await softUpdate('school_subjects', id, {
-        school_subject,
+      const { statusCode, data } = await softUpdate('book_states', id, {
+        state,
         active,
       });
 
@@ -43,6 +44,6 @@ module.exports = {
   async delete(req, res) {
     const { id } = req.params;
 
-    return res.status(await softDelete('school_subjects', id)).send();
+    return res.status(await softDelete('book_states', id)).send();
   },
 };

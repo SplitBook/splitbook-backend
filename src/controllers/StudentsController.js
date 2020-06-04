@@ -15,8 +15,11 @@ module.exports = {
     const { name, number, photo, born_date } = req.body;
 
     try {
-      await knex('students').insert({ name, number, photo, born_date });
-      return res.status(201).send();
+      const [student] = await knex('students')
+        .insert({ name, number, photo, born_date })
+        .returning('*');
+
+      return res.json(student);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -27,16 +30,14 @@ module.exports = {
     const { name, photo, born_date, active } = req.body;
 
     try {
-      return res
-        .status(
-          await softUpdate('students', id, {
-            name,
-            photo,
-            born_date,
-            active,
-          })
-        )
-        .send();
+      const { statusCode, data } = await softUpdate('students', id, {
+        name,
+        photo,
+        born_date,
+        active,
+      });
+
+      return res.status(statusCode).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

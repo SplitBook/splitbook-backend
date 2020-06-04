@@ -36,15 +36,19 @@ module.exports = {
       const id = generateId();
       const password = await encript('null');
 
-      await knex('users').insert({
-        id,
-        username,
-        email,
-        password,
-        born_date,
-        phone,
-        photo,
-      });
+      const [user] = await knex('users')
+        .insert({
+          id,
+          username,
+          email,
+          password,
+          born_date,
+          phone,
+          photo,
+        })
+        .returning('*');
+
+      user.password = undefined;
 
       const token = generate(
         {
@@ -59,7 +63,8 @@ module.exports = {
         emailType: EnumEmailTypes.REGISTER,
         properties: { token },
       });
-      return res.status(201).send();
+
+      return res.json(user);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -84,7 +89,7 @@ module.exports = {
     );
 
     try {
-      const status = await softUpdate('users', id, {
+      const { statusCode, data: user } = await softUpdate('users', id, {
         username,
         password,
         active,
@@ -95,15 +100,17 @@ module.exports = {
         email_confirmed: false,
       });
 
-      if (status === 202) {
+      if (statusCode === 202) {
         await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,
           emailType: EnumEmailTypes.USER_CHANGE,
           properties: { token },
         });
+
+        user.password = undefined;
       }
 
-      return res.status(status).send();
+      return res.status(statusCode).json(user);
     } catch (err) {
       return res.status(406).json(err);
     }

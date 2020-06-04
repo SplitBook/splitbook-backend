@@ -16,16 +16,18 @@ module.exports = {
     const cover = req.file ? req.file.filename : undefined;
 
     try {
-      await knex('books').insert({
-        name,
-        isbn,
-        publishing_company,
-        subject_id,
-        cover,
-        code,
-      });
+      const [book] = await knex('books')
+        .insert({
+          name,
+          isbn,
+          publishing_company,
+          subject_id,
+          cover,
+          code,
+        })
+        .returning('*');
 
-      return res.status(201).send();
+      return res.json(book);
     } catch (err) {
       return res.status(406).json(err);
     }
@@ -34,29 +36,26 @@ module.exports = {
   async update(req, res) {
     const { isbn } = req.params;
     const { delete_cover } = req.query;
-    const { name, publishing_company, subject_id, active, code } = req.body;
+    const { name, publishing_company, subject_id, active } = req.body;
     let cover = req.file ? req.file.filename : undefined;
 
     if (delete_cover && cover === undefined) cover = null;
 
     try {
-      return res
-        .status(
-          await softUpdate(
-            'books',
-            isbn,
-            {
-              name,
-              publishing_company,
-              cover,
-              subject_id,
-              active,
-              code,
-            },
-            'isbn'
-          )
-        )
-        .send();
+      const { statusCode, data } = await softUpdate(
+        'books',
+        isbn,
+        {
+          name,
+          publishing_company,
+          cover,
+          subject_id,
+          active,
+        },
+        'isbn'
+      );
+
+      return res.status(statusCode).json(data);
     } catch (err) {
       return res.status(406).json(err);
     }

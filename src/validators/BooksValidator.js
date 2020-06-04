@@ -18,7 +18,6 @@ module.exports = {
       name: Joi.string().trim().required(),
       publishing_company: Joi.string().trim(),
       cover: Joi.string(),
-      code: Joi.string().trim().uppercase().min(2).max(5).required(),
       active: Joi.boolean().default(true),
       subject_id: Joi.number().integer().min(1),
     }),
