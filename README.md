@@ -1,4 +1,4 @@
-# SPLITBOOK
+# SPLITBOOK 📚🏫
 
 ## Getting Started
 
@@ -11,9 +11,11 @@
 - Run npm install
   `npm install`
 
-- Create database on SQL Server
-  _IMPORTANT_ - Set **collate** as case sensitive
-  (Example: **CREATE DATABASE split_book COLLATE SQL_Latin1_General_CP1_CS_AS**)
+- Create database on SQL Server (Example: **CREATE DATABASE split_book COLLATE SQL_Latin1_General_CP1_CS_AS**)
+
+  ### IMPORTANT
+
+  - Set _collate_ as case sensitive
 
 - Set environment variables on _.env_ file
 
@@ -21,14 +23,13 @@
   `npx knex migrate:latest`
   `npx knex seed:run`
 
-- Run npm start
-  `npm start`
+- Run`npm start`
 
 ## Run
 
-- Start docker contatiners
-  `docker start mssql-server`
-  `docker start redis-server`
+- Start docker containers
 
-- Run npm start
-  `npm start`
+  - `docker start mssql-server`
+  - `docker start redis-server`
+
+- Run `npm start`
