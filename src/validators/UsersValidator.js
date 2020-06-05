@@ -11,6 +11,12 @@ module.exports = {
     }),
   }),
 
+  get: celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.string().length(10).required(),
+    }),
+  }),
+
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       username: Joi.string().trim(),

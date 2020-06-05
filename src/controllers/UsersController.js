@@ -28,6 +28,37 @@ module.exports = {
     return res.json(users);
   },
 
+  async get(req, res) {
+    const { id } = req.params;
+
+    const user = await knex('users')
+      .where('id', id)
+      .whereNull('deleted_at')
+      .first();
+
+    if (user) {
+      user.password = undefined;
+
+      user.profiles = await knex('accounts')
+        .where('user_id', user.id)
+        .whereNull('deleted_at')
+        .union([
+          knex('guardians')
+            .where('user_id', user.id)
+            .whereNull('deleted_at')
+            .select('*'),
+          knex('teachers')
+            .where('user_id', user.id)
+            .whereNull('deleted_at')
+            .select('*'),
+        ]);
+
+      return res.json(user);
+    }
+
+    return res.status(404).json({ error: 'User not found.' });
+  },
+
   async store(req, res, next) {
     const { username, email, born_date, phone } = req.body;
     const photo = req.file ? req.file.filename : undefined;

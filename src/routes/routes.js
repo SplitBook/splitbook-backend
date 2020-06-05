@@ -146,6 +146,7 @@ routes.delete('/books/:isbn', BooksValidator.delete, BooksController.delete);
 
 // Users
 routes.get('/users', UsersController.index);
+routes.get('/users/:id', UsersController.get);
 routes.post(
   '/users',
   multer(multerImagesConfig).single('photo'),
