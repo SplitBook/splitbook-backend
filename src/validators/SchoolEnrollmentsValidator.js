@@ -6,6 +6,7 @@ module.exports = {
       student_id: Joi.number().integer().min(1).required(),
       guardian_id: Joi.number().integer().min(1).required(),
       school_year_id: Joi.number().integer().min(1).required(),
+      class_id: Joi.number().integer().min(1).required(),
       active: Joi.boolean().default(true),
     }),
   }),
@@ -15,6 +16,7 @@ module.exports = {
       student_id: Joi.number().integer().min(1).required(),
       guardian_id: Joi.number().integer().min(1).required(),
       school_year_id: Joi.number().integer().min(1).required(),
+      class_id: Joi.number().integer().min(1).required(),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

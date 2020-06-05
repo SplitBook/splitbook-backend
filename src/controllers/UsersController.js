@@ -8,24 +8,38 @@ const { EnumEmailTypes } = require('../email');
 
 module.exports = {
   async index(req, res, next) {
-    const users = await knex('users')
-      .select([
-        'users.id',
-        'username',
-        'email',
-        'photo',
-        'phone',
-        'born_date',
-        'email_confirmed',
-        'users.created_at',
-        'users.updated_at',
-        'users.deleted_at',
-        'users.active',
-      ])
-      .whereNull('users.deleted_at')
-      .orderBy('users.id');
+    const { search, page, limit } = req.query;
+    let nextPage = false;
 
-    return res.json(users);
+    let users = await knex
+      .select('*')
+      .where('email', 'like', `%${search}%`)
+      .orWhere('username', 'like', `%${search}%`)
+      .orWhere('phone', 'like', `%${search}%`)
+      .orWhere('born_date', 'like', `%${search}%`)
+      .whereNull('deleted_at')
+      .from('users')
+      .limit(limit + 1)
+      .offset((page - 1) * limit)
+      .orderBy('updated_at');
+
+    if (users.length > limit) {
+      nextPage = true;
+      users = users.slice(0, limit);
+    }
+
+    users = users.map((user) => {
+      user.password = undefined;
+      return user;
+    });
+
+    return res.json({
+      data: users,
+      page,
+      pageCount: users.length,
+      limit,
+      nextPage,
+    });
   },
 
   async get(req, res) {

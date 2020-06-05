@@ -133,7 +133,8 @@ routes.delete(
 );
 
 // Books
-routes.get('/books', BooksController.index);
+routes.get('/books', BooksValidator.index, BooksController.index);
+routes.get('/books/:isbn', BooksValidator.get, BooksController.get);
 routes.post(
   '/books',
   multer(multerImagesConfig).single('cover'),
@@ -149,8 +150,8 @@ routes.put(
 routes.delete('/books/:isbn', BooksValidator.delete, BooksController.delete);
 
 // Users
-routes.get('/users', UsersController.index);
-routes.get('/users/:id', UsersController.get);
+routes.get('/users', UsersValidator.index, UsersController.index);
+routes.get('/users/:id', UsersValidator.get, UsersController.get);
 routes.post(
   '/users',
   multer(multerImagesConfig).single('photo'),
@@ -167,6 +168,7 @@ routes.delete('/users/:id', UsersValidator.delete, UsersController.delete);
 
 // Guardians
 routes.get('/guardians', GuardiansController.index);
+routes.get('/guardians/:id', GuardiansValidator.get, GuardiansController.get);
 routes.post('/guardians', GuardiansValidator.insert, GuardiansController.store);
 routes.put(
   '/guardians/:id',
@@ -254,7 +256,11 @@ routes.delete(
 );
 
 // Physical Books
-routes.get('/physical-books', PhysicalBooksController.index);
+routes.get(
+  '/physical-books',
+  PhysicalBooksValidator.index,
+  PhysicalBooksController.index
+);
 routes.post(
   '/physical-books',
   PhysicalBooksValidator.insert,
@@ -414,13 +420,6 @@ routes.delete(
   '/accounts/:id',
   AccountsValidator.delete,
   AccountsController.delete
-);
-
-// Search
-routes.get(
-  '/search/users',
-  SearchValidator.searchUsers,
-  SearchController.searchUsers
 );
 
 module.exports = routes;

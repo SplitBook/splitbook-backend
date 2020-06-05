@@ -1,9 +1,23 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
 module.exports = {
+  index: celebrate({
+    [Segments.QUERY]: Joi.object().keys({
+      search: Joi.string().trim().default(''),
+      limit: Joi.number().integer().min(5).max(100).default(5),
+      page: Joi.number().integer().min(1).default(1),
+    }),
+  }),
+
+  get: celebrate({
+    [Segments.PARAMS]: Joi.object({
+      isbn: Joi.string().trim().required(),
+    }),
+  }),
+
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      isbn: Joi.string().trim().required().max(15),
+      isbn: Joi.string().trim().required(),
       name: Joi.string().trim().required(),
       publishing_company: Joi.string().trim(),
       cover: Joi.string(),
