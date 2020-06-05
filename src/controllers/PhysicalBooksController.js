@@ -13,7 +13,6 @@ module.exports = {
    */
   async index(req, res, next) {
     const { search, page, limit } = req.query;
-    let nextPage = false;
 
     let physicalBooks = await knex
       .select(
@@ -38,21 +37,21 @@ module.exports = {
       )
       .leftJoin('book_states', 'book_states.id', 'physical_books.state_id')
       .leftJoin('books', 'books.isbn', 'physical_books.book_isbn')
-      .limit(limit + 1)
+      .limit(limit)
       .offset((page - 1) * limit)
       .orderBy('physical_books.created_at');
 
-    if (physicalBooks.length > limit) {
-      nextPage = true;
-      physicalBooks = physicalBooks.slice(0, limit);
-    }
+    const { total_count: totalCount } = await knex('physical_books')
+      .count('*', { as: 'total_count' })
+      .whereNull('deleted_at')
+      .first();
 
     return res.json({
       data: physicalBooks,
       page,
-      pageCount: physicalBooks.length,
+      length: physicalBooks.length,
       limit,
-      nextPage,
+      totalCount,
     });
   },
 

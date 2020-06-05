@@ -7,9 +7,15 @@ const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
 const { EnumEmailTypes } = require('../email');
 
 module.exports = {
+  /*
+   * Search By:
+   * Email
+   * Username
+   * Phone
+   * Born Date
+   */
   async index(req, res, next) {
     const { search, page, limit } = req.query;
-    let nextPage = false;
 
     let users = await knex
       .select('*')
@@ -19,14 +25,14 @@ module.exports = {
       .orWhere('born_date', 'like', `%${search}%`)
       .whereNull('deleted_at')
       .from('users')
-      .limit(limit + 1)
+      .limit(limit)
       .offset((page - 1) * limit)
       .orderBy('updated_at');
 
-    if (users.length > limit) {
-      nextPage = true;
-      users = users.slice(0, limit);
-    }
+    const { total_count: totalCount } = await knex('users')
+      .count('*', { as: 'total_count' })
+      .whereNull('deleted_at')
+      .first();
 
     users = users.map((user) => {
       user.password = undefined;
@@ -36,9 +42,9 @@ module.exports = {
     return res.json({
       data: users,
       page,
-      pageCount: users.length,
+      length: users.length,
       limit,
-      nextPage,
+      totalCount,
     });
   },
 

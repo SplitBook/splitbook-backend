@@ -4,7 +4,6 @@ const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 module.exports = {
   async index(req, res, next) {
     const { search, page, limit } = req.query;
-    let nextPage = false;
 
     let books = await knex
       .select('books.*', 'school_subjects.school_subject')
@@ -14,23 +13,24 @@ module.exports = {
       .orWhere('code', 'like', `%${search}%`)
       .orWhere('books.name', 'like', `%${search}%`)
       .orWhere('books.publishing_company', 'like', `%${search}%`)
+      .whereNull('books.deleted_at')
       .from('books')
       .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
-      .limit(limit + 1)
+      .limit(limit)
       .offset((page - 1) * limit)
       .orderBy('books.name');
 
-    if (books.length > limit) {
-      nextPage = true;
-      books = books.slice(0, limit);
-    }
+    const { total_count: totalCount } = await knex('books')
+      .count('*', { as: 'total_count' })
+      .whereNull('deleted_at')
+      .first();
 
     return res.json({
       data: books,
       page,
-      pageCount: books.length,
+      length: books.length,
       limit,
-      nextPage,
+      totalCount,
     });
   },
 

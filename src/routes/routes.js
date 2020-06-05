@@ -167,7 +167,7 @@ routes.put(
 routes.delete('/users/:id', UsersValidator.delete, UsersController.delete);
 
 // Guardians
-routes.get('/guardians', GuardiansController.index);
+routes.get('/guardians', GuardiansValidator.index, GuardiansController.index);
 routes.get('/guardians/:id', GuardiansValidator.get, GuardiansController.get);
 routes.post('/guardians', GuardiansValidator.insert, GuardiansController.store);
 routes.put(

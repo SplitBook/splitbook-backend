@@ -2,21 +2,66 @@ const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 
 module.exports = {
+  /**
+   * Search by:
+   * Name
+   * Email
+   * Phone
+   * Born Date
+   * Username
+   */
   async index(req, res, next) {
-    const guardians = await knex('guardians')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('id');
+    const { search, page, limit } = req.query;
 
-    return res.json(guardians);
+    let guardians = await knex
+      .select(
+        'guardians.*',
+        'users.email',
+        'users.phone',
+        'users.born_date',
+        'users.photo',
+        'users.username'
+      )
+      .where('name', 'like', `%${search}%`)
+      .orWhere('users.email', 'like', `%${search}%`)
+      .orWhere('users.phone', 'like', `%${search}%`)
+      .orWhere('users.born_date', 'like', `%${search}%`)
+      .orWhere('users.username', 'like', `%${search}%`)
+      .whereNull('guardians.deleted_at')
+      .from('guardians')
+      .leftJoin('users', 'users.id', 'guardians.user_id')
+      .limit(limit)
+      .offset((page - 1) * limit)
+      .orderBy('guardians.name');
+
+    const { total_count: totalCount } = await knex('guardians')
+      .count('*', { as: 'total_count' })
+      .whereNull('deleted_at')
+      .first();
+
+    return res.json({
+      data: guardians,
+      page,
+      length: guardians.length,
+      limit,
+      totalCount,
+    });
   },
 
   async get(req, res) {
     const { id } = req.params;
 
     const guardian = await knex('guardians')
-      .select('guardians.*')
-      .where('id', id)
+      .select(
+        'guardians.*',
+        'users.email',
+        'users.phone',
+        'users.born_date',
+        'users.photo',
+        'username'
+      )
+      .where('guardians.id', id)
+      .leftJoin('users', 'users.id', 'guardians.user_id')
       .whereNull('guardians.deleted_at')
       .first();
 
