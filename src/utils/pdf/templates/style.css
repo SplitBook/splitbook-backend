@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #2f2f2f;
+  height: 90%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  border: 2px solid #aeaeaa;
+  height: auto;
+  padding: 20px;
+  margin: 20px;
+}
+
+.inline p.space {
+  margin-left: 30px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+header img {
+  height: 130px;
+  width: auto;
+  margin: auto 0;
+  float: right;
+}
+
+header .information {
+  display: inline-block;
+}
+
+.inline {
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
+.inline p {
+  display: inline-block;
+}
+
+p.bold {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.container {
+  margin-top: 40px;
+  justify-content: center;
+  height: 100%;
+  padding: 0 20px;
+}
+
+table {
+  width: 100%;
+  border: 2px solid #4d4d4d;
+  border-collapse: collapse;
+}
+
+tr td:first-child {
+  text-align: start;
+  padding-left: 15px;
+}
+
+table tr:first-child {
+  height: 30px;
+}
+
+table tr:nth-child(n + 2) {
+  height: 40px;
+}
+
+td,
+th {
+  border: 1px solid #aeaeae;
+}
+
+th {
+  border-bottom: 1px solid #4d4d4d;
+}
+
+td {
+  text-align: center;
+}
+
+table th:nth-child(1) {
+  width: 50%;
+}
+
+table th:nth-child(2) {
+  width: 15%;
+}
+
+table th:nth-child(3) {
+  width: 15%;
+}
+
+table th:nth-child(4) {
+  width: 20%;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+  border-top: 1px solid #0f0f0f;
+
+  width: 100%;
+}
+
+footer .information p {
+  font-size: 12px;
+}
