@@ -23,10 +23,10 @@ module.exports = {
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       available: Joi.boolean().default(true),
-      description: Joi.string().trim(),
+      description: Joi.string().trim().allow(null, ''),
       active: Joi.boolean().default(true),
-      state_id: Joi.number().integer().min(1).required(),
-      location_id: Joi.number().integer().min(1),
+      state_id: Joi.number().integer().min(1),
+      location_id: Joi.number().integer().min(1).allow(null),
     }),
     [Segments.PARAMS]: Joi.object({
       id: Joi.string()

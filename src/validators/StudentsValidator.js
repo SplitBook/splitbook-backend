@@ -16,7 +16,7 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().trim().required(),
+      name: Joi.string().trim(),
       born_date: Joi.date().less('now'),
       active: Joi.boolean().default(true),
     }),

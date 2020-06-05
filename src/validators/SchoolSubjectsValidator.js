@@ -10,7 +10,7 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      school_subject: Joi.string().trim().required(),
+      school_subject: Joi.string().trim(),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

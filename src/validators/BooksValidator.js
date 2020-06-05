@@ -29,8 +29,8 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().trim().required(),
-      publishing_company: Joi.string().trim(),
+      name: Joi.string().trim(),
+      publishing_company: Joi.string().trim().allow(null),
       cover: Joi.string(),
       active: Joi.boolean().default(true),
       subject_id: Joi.number().integer().min(1),

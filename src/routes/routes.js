@@ -27,7 +27,6 @@ const RequisitionsPhysicalBookController = require('../controllers/RequisitionsP
 const DeliveriesController = require('../controllers/DeliveriesController');
 const ReturnsController = require('../controllers/ReturnsController');
 const AccountsController = require('../controllers/AccountsController');
-const SearchController = require('../controllers/SearchController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -51,7 +50,6 @@ const RequisitionsPhysicalBookValidator = require('../validators/RequisitionsPhy
 const DeliveriesValidator = require('../validators/DeliveriesValidator');
 const ReturnsValidator = require('../validators/ReturnsValidator');
 const AccountsValidator = require('../validators/AccountsValidator');
-const SearchValidator = require('../validators/SearchValidator');
 
 const routes = express.Router();
 
@@ -182,7 +180,7 @@ routes.delete(
 );
 
 // Teachers
-routes.get('/teachers', TeachersController.index);
+routes.get('/teachers', TeachersValidator.index, TeachersController.index);
 routes.post('/teachers', TeachersValidator.insert, TeachersController.store);
 routes.put(
   '/teachers/:id',
@@ -212,12 +210,8 @@ routes.delete(
 // Classes
 routes.get('/classes', ClassesController.index);
 routes.post('/classes', ClassesValidator.insert, ClassesController.store);
-routes.put('/classes/:id', ClassesValidator.update, ClassesController.update);
-routes.delete(
-  '/classes/:id',
-  ClassesValidator.delete,
-  ClassesController.delete
-);
+routes.put('/classes', ClassesValidator.update, ClassesController.update);
+routes.delete('/classes', ClassesValidator.delete, ClassesController.delete);
 
 // Book Locations
 routes.get('/book-locations', BookLocationsController.index);

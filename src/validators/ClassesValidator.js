@@ -14,11 +14,8 @@ module.exports = {
     [Segments.BODY]: Joi.object().keys({
       class_id: Joi.number().integer().min(1).required(),
       school_year_id: Joi.number().integer().min(1).required(),
-      head_class_id: Joi.number().integer().min(1),
+      head_class_id: Joi.number().integer().min(1).allow(null),
       active: Joi.boolean().default(true),
-    }),
-    [Segments.PARAMS]: Joi.object({
-      id: Joi.number().integer().min(1).required(),
     }),
   }),
 

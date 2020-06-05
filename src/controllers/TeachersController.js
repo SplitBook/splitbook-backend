@@ -3,12 +3,41 @@ const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 
 module.exports = {
   async index(req, res, next) {
-    const teachers = await knex('teachers')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('name');
+    const { search, page, limit } = req.query;
 
-    return res.json(teachers);
+    let teachers = await knex
+      .select(
+        'teachers.*',
+        'users.email',
+        'users.phone',
+        'users.born_date',
+        'users.photo',
+        'users.username'
+      )
+      .where('name', 'like', `%${search}%`)
+      .orWhere('users.email', 'like', `%${search}%`)
+      .orWhere('users.phone', 'like', `%${search}%`)
+      .orWhere('users.born_date', 'like', `%${search}%`)
+      .orWhere('users.username', 'like', `%${search}%`)
+      .whereNull('teachers.deleted_at')
+      .from('teachers')
+      .leftJoin('users', 'users.id', 'teachers.user_id')
+      .limit(limit)
+      .offset((page - 1) * limit)
+      .orderBy('teachers.name');
+
+    const { total_count: totalCount } = await knex('teachers')
+      .count('*', { as: 'total_count' })
+      .whereNull('deleted_at')
+      .first();
+
+    return res.json({
+      data: teachers,
+      page,
+      length: teachers.length,
+      limit,
+      totalCount,
+    });
   },
 
   async store(req, res, next) {

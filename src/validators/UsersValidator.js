@@ -27,10 +27,10 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      username: Joi.string().trim(),
-      email: Joi.string().email().trim().required(),
+      username: Joi.string().allow(null).trim(),
+      email: Joi.string().email().trim(),
       active: Joi.boolean().default(true),
-      phone: Joi.string().trim(),
+      phone: Joi.string().allow(null).trim(),
       born_date: Joi.date().less('now'),
     }),
     [Segments.PARAMS]: Joi.object({
