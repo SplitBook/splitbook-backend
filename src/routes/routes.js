@@ -27,6 +27,7 @@ const RequisitionsPhysicalBookController = require('../controllers/RequisitionsP
 const DeliveriesController = require('../controllers/DeliveriesController');
 const ReturnsController = require('../controllers/ReturnsController');
 const AccountsController = require('../controllers/AccountsController');
+const SearchController = require('../controllers/SearchController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -50,6 +51,7 @@ const RequisitionsPhysicalBookValidator = require('../validators/RequisitionsPhy
 const DeliveriesValidator = require('../validators/DeliveriesValidator');
 const ReturnsValidator = require('../validators/ReturnsValidator');
 const AccountsValidator = require('../validators/AccountsValidator');
+const SearchValidator = require('../validators/SearchValidator');
 
 const routes = express.Router();
 
@@ -412,6 +414,13 @@ routes.delete(
   '/accounts/:id',
   AccountsValidator.delete,
   AccountsController.delete
+);
+
+// Search
+routes.get(
+  '/search/users',
+  SearchValidator.searchUsers,
+  SearchController.searchUsers
 );
 
 module.exports = routes;
