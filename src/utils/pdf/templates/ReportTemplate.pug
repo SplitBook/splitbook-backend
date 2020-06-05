@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title ReportTemplate
+    style
+      include style.css
+  body
+    header
+      .information
+        h1 #{title}
+        .inline
+          p.bold Número:
+          p #{studentNumber}
+          p.bold.space Aluno:
+          p #{studentName}
+        .inline
+          p.bold Encarregado de Educação:
+          p #{guardianName}
+        .inline
+          p.bold Ano Letivo:
+          p #{schoolYear}
+          p.bold.space Data:
+          p #{date}
+
+      
+      img(src='https://pupilos.eu/wp-content/uploads/2018/09/IPE-logo_redondo-PNG.png')
+    .container
+      table
+        tr
+          th LIVRO
+          th CÓDIGO
+          th ESTADO
+          th ASSINATURA
+        each val in books
+          tr(class=val.signature?'block':'')
+            td= val.name
+            td= val.code
+            td= val.state
+            td= val.signature ? '---' : ''
+    footer
+      .information
+        h4 Instituto dos Pupilos do Exército
+        p Tv. São Domingos de Benfica 1500, Lisboa
+        p Telefone: 217713800 

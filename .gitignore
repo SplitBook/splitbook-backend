@@ -6,3 +6,4 @@ node_modules/
 
 #Tmp Files
 tmp/uploads/*
+tmp/reports/*
