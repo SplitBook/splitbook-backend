@@ -5,16 +5,14 @@ module.exports = {
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim().required(),
       user_id: Joi.string().length(10),
-      administrator: Joi.boolean().default(false),
       active: Joi.boolean().default(true),
     }),
   }),
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().trim().required(),
-      user_id: Joi.string().length(10),
-      administrator: Joi.boolean().default(false),
+      resume_id: Joi.number().integer().min(1).required(),
+      isbn: Joi.string().trim().required().max(15),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({
