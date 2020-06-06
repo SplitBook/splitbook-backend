@@ -6,7 +6,6 @@ exports.seed = function (knex) {
       const currentYear = new Date().getFullYear();
       // Inserts seed entries
       return knex('school_years').insert([
-        { school_year: `${currentYear - 1}/${currentYear}` },
         { school_year: `${currentYear}/${currentYear + 1}` },
       ]);
     });

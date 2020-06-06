@@ -1,4 +1,5 @@
 const { decode, EnumTokenTypes } = require('../utils/TokenUtils');
+const config = require('../utils/ConfigUtils');
 
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -34,6 +35,14 @@ module.exports = async (req, res, next) => {
     req.user_id = decoded.user_id;
     req.charge = decoded.charge;
     req.profile_id = decoded.profile_id;
+
+    try {
+      req.school_year_id = parseInt(await config.getConfig('school_year_id'));
+    } catch (err) {
+      req.school_year_id = 1;
+    }
+
+    res.set('School-Year-ID', req.school_year_id);
 
     return next();
   } catch (err) {

@@ -6,7 +6,7 @@ module.exports = {
       username: Joi.string().trim(),
       email: Joi.string().email().trim().required(),
       active: Joi.boolean().default(true),
-      phone: Joi.string().trim(),
+      phone: Joi.string().trim().pattern(new RegExp(/[0-9]/)),
       born_date: Joi.date().less('now'),
     }),
   }),
@@ -22,7 +22,7 @@ module.exports = {
       username: Joi.string().trim(),
       email: Joi.string().email().trim().required(),
       active: Joi.boolean().default(true),
-      phone: Joi.string().trim(),
+      phone: Joi.string().trim().pattern(new RegExp(/[0-9]/)),
       born_date: Joi.date().less('now'),
     }),
     [Segments.PARAMS]: Joi.object({

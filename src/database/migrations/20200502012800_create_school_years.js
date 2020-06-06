@@ -14,7 +14,14 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE school_years ADD CONSTRAINT UQ_school_years UNIQUE (school_year, deleted_at);'
       )
-    );
+    )
+    .then(() => {
+      const currentYear = new Date().getFullYear();
+
+      return knex('school_years').insert({
+        school_year: `${currentYear - 1}/${currentYear}`,
+      });
+    });
 };
 
 exports.down = async function (knex) {

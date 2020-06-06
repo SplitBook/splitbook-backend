@@ -27,6 +27,7 @@ const RequisitionsPhysicalBookController = require('../controllers/RequisitionsP
 const DeliveriesController = require('../controllers/DeliveriesController');
 const ReturnsController = require('../controllers/ReturnsController');
 const AccountsController = require('../controllers/AccountsController');
+const ConfigsController = require('../controllers/ConfigsController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -50,6 +51,7 @@ const RequisitionsPhysicalBookValidator = require('../validators/RequisitionsPhy
 const DeliveriesValidator = require('../validators/DeliveriesValidator');
 const ReturnsValidator = require('../validators/ReturnsValidator');
 const AccountsValidator = require('../validators/AccountsValidator');
+const ConfigsValidator = require('../validators/ConfigsValidator');
 
 const routes = express.Router();
 
@@ -413,5 +415,9 @@ routes.delete(
   AccountsValidator.delete,
   AccountsController.delete
 );
+
+// Configs
+routes.get('/configs', ConfigsController.index);
+routes.put('/configs', ConfigsValidator.update, ConfigsController.update);
 
 module.exports = routes;
