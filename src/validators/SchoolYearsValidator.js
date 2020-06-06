@@ -15,8 +15,7 @@ module.exports = {
     [Segments.BODY]: Joi.object().keys({
       school_year: Joi.string()
         .trim()
-        .pattern(new RegExp(/(\d{4}\/\d{4})$/))
-        .required(),
+        .pattern(new RegExp(/(\d{4}\/\d{4})$/)),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

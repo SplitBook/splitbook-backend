@@ -22,6 +22,9 @@ module.exports = {
         '1h'
       );
 
+      // Show token to change password
+      // console.log('Token', token)
+
       if (change_password) {
         await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,

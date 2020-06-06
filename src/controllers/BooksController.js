@@ -1,14 +1,55 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
   async index(req, res, next) {
-    const books = await knex('books')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('name');
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    return res.json(books);
+    try {
+      const pagination = await createPagination(
+        'books',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'books.name',
+          desc,
+          selects: ['books.*', 'school_subjects.school_subject'],
+          searchColumns: [
+            'isbn',
+            'name',
+            'school_subjects.school_subject',
+            'code',
+            'books.name',
+            'books.publishing_company',
+          ],
+          leftJoins: [
+            ['school_subjects', 'school_subjects.id', 'books.subject_id'],
+          ],
+        }
+      );
+
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
+  },
+
+  async get(req, res) {
+    const { isbn } = req.params;
+
+    const book = await knex('books')
+      .select('books.*', 'school_subjects.school_subject')
+      .where('isbn', isbn)
+      .whereNull('books.deleted_at')
+      .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
+      .orderBy('books.name')
+      .first();
+
+    if (book) {
+      return res.json(book);
+    }
+
+    return res.status(404).json({ error: 'Book not found' });
   },
 
   async store(req, res, next) {

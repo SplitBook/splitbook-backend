@@ -1,14 +1,82 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
+  /**
+   * Search by:
+   * Name
+   * Email
+   * Phone
+   * Born Date
+   * Username
+   */
   async index(req, res, next) {
-    const guardians = await knex('guardians')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('id');
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    return res.json(guardians);
+    try {
+      const pagination = await createPagination(
+        'guardians',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'guardians.name',
+          desc,
+          selects: [
+            'guardians.*',
+            'users.email',
+            'users.phone',
+            'users.born_date',
+            'users.photo',
+            'users.username',
+          ],
+          searchColumns: [
+            'name',
+            'users.email',
+            'users.phone',
+            'users.born_date',
+            'users.username',
+          ],
+          leftJoins: [['users', 'users.id', 'guardians.user_id']],
+        }
+      );
+
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
+  },
+
+  async get(req, res) {
+    const { id } = req.params;
+
+    const guardian = await knex('guardians')
+      .select(
+        'guardians.*',
+        'users.email',
+        'users.phone',
+        'users.born_date',
+        'users.photo',
+        'username'
+      )
+      .where('guardians.id', id)
+      .leftJoin('users', 'users.id', 'guardians.user_id')
+      .whereNull('guardians.deleted_at')
+      .first();
+
+    if (guardian) {
+      const students = await knex('school_enrollments')
+        .select('students.*')
+        .distinct()
+        .where('school_enrollments.guardian_id', id)
+        .innerJoin('students', 'students.id', 'school_enrollments.student_id')
+        .whereNull('school_enrollments.deleted_at');
+
+      guardian.students = students;
+
+      return res.json(guardian);
+    }
+
+    return res.status(404).json({ error: 'Guardian not found.' });
   },
 
   async store(req, res, next) {

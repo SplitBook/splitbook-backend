@@ -1,15 +1,58 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { generateCode } = require('../utils/PhysicalBookUtils');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
+  /*
+   * Search By:
+   * ISBN
+   * Physical Book Id (Code)
+   * State
+   * Name
+   * Publishing Company
+   */
   async index(req, res, next) {
-    const physical_books = await knex('physical_books')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('created_at');
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    return res.json(physical_books);
+    try {
+      const pagination = await createPagination(
+        'physical_books',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'physical_books.created_at',
+          desc,
+          selects: [
+            'physical_books.*',
+            'book_locations.location',
+            'book_states.state',
+            'books.name',
+            'books.publishing_company',
+          ],
+          searchColumns: [
+            'book_isbn',
+            'book_locations.location',
+            'physical_books.id',
+            'book_states.state',
+            'books.name',
+            'books.publishing_company',
+          ],
+          leftJoins: [
+            [
+              'book_locations',
+              'book_locations.id',
+              'physical_books.location_id',
+            ],
+            ['book_states', 'book_states.id', 'physical_books.state_id'],
+            ['books', 'books.isbn', 'physical_books.book_isbn'],
+          ],
+        }
+      );
+
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async store(req, res, next) {
@@ -21,12 +64,15 @@ module.exports = {
       description,
     } = req.body;
 
-    const [{ code }] = await knex('books')
+    const book = await knex('books')
       .select('code')
       .where('isbn', book_isbn)
-      .whereNull('deleted_at');
+      .whereNull('deleted_at')
+      .first();
 
-    if (code) {
+    if (book) {
+      const { code } = book;
+
       const id = `${code}-${generateCode()}`;
 
       try {
@@ -45,9 +91,9 @@ module.exports = {
       } catch (err) {
         return res.status(406).json(err);
       }
-    } else {
-      return res.status(406).json({ error: 'Book not found.' });
     }
+
+    return res.status(406).json({ error: 'Book not found.' });
   },
 
   async update(req, res) {

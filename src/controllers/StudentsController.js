@@ -1,18 +1,37 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
   async index(req, res, next) {
-    const students = await knex('students')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('number');
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    return res.json(students);
+    try {
+      const pagination = await createPagination(
+        'students',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'students.number',
+          desc,
+          searchColumns: [
+            'students.number',
+            'students.name',
+            'students.born_date',
+          ],
+        }
+      );
+
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async store(req, res, next) {
-    const { name, number, photo, born_date } = req.body;
+    const { name, photo, born_date } = req.body;
+    let { number } = req.body;
+
+    number = String(number).padStart('7', '0');
 
     try {
       const [student] = await knex('students')

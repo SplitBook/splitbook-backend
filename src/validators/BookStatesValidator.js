@@ -10,7 +10,7 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      state: Joi.string().trim().required(),
+      state: Joi.string().trim(),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({
