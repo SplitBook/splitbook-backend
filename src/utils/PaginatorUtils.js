@@ -32,11 +32,13 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
     query.leftJoin(...elm);
   });
 
-  searchColumns.forEach((elm) => {
-    query.orWhere(elm, 'like', `%${search}%`);
+  query.where((builder) => {
+    searchColumns.forEach((elm) => {
+      builder.orWhere(`${elm}`, 'like', `%${search}%`);
+    });
   });
 
-  query.andWhere(`${tableName}.deleted_at`, null);
+  query.whereNull(`${tableName}.deleted_at`);
 
   const querySelect = query.clone();
   const queryCount = query.clone();

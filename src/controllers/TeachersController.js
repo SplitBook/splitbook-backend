@@ -13,31 +13,34 @@ module.exports = {
    */
   async index(req, res, next) {
     const { search, page, limit, orderBy, desc } = req.query;
-    const pagination = await createPagination(
-      'teachers',
-      { search, page, limit },
-      {
-        orderBy: orderBy || 'teachers.name',
-        desc,
-        selects: [
-          'teachers.*',
-          'users.email',
-          'users.phone',
-          'users.born_date',
-          'users.photo',
-          'users.username',
-        ],
-        searchColumns: [
-          'name',
-          'users.email',
-          'users.born_date',
-          'users.username',
-        ],
-        leftJoins: [['users', 'users.id', 'teachers.user_id']],
-      }
-    );
-
-    return res.json(pagination);
+    try {
+      const pagination = await createPagination(
+        'teachers',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'teachers.name',
+          desc,
+          selects: [
+            'teachers.*',
+            'users.email',
+            'users.phone',
+            'users.born_date',
+            'users.photo',
+            'users.username',
+          ],
+          searchColumns: [
+            'name',
+            'users.email',
+            'users.born_date',
+            'users.username',
+          ],
+          leftJoins: [['users', 'users.id', 'teachers.user_id']],
+        }
+      );
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).send(err);
+    }
   },
 
   async get(req, res) {

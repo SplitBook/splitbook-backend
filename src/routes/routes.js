@@ -417,7 +417,8 @@ routes.delete(
 );
 
 // Accounts
-routes.get('/accounts', AccountsController.index);
+routes.get('/accounts', AccountsValidator.index, AccountsController.index);
+routes.get('/accounts/:id', AccountsValidator.get, AccountsController.get);
 routes.post('/accounts', AccountsValidator.insert, AccountsController.store);
 routes.put(
   '/accounts/:id',
