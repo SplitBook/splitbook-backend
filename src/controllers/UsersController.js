@@ -1,6 +1,7 @@
 const knex = require('../database');
 const Queue = require('../stack');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
 const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
@@ -15,37 +16,28 @@ module.exports = {
    * Born Date
    */
   async index(req, res, next) {
-    const { search, page, limit } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    let users = await knex
-      .select('*')
-      .where('email', 'like', `%${search}%`)
-      .orWhere('username', 'like', `%${search}%`)
-      .orWhere('phone', 'like', `%${search}%`)
-      .orWhere('born_date', 'like', `%${search}%`)
-      .whereNull('deleted_at')
-      .from('users')
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy('updated_at');
+    try {
+      let pagination = await createPagination(
+        'users',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'users.updated_at',
+          desc,
+          searchColumns: ['email', 'username', 'phone', 'born_date'],
+        }
+      );
 
-    const { total_count: totalCount } = await knex('users')
-      .count('*', { as: 'total_count' })
-      .whereNull('deleted_at')
-      .first();
+      pagination.data = pagination.data.map((user) => {
+        user.password = undefined;
+        return user;
+      });
 
-    users = users.map((user) => {
-      user.password = undefined;
-      return user;
-    });
-
-    return res.json({
-      data: users,
-      page,
-      length: users.length,
-      limit,
-      totalCount,
-    });
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async get(req, res) {

@@ -1,43 +1,43 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
+  /**
+   * Search by:
+   * Name
+   * Email
+   * Phone
+   * Born Date
+   * Username
+   */
   async index(req, res, next) {
-    const { search, page, limit } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query;
+    const pagination = await createPagination(
+      'teachers',
+      { search, page, limit },
+      {
+        orderBy: orderBy || 'teachers.name',
+        desc,
+        selects: [
+          'teachers.*',
+          'users.email',
+          'users.phone',
+          'users.born_date',
+          'users.photo',
+          'users.username',
+        ],
+        searchColumns: [
+          'name',
+          'users.email',
+          'users.born_date',
+          'users.username',
+        ],
+        leftJoins: [['users', 'users.id', 'teachers.user_id']],
+      }
+    );
 
-    let teachers = await knex
-      .select(
-        'teachers.*',
-        'users.email',
-        'users.phone',
-        'users.born_date',
-        'users.photo',
-        'users.username'
-      )
-      .where('name', 'like', `%${search}%`)
-      .orWhere('users.email', 'like', `%${search}%`)
-      .orWhere('users.phone', 'like', `%${search}%`)
-      .orWhere('users.born_date', 'like', `%${search}%`)
-      .orWhere('users.username', 'like', `%${search}%`)
-      .whereNull('teachers.deleted_at')
-      .from('teachers')
-      .leftJoin('users', 'users.id', 'teachers.user_id')
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy('teachers.name');
-
-    const { total_count: totalCount } = await knex('teachers')
-      .count('*', { as: 'total_count' })
-      .whereNull('deleted_at')
-      .first();
-
-    return res.json({
-      data: teachers,
-      page,
-      length: teachers.length,
-      limit,
-      totalCount,
-    });
+    return res.json(pagination);
   },
 
   async get(req, res) {

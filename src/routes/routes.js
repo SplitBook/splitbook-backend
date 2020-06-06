@@ -195,7 +195,7 @@ routes.delete(
 );
 
 // Students
-routes.get('/students', StudentsController.index);
+routes.get('/students', StudentsValidator.index, StudentsController.index);
 routes.post('/students', StudentsValidator.insert, StudentsController.store);
 routes.put(
   '/students/:id',

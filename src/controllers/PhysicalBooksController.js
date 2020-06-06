@@ -1,6 +1,7 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { generateCode } = require('../utils/PhysicalBookUtils');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
   /*
@@ -12,47 +13,46 @@ module.exports = {
    * Publishing Company
    */
   async index(req, res, next) {
-    const { search, page, limit } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    let physicalBooks = await knex
-      .select(
-        'physical_books.*',
-        'book_locations.location',
-        'book_states.state',
-        'books.name',
-        'books.publishing_company'
-      )
-      .where('book_isbn', 'like', `%${search}%`)
-      .orWhere('book_locations.location', 'like', `%${search}%`)
-      .orWhere('physical_books.id', 'like', `%${search}%`)
-      .orWhere('book_states.state', 'like', `%${search}%`)
-      .orWhere('books.name', 'like', `%${search}%`)
-      .orWhere('books.publishing_company', 'like', `%${search}%`)
-      .whereNull('physical_books.deleted_at')
-      .from('physical_books')
-      .leftJoin(
-        'book_locations',
-        'book_locations.id',
-        'physical_books.location_id'
-      )
-      .leftJoin('book_states', 'book_states.id', 'physical_books.state_id')
-      .leftJoin('books', 'books.isbn', 'physical_books.book_isbn')
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy('physical_books.created_at');
+    try {
+      const pagination = await createPagination(
+        'physical_books',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'physical_books.created_at',
+          desc,
+          selects: [
+            'physical_books.*',
+            'book_locations.location',
+            'book_states.state',
+            'books.name',
+            'books.publishing_company',
+          ],
+          searchColumns: [
+            'book_isbn',
+            'book_locations.location',
+            'physical_books.id',
+            'book_states.state',
+            'books.name',
+            'books.publishing_company',
+          ],
+          leftJoins: [
+            [
+              'book_locations',
+              'book_locations.id',
+              'physical_books.location_id',
+            ],
+            ['book_states', 'book_states.id', 'physical_books.state_id'],
+            ['books', 'books.isbn', 'physical_books.book_isbn'],
+          ],
+        }
+      );
 
-    const { total_count: totalCount } = await knex('physical_books')
-      .count('*', { as: 'total_count' })
-      .whereNull('deleted_at')
-      .first();
-
-    return res.json({
-      data: physicalBooks,
-      page,
-      length: physicalBooks.length,
-      limit,
-      totalCount,
-    });
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async store(req, res, next) {

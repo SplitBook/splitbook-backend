@@ -1,4 +1,5 @@
 const knex = require('../database');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
   /**
@@ -7,37 +8,34 @@ module.exports = {
    * Class
    */
   async index(req, res, next) {
-    const { search, page, limit } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    const classes = await knex('classes')
-      .select(
-        'classes.*',
-        'school_years.school_year',
-        'general_classes.class',
-        'teachers.name'
-      )
-      .orWhere('general_classes.class', 'like', `%${search}%`)
-      .orWhere('school_years.school_year', 'like', `%${search}%`)
-      .whereNull('classes.deleted_at')
-      .innerJoin('school_years', 'school_years.id', 'classes.school_year_id')
-      .innerJoin('general_classes', 'general_classes.id', 'classes.class_id')
-      .leftJoin('teachers', 'teachers.id', 'classes.head_class_id')
-      .orderBy('school_year', 'class')
-      .limit(limit)
-      .offset((page - 1) * limit);
+    try {
+      const pagination = await createPagination(
+        'classes',
+        { search, page, limit },
+        {
+          orderBy: orderBy || ['school_year', 'class'],
+          desc,
+          selects: [
+            'classes.*',
+            'school_years.school_year',
+            'general_classes.class',
+            'teachers.name',
+          ],
+          searchColumns: ['general_classes.class', 'school_years.school_year'],
+          innerJoins: [
+            ['school_years', 'school_years.id', 'classes.school_year_id'],
+            ['general_classes', 'general_classes.id', 'classes.class_id'],
+          ],
+          leftJoins: [['teachers', 'teachers.id', 'classes.head_class_id']],
+        }
+      );
 
-    const { total_count: totalCount } = await knex('classes')
-      .count('*', { as: 'total_count' })
-      .whereNull('deleted_at')
-      .first();
-
-    return res.json({
-      data: classes,
-      page,
-      length: classes.length,
-      limit,
-      totalCount,
-    });
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async get(req, res) {

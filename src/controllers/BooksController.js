@@ -1,37 +1,37 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
   async index(req, res, next) {
-    const { search, page, limit } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    let books = await knex
-      .select('books.*', 'school_subjects.school_subject')
-      .where('isbn', 'like', `%${search}%`)
-      .orWhere('name', 'like', `%${search}%`)
-      .orWhere('school_subjects.school_subject', 'like', `%${search}%`)
-      .orWhere('code', 'like', `%${search}%`)
-      .orWhere('books.name', 'like', `%${search}%`)
-      .orWhere('books.publishing_company', 'like', `%${search}%`)
-      .whereNull('books.deleted_at')
-      .from('books')
-      .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy('books.name');
+    try {
+      const pagination = await createPagination(
+        'books',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'books.name',
+          desc,
+          selects: ['books.*', 'school_subjects.school_subject'],
+          searchColumns: [
+            'isbn',
+            'name',
+            'school_subjects.school_subject',
+            'code',
+            'books.name',
+            'books.publishing_company',
+          ],
+          leftJoins: [
+            ['school_subjects', 'school_subjects.id', 'books.subject_id'],
+          ],
+        }
+      );
 
-    const { total_count: totalCount } = await knex('books')
-      .count('*', { as: 'total_count' })
-      .whereNull('deleted_at')
-      .first();
-
-    return res.json({
-      data: books,
-      page,
-      length: books.length,
-      limit,
-      totalCount,
-    });
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async get(req, res) {

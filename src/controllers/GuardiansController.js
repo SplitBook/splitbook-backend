@@ -1,5 +1,6 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const { createPagination } = require('../utils/PaginatorUtils');
 
 module.exports = {
   /**
@@ -11,41 +12,38 @@ module.exports = {
    * Username
    */
   async index(req, res, next) {
-    const { search, page, limit } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query;
 
-    let guardians = await knex
-      .select(
-        'guardians.*',
-        'users.email',
-        'users.phone',
-        'users.born_date',
-        'users.photo',
-        'users.username'
-      )
-      .where('name', 'like', `%${search}%`)
-      .orWhere('users.email', 'like', `%${search}%`)
-      .orWhere('users.phone', 'like', `%${search}%`)
-      .orWhere('users.born_date', 'like', `%${search}%`)
-      .orWhere('users.username', 'like', `%${search}%`)
-      .whereNull('guardians.deleted_at')
-      .from('guardians')
-      .leftJoin('users', 'users.id', 'guardians.user_id')
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy('guardians.name');
+    try {
+      const pagination = await createPagination(
+        'guardians',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'guardians.name',
+          desc,
+          selects: [
+            'guardians.*',
+            'users.email',
+            'users.phone',
+            'users.born_date',
+            'users.photo',
+            'users.username',
+          ],
+          searchColumns: [
+            'name',
+            'users.email',
+            'users.phone',
+            'users.born_date',
+            'users.username',
+          ],
+          leftJoins: [['users', 'users.id', 'guardians.user_id']],
+        }
+      );
 
-    const { total_count: totalCount } = await knex('guardians')
-      .count('*', { as: 'total_count' })
-      .whereNull('deleted_at')
-      .first();
-
-    return res.json({
-      data: guardians,
-      page,
-      length: guardians.length,
-      limit,
-      totalCount,
-    });
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async get(req, res) {
