@@ -7,3 +7,5 @@ node_modules/
 #Tmp Files
 tmp/uploads/*
 tmp/reports/*
+!tmp/uploads/.gitkeep
+!tmp/reports/.gitkeep

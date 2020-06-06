@@ -1,13 +1,102 @@
 const knex = require('../database');
 
 module.exports = {
+  /**
+   * Search by:
+   * School Year
+   * Class
+   */
   async index(req, res, next) {
-    const classes = await knex('classes')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('class_id');
+    const { search, page, limit } = req.query;
 
-    return res.json(classes);
+    const classes = await knex('classes')
+      .select(
+        'classes.*',
+        'school_years.school_year',
+        'general_classes.class',
+        'teachers.name'
+      )
+      .orWhere('general_classes.class', 'like', `%${search}%`)
+      .orWhere('school_years.school_year', 'like', `%${search}%`)
+      .whereNull('classes.deleted_at')
+      .innerJoin('school_years', 'school_years.id', 'classes.school_year_id')
+      .innerJoin('general_classes', 'general_classes.id', 'classes.class_id')
+      .leftJoin('teachers', 'teachers.id', 'classes.head_class_id')
+      .orderBy('school_year', 'class')
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    const { total_count: totalCount } = await knex('classes')
+      .count('*', { as: 'total_count' })
+      .whereNull('deleted_at')
+      .first();
+
+    return res.json({
+      data: classes,
+      page,
+      length: classes.length,
+      limit,
+      totalCount,
+    });
+  },
+
+  async get(req, res) {
+    const { school_year_id, class_id } = req.params;
+
+    const classObject = await knex('classes')
+      .select(
+        'classes.*',
+        'school_years.school_year',
+        'general_classes.class',
+        'teachers.name'
+      )
+      .where('classes.school_year_id', school_year_id)
+      .where('classes.class_id', class_id)
+      .whereNull('classes.deleted_at')
+      .innerJoin('school_years', 'school_years.id', 'classes.school_year_id')
+      .innerJoin('general_classes', 'general_classes.id', 'classes.class_id')
+      .leftJoin('teachers', 'teachers.id', 'classes.head_class_id')
+      .first();
+
+    if (classObject) {
+      // TODO Return students and Adopted Books
+      const students = await knex('students')
+        .select(
+          'school_enrollments.id as school_enrollment_id',
+          'students.*',
+          'guardians.id as guardian_id',
+          'guardians.name as guardian_name'
+        )
+        .innerJoin(
+          'school_enrollments',
+          'school_enrollments.student_id',
+          'students.id'
+        )
+        .innerJoin(
+          'guardians',
+          'guardians.id',
+          'school_enrollments.guardian_id'
+        )
+        .whereNull('school_enrollments.deleted_at')
+        .where('school_enrollments.school_year_id', school_year_id)
+        .where('school_enrollments.class_id', class_id);
+
+      const resumes = await knex('resumes')
+        .select('resumes.*', 'school_subjects.school_subject')
+        .innerJoin(
+          'school_subjects',
+          'resumes.school_subject_id',
+          'school_subjects.id'
+        )
+        .where('resumes.class_id', class_id)
+        .where('resumes.school_year_id', school_year_id)
+        .whereNull('resumes.deleted_at')
+        .orderBy('school_subjects.school_subject');
+
+      return res.json({ ...classObject, resumes, students });
+    }
+
+    return res.status(404).json({ error: 'Class not found.' });
   },
 
   async store(req, res, next) {
@@ -25,7 +114,8 @@ module.exports = {
   },
 
   async update(req, res) {
-    const { class_id, school_year_id, head_class_id } = req.body;
+    const { head_class_id } = req.body;
+    const { class_id, school_year_id } = req.params;
     let result;
 
     try {
@@ -47,7 +137,7 @@ module.exports = {
   },
 
   async delete(req, res) {
-    const { class_id, school_year_id } = req.body;
+    const { class_id, school_year_id } = req.params;
 
     try {
       const result = await knex('classes')

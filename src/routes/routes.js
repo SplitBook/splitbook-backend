@@ -181,6 +181,7 @@ routes.delete(
 
 // Teachers
 routes.get('/teachers', TeachersValidator.index, TeachersController.index);
+routes.get('/teachers/:id', TeachersValidator.get, TeachersController.get);
 routes.post('/teachers', TeachersValidator.insert, TeachersController.store);
 routes.put(
   '/teachers/:id',
@@ -208,10 +209,23 @@ routes.delete(
 );
 
 // Classes
-routes.get('/classes', ClassesController.index);
+routes.get('/classes', ClassesValidator.index, ClassesController.index);
+routes.get(
+  '/classes/:class_id/:school_year_id',
+  ClassesValidator.get,
+  ClassesController.get
+);
 routes.post('/classes', ClassesValidator.insert, ClassesController.store);
-routes.put('/classes', ClassesValidator.update, ClassesController.update);
-routes.delete('/classes', ClassesValidator.delete, ClassesController.delete);
+routes.put(
+  '/classes/:class_id/:school_year_id',
+  ClassesValidator.update,
+  ClassesController.update
+);
+routes.delete(
+  '/classes/:class_id/:school_year_id',
+  ClassesValidator.delete,
+  ClassesController.delete
+);
 
 // Book Locations
 routes.get('/book-locations', BookLocationsController.index);

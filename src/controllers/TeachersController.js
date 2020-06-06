@@ -40,6 +40,41 @@ module.exports = {
     });
   },
 
+  async get(req, res) {
+    const { id } = req.params;
+
+    const teacher = await knex('teachers')
+      .select(
+        'teachers.*',
+        'users.email',
+        'users.phone',
+        'users.born_date',
+        'users.photo',
+        'users.username'
+      )
+      .where('teachers.id', id)
+      .whereNull('teachers.deleted_at')
+      .leftJoin('users', 'users.id', 'teachers.user_id')
+      .first();
+
+    if (teacher) {
+      teacher.classes = await knex('classes')
+        .select(
+          'classes.*',
+          'school_years.school_year',
+          'general_classes.class'
+        )
+        .where('classes.head_class_id', id)
+        .whereNull('classes.deleted_at')
+        .innerJoin('school_years', 'school_years.id', 'classes.school_year_id')
+        .innerJoin('general_classes', 'general_classes.id', 'classes.class_id');
+
+      return res.json(teacher);
+    }
+
+    return res.status(404).json({ error: 'Teacher not found.' });
+  },
+
   async store(req, res, next) {
     const { name, user_id } = req.body;
 

@@ -9,6 +9,12 @@ module.exports = {
     }),
   }),
 
+  get: celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    }),
+  }),
+
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim().required(),

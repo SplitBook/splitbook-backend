@@ -52,6 +52,7 @@ module.exports = {
     const { id } = req.params;
 
     const user = await knex('users')
+      .select('*')
       .where('id', id)
       .whereNull('deleted_at')
       .first();
