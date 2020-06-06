@@ -67,6 +67,7 @@ module.exports = {
       const students = await knex('school_enrollments')
         .select('students.*')
         .distinct()
+        .where('school_enrollments.school_year_id', req.school_year_id)
         .where('school_enrollments.guardian_id', id)
         .innerJoin('students', 'students.id', 'school_enrollments.student_id')
         .whereNull('school_enrollments.deleted_at');
