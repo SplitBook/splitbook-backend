@@ -1,5 +1,5 @@
 const knex = require('../database');
-const config = require('../utils/ConfigUtils');
+const Config = require('../utils/ConfigUtils');
 
 module.exports = {
   async index(req, res) {
@@ -11,14 +11,20 @@ module.exports = {
   async update(req, res) {
     let { key, value } = req.body;
 
-    key = ['school_year_id'].find((elm) => elm === key);
+    const configKeys = Object.values(Config.EnumConfigs).map(
+      ({ key: keyValue }) => keyValue
+    );
+
+    console.log('config Keys', configKeys);
+
+    key = configKeys.find((elm) => elm === key);
 
     if (!key) {
       return res.status(404).json({ error: 'Config not found.' });
     }
 
     try {
-      config.setConfig(key, value);
+      Config.setConfig(key, value);
 
       return res.status(204).send();
     } catch (err) {

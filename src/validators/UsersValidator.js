@@ -8,6 +8,7 @@ module.exports = {
       desc: Joi.boolean().default(false),
       limit: Joi.number().integer().min(5).max(100).default(5),
       page: Joi.number().integer().min(1).default(1),
+      email_confirmed: Joi.boolean(),
     }),
   }),
 
@@ -19,7 +20,7 @@ module.exports = {
 
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      username: Joi.string().trim(),
+      username: Joi.string().trim().required(),
       email: Joi.string().email().trim().required(),
       active: Joi.boolean().default(true),
       phone: Joi.string().trim().pattern(new RegExp(/[0-9]/)),
@@ -29,11 +30,11 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      username: Joi.string().allow(null).trim(),
+      username: Joi.string().trim(),
       email: Joi.string().email().trim(),
       active: Joi.boolean().default(true),
       phone: Joi.string().allow(null).trim(),
-      born_date: Joi.date().less('now'),
+      born_date: Joi.date().allow(null).less('now'),
     }),
     [Segments.PARAMS]: Joi.object({
       id: Joi.string().length(10).required(),

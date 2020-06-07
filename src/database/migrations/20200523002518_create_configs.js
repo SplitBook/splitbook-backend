@@ -1,3 +1,5 @@
+const EnumConfigs = require('../../utils/enums/EnumConfigs');
+
 exports.up = async function (knex) {
   return knex.schema
     .createTable('configs', (table) => {
@@ -7,7 +9,16 @@ exports.up = async function (knex) {
       table.boolean('active').defaultTo(true);
     })
     .then(() => {
-      return knex('configs').insert({ key: 'school_year_id', value: '1' });
+      return knex('configs').insert([
+        {
+          key: EnumConfigs.CURRENT_SCHOOL_YEAR_ID.key,
+          value: String(EnumConfigs.CURRENT_SCHOOL_YEAR_ID.defaultValue),
+        },
+        {
+          key: EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key,
+          value: String(EnumConfigs.DEFAULT_REQUISITION_STATE_ID.defaultValue),
+        },
+      ]);
     });
 };
 

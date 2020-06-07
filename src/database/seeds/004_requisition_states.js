@@ -7,7 +7,6 @@ exports.seed = function (knex) {
     .then(function () {
       // Inserts seed entries
       return knex('requisition_states').insert([
-        { state: requisitionStates.PROCESS },
         { state: requisitionStates.PENDING },
         { state: requisitionStates.COMPLETED },
         { state: requisitionStates.REFUSED },

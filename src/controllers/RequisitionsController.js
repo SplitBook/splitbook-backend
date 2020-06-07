@@ -1,24 +1,114 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const Config = require('../utils/ConfigUtils');
+const {
+  createPagination,
+  getFiltersFromObject,
+} = require('../utils/PaginatorUtils');
 
 module.exports = {
+  /**
+   * Search by:
+   * Student Name
+   * Guardian Name
+   * Student Number
+   * Class
+   * School Year
+   * Requisition State
+   */
   async index(req, res, next) {
-    const requisitions = await knex('requisitions')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('created_at');
+    const {
+      search,
+      page,
+      limit,
+      orderBy,
+      desc,
+      school_year_id,
+      current_school_year,
+      guardian_id,
+      student_id,
+      class_id,
+      state_id,
+    } = req.query;
 
-    return res.json(requisitions);
+    const filter = getFiltersFromObject({
+      school_year_id: current_school_year ? req.school_year_id : school_year_id,
+      guardian_id,
+      student_id,
+      class_id,
+      state_id,
+    });
+
+    try {
+      const pagination = await createPagination(
+        'requisitions',
+        { search, page, limit },
+        {
+          orderBy: orderBy || 'requisitions.created_at',
+          desc: orderBy ? desc : true,
+          selects: [
+            'requisitions.*',
+            'students.name as student_name',
+            'students.number as student_number',
+            'guardians.name as guardian_name',
+            'general_classes.class',
+            'school_years.school_year',
+            'requisition_states.state',
+          ],
+          filter,
+          searchColumns: [
+            'students.name',
+            'guardians.name',
+            'students.number',
+            'class',
+            'school_year',
+            'requisition_states.state',
+          ],
+          innerJoins: [
+            [
+              'school_enrollments',
+              'requisitions.school_enrollment_id',
+              'school_enrollments.id',
+            ],
+            ['students', 'students.id', 'school_enrollments.student_id'],
+            ['guardians', 'guardians.id', 'school_enrollments.guardian_id'],
+            [
+              'school_years',
+              'school_years.id',
+              'school_enrollments.school_year_id',
+            ],
+            [
+              'general_classes',
+              'general_classes.id',
+              'school_enrollments.class_id',
+            ],
+            [
+              'requisition_states',
+              'requisition_states.id',
+              'requisitions.state_id',
+            ],
+          ],
+        }
+      );
+
+      return res.json(pagination);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 
   async store(req, res, next) {
     const { school_enrollment_id, state_id } = req.body;
 
+    const defaultStateId = await Config.getConfig(
+      Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
+    );
+
     try {
       const [requisition] = await knex('requisitions')
         .insert({
           school_enrollment_id,
-          state_id,
+          state_id: state_id || defaultStateId,
         })
         .returning('*');
 

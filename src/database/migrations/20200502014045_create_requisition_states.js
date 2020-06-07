@@ -1,3 +1,5 @@
+const EnumRequisitionStates = require('../../utils/enums/EnumRequisitonStates');
+
 exports.up = async function (knex) {
   return knex.schema
     .createTable('requisition_states', (table) => {
@@ -12,7 +14,12 @@ exports.up = async function (knex) {
       knex.raw(
         'ALTER TABLE requisition_states ADD CONSTRAINT UQ_requisition_states UNIQUE (state, deleted_at);'
       )
-    );
+    )
+    .then(() => {
+      return knex('requisition_states').insert({
+        state: requisitionStates.PROCESS,
+      });
+    });
 };
 
 exports.down = async function (knex) {

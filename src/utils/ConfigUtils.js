@@ -1,5 +1,6 @@
 const redis = require('../redis');
 const knex = require('../database');
+const EnumConfigs = require('./enums/EnumConfigs');
 
 function getConfig(key) {
   return new Promise((resolve, reject) => {
@@ -24,9 +25,9 @@ function getConfig(key) {
 }
 
 async function setConfig(key, value) {
-  await knex('configs').update({ key, value });
+  await knex('configs').where({ key }).update({ value });
   redis.setex(key, 3600, value);
   return value;
 }
 
-module.exports = { getConfig, setConfig };
+module.exports = { getConfig, setConfig, EnumConfigs };

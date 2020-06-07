@@ -1,7 +1,10 @@
 const knex = require('../database');
 const Queue = require('../stack');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const { createPagination } = require('../utils/PaginatorUtils');
+const {
+  createPagination,
+  getFiltersFromObject,
+} = require('../utils/PaginatorUtils');
 const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
 const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
@@ -16,15 +19,17 @@ module.exports = {
    * Born Date
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const { search, page, limit, orderBy, desc, email_confirmed } = req.query;
+    const filter = getFiltersFromObject({ email_confirmed });
 
     try {
       let pagination = await createPagination(
         'users',
         { search, page, limit },
         {
-          orderBy: orderBy || 'users.updated_at',
-          desc,
+          orderBy: orderBy || ['users.updated_at'],
+          desc: orderBy ? desc : true,
+          filter,
           searchColumns: ['email', 'username', 'phone', 'born_date'],
         }
       );
@@ -123,42 +128,33 @@ module.exports = {
     const { username, email, phone, born_date, active } = req.body;
     let photo = req.file ? req.file.filename : undefined;
 
-    const password = await encript('null');
-
     if (delete_photo && photo === undefined) photo = null;
 
-    const token = generate(
-      {
-        email,
-      },
-      EnumTokenTypes.EMAIL,
-      '3 days'
-    );
+    const email_confirmed = !email;
 
     try {
       const { statusCode, data: user } = await softUpdate('users', id, {
         username,
-        password,
         active,
         email,
         born_date,
         phone,
         photo,
-        email_confirmed: false,
+        email_confirmed,
       });
 
       // Show token to change password
       // console.log('Token', token)
 
-      if (statusCode === 202) {
+      if (!email_confirmed && statusCode === 202) {
         await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,
           emailType: EnumEmailTypes.USER_CHANGE,
           properties: { token },
         });
-
-        user.password = undefined;
       }
+
+      user.password = undefined;
 
       return res.status(statusCode).json(user);
     } catch (err) {

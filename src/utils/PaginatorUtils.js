@@ -84,7 +84,7 @@ function getFiltersFromObject(object, filters = Object.keys(object)) {
     const [key, keyRenamed] = filter.split(' as ');
     let filterValue = object[keyRenamed || key];
 
-    if (filterValue) {
+    if (filterValue !== undefined) {
       filterValue = String(filterValue);
 
       filterValue = filterValue.split(',').map((elm) => {
