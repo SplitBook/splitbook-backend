@@ -321,6 +321,11 @@ routes.get(
   SchoolEnrollmentsValidator.index,
   SchoolEnrollmentsController.index
 );
+routes.get(
+  '/school-enrollments/:id',
+  SchoolEnrollmentsValidator.get,
+  SchoolEnrollmentsController.get
+);
 routes.post(
   '/school-enrollments',
   SchoolEnrollmentsValidator.insert,

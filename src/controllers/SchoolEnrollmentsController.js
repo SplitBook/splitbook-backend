@@ -6,6 +6,15 @@ const {
 } = require('../utils/PaginatorUtils');
 
 module.exports = {
+  /**
+   * Search by:
+   * Student Name
+   * Guardian Name
+   * Student Number
+   * Class
+   * School Year
+   * Requisition State
+   */
   async index(req, res, next) {
     const {
       search,
@@ -18,6 +27,7 @@ module.exports = {
       guardian_id,
       student_id,
       class_id,
+      state_id,
     } = req.query;
 
     const filter = getFiltersFromObject({
@@ -25,6 +35,7 @@ module.exports = {
       guardian_id,
       student_id,
       class_id,
+      state_id,
     });
 
     try {
@@ -41,6 +52,9 @@ module.exports = {
             'guardians.name as guardian_name',
             'general_classes.class',
             'school_years.school_year',
+            'requisitions.id as requisition_id',
+            'requisitions.state_id',
+            'requisition_states.state',
           ],
           filter,
           searchColumns: [
@@ -49,6 +63,7 @@ module.exports = {
             'students.number',
             'class',
             'school_year',
+            'requisition_states.state',
           ],
           innerJoins: [
             ['students', 'students.id', 'school_enrollments.student_id'],
@@ -64,6 +79,18 @@ module.exports = {
               'school_enrollments.class_id',
             ],
           ],
+          leftJoins: [
+            [
+              'requisitions',
+              'requisitions.school_enrollment_id',
+              'school_enrollments.id',
+            ],
+            [
+              'requisition_states',
+              'requisition_states.id',
+              'requisitions.state_id',
+            ],
+          ],
         }
       );
 
@@ -71,6 +98,84 @@ module.exports = {
     } catch (err) {
       return res.status(406).json(err);
     }
+  },
+
+  async get(req, res) {
+    const { id } = req.params;
+
+    const schoolEnrollment = await knex('school_enrollments')
+      .select(
+        'school_enrollments.*',
+        'students.name as student_name',
+        'students.number as student_number',
+        'guardians.name as guardian_name',
+        'general_classes.class',
+        'school_years.school_year',
+        'requisitions.id as requisition_id',
+        'requisitions.state_id',
+        'requisition_states.state'
+      )
+      .where('school_enrollments.id', id)
+      .whereNull('school_enrollments.deleted_at')
+      .innerJoin('students', 'students.id', 'school_enrollments.student_id')
+      .innerJoin('guardians', 'guardians.id', 'school_enrollments.guardian_id')
+      .innerJoin(
+        'school_years',
+        'school_years.id',
+        'school_enrollments.school_year_id'
+      )
+      .innerJoin(
+        'general_classes',
+        'general_classes.id',
+        'school_enrollments.class_id'
+      )
+      .leftJoin(
+        'requisitions',
+        'requisitions.school_enrollment_id',
+        'school_enrollments.id'
+      )
+      .leftJoin(
+        'requisition_states',
+        'requisition_states.id',
+        'requisitions.state_id'
+      )
+      .first();
+
+    if (schoolEnrollment) {
+      schoolEnrollment.book_requisitions = [];
+
+      if (schoolEnrollment.requisition_id) {
+        schoolEnrollment.book_requisitions = await knex('book_requisitions')
+          .select(
+            'book_requisitions.*',
+            'books.isbn',
+            'books.cover',
+            'books.subject_id',
+            'books.name'
+          )
+          .where(
+            'book_requisitions.requisition_id',
+            schoolEnrollment.requisition_id
+          )
+          .whereNull('book_requisitions.deleted_at')
+          .innerJoin(
+            'adopted_books',
+            'adopted_books.id',
+            'book_requisitions.adopted_book_id'
+          )
+          .innerJoin('books', 'books.isbn', 'adopted_books.book_isbn')
+          .leftJoin(
+            'school_subjects',
+            'school_subjects.id',
+            'books.school_subject_id'
+          )
+          .orderBy('books.subject_id', 'books.name');
+      }
+
+      return res.json(schoolEnrollment);
+    }
+
+    return res.status(404).json({ error: 'School Enrollment not found.' });
   },
 
   async store(req, res, next) {

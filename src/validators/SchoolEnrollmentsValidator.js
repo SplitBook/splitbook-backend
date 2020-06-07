@@ -13,6 +13,13 @@ module.exports = {
       student_id: Joi.string().trim(),
       guardian_id: Joi.string().trim(),
       class_id: Joi.string().trim(),
+      state_id: Joi.string().trim(),
+    }),
+  }),
+
+  get: celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer().min(1).required(),
     }),
   }),
 
