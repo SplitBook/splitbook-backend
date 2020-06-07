@@ -18,6 +18,7 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
     innerJoins = [],
     leftJoins = [],
     searchColumns = [],
+    filter = {},
     orderBy = `${tableName}.created_at`,
     desc = false,
   } = queryOptions;
@@ -35,6 +36,12 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
   query.where((builder) => {
     searchColumns.forEach((elm) => {
       builder.orWhere(`${elm}`, 'like', `%${search}%`);
+    });
+  });
+
+  query.where((builder) => {
+    Object.keys(filter).forEach((key) => {
+      builder.whereIn(key, filter[key]);
     });
   });
 
@@ -70,4 +77,29 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
   };
 }
 
-module.exports = { createPagination };
+function getFiltersFromObject(object, filters = Object.keys(object)) {
+  let filtersObject = {};
+
+  filters.forEach((filter) => {
+    const [key, keyRenamed] = filter.split(' as ');
+    let filterValue = object[keyRenamed || key];
+
+    if (filterValue) {
+      filterValue = String(filterValue);
+
+      filterValue = filterValue.split(',').map((elm) => {
+        let element = elm.trim();
+        return element.match(/^\d*$/) ? parseInt(element) : element;
+      });
+
+      filtersObject = {
+        ...filtersObject,
+        [key]: filterValue,
+      };
+    }
+  });
+
+  return filtersObject;
+}
+
+module.exports = { createPagination, getFiltersFromObject };

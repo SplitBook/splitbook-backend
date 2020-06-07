@@ -316,7 +316,11 @@ routes.delete(
 );
 
 // School Enrollments
-routes.get('/school-enrollments', SchoolEnrollmentsController.index);
+routes.get(
+  '/school-enrollments',
+  SchoolEnrollmentsValidator.index,
+  SchoolEnrollmentsController.index
+);
 routes.post(
   '/school-enrollments',
   SchoolEnrollmentsValidator.insert,

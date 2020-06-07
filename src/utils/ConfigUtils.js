@@ -15,7 +15,7 @@ function getConfig(key) {
         .where({ key })
         .first()
         .then(({ value }) => {
-          redis.setex(key, 1800, value);
+          redis.setex(key, 3600, value);
           return resolve(value);
         })
         .catch((err) => reject(err));
@@ -25,7 +25,7 @@ function getConfig(key) {
 
 async function setConfig(key, value) {
   await knex('configs').update({ key, value });
-  redis.setex(key, 1800, value);
+  redis.setex(key, 3600, value);
   return value;
 }
 

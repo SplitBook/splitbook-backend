@@ -102,6 +102,9 @@ module.exports = {
         '3 days'
       );
 
+      // Show token to change password
+      // console.log('Token', token)
+
       await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
         to: email,
         emailType: EnumEmailTypes.REGISTER,
@@ -143,6 +146,9 @@ module.exports = {
         photo,
         email_confirmed: false,
       });
+
+      // Show token to change password
+      // console.log('Token', token)
 
       if (statusCode === 202) {
         await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
