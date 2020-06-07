@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     .createTable('guardians', (table) => {
       table.increments('id');
       table.string('name').notNullable();
-      table.string('user_id', 10).unsigned().references('users.id');
+      table.string('user_id', 36).unsigned().references('users.id');
       table
         .enu('charge', [EnumCharges.GUARDIAN.charge])
         .notNullable()

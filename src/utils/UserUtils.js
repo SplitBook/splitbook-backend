@@ -1,8 +1,8 @@
-const crypto = require('crypto');
+const { v4: uuid } = require('uuid');
 
 module.exports = {
   generateId() {
-    const id = crypto.randomBytes(5).toString('HEX');
+    const id = uuid();
 
     return id;
   },

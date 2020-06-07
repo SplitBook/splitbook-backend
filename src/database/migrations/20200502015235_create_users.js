@@ -1,7 +1,7 @@
 exports.up = async function (knex) {
   return knex.schema
     .createTable('users', (table) => {
-      table.string('id', 10).primary();
+      table.string('id', 36).primary();
       table.string('username').notNullable();
       table.string('email').notNullable(); //Cannot Change Email on Edit User
       table.string('password').notNullable();

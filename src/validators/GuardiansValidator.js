@@ -20,7 +20,7 @@ module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim().required(),
-      user_id: Joi.string().allow(null).length(10),
+      user_id: Joi.string().allow(null).length(36),
       active: Joi.boolean().default(true),
     }),
   }),
@@ -28,7 +28,7 @@ module.exports = {
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim(),
-      user_id: Joi.string().allow(null).length(10),
+      user_id: Joi.string().allow(null).length(36),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

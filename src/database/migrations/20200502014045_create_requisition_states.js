@@ -17,7 +17,7 @@ exports.up = async function (knex) {
     )
     .then(() => {
       return knex('requisition_states').insert({
-        state: requisitionStates.PROCESS,
+        state: EnumRequisitionStates.PROCESS,
       });
     });
 };

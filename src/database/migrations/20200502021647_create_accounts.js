@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     .createTable('accounts', (table) => {
       table.increments('id');
       table.string('name').notNullable();
-      table.string('user_id', 10).unsigned().references('users.id');
+      table.string('user_id', 36).unsigned().references('users.id');
       // .onDelete('RESTRICT');
       table
         .enu('charge', [EnumCharges.ADMIN.charge, EnumCharges.SECRETARY.charge])
