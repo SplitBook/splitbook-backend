@@ -2,6 +2,7 @@ const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { generateCode } = require('../utils/PhysicalBookUtils');
 const { createPagination } = require('../utils/PaginatorUtils');
+const Config = require('../utils/ConfigUtils');
 
 module.exports = {
   /*
@@ -20,8 +21,8 @@ module.exports = {
         'physical_books',
         { search, page, limit },
         {
-          orderBy: orderBy || 'physical_books.created_at',
-          desc,
+          orderBy: orderBy || 'physical_books.updated_at',
+          desc: orderBy ? desc : true,
           selects: [
             'physical_books.*',
             'book_locations.location',
@@ -64,6 +65,8 @@ module.exports = {
       description,
     } = req.body;
 
+    const { quantity } = req.query;
+
     const book = await knex('books')
       .select('code')
       .where('isbn', book_isbn)
@@ -71,26 +74,43 @@ module.exports = {
       .first();
 
     if (book) {
-      const { code } = book;
+      const defaultBookStateId = parseInt(
+        await Config.getConfig(Config.EnumConfigs.DEFAULT_BOOK_STATE_ID.key)
+      );
 
-      const id = `${code}-${generateCode()}`;
+      const trx = await knex.transaction();
 
-      try {
-        const [physicalBook] = await knex('physical_books')
-          .insert({
-            id,
-            book_isbn,
-            available,
-            state_id,
-            location_id,
-            description,
-          })
-          .returning('*');
+      let physicalBooks = [];
 
-        return res.json(physicalBook);
-      } catch (err) {
-        return res.status(406).json(err);
+      for (let i = 0; i < quantity; i++) {
+        const { code } = book;
+
+        const id = `${code}-${generateCode()}`;
+
+        try {
+          const [physicalBook] = await trx('physical_books')
+            .insert({
+              id,
+              book_isbn,
+              available,
+              state_id: state_id || defaultBookStateId,
+              location_id,
+              description,
+            })
+            .returning('*');
+
+          physicalBooks = [...physicalBooks, physicalBook];
+        } catch (err) {
+          await trx.rollback();
+          return res.status(406).json(err);
+        }
       }
+
+      await trx.commit();
+
+      return res.json(
+        physicalBooks.length > 1 ? physicalBooks : physicalBooks[0]
+      );
     }
 
     return res.status(406).json({ error: 'Book not found.' });

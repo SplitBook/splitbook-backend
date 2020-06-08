@@ -18,6 +18,10 @@ exports.up = async function (knex) {
           key: EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key,
           value: String(EnumConfigs.DEFAULT_REQUISITION_STATE_ID.defaultValue),
         },
+        {
+          key: EnumConfigs.DEFAULT_BOOK_STATE_ID.key,
+          value: String(EnumConfigs.DEFAULT_BOOK_STATE_ID.defaultValue),
+        },
       ]);
     });
 };

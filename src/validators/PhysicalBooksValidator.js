@@ -17,8 +17,11 @@ module.exports = {
       available: Joi.boolean().default(true),
       description: Joi.string().trim(),
       active: Joi.boolean().default(true),
-      state_id: Joi.number().integer().min(1).required(),
+      state_id: Joi.number().integer().min(1),
       location_id: Joi.number().integer().min(1),
+    }),
+    [Segments.QUERY]: Joi.object().keys({
+      quantity: Joi.number().integer().min(1).max(25).default(1),
     }),
   }),
 

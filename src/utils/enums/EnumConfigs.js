@@ -4,6 +4,10 @@ const configs = {
     key: 'default_requisition_state_id',
     defaultValue: 1,
   },
+  DEFAULT_BOOK_STATE_ID: {
+    key: 'default_book_state_id',
+    defaultValue: 1,
+  },
 };
 
 module.exports = configs;
