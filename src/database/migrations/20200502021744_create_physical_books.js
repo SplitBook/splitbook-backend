@@ -1,7 +1,7 @@
 exports.up = async function (knex) {
   return knex.schema.createTable('physical_books', (table) => {
     table.string('id', 12).primary();
-    table.string('book_isbn', 15);
+    table.string('book_isbn');
     table.boolean('available').defaultTo(true);
     table.integer('state_id').unsigned();
     table.integer('location_id').unsigned();

@@ -3,7 +3,7 @@ exports.up = async function (knex) {
     .createTable('adopted_books', (table) => {
       table.increments('id');
       table.integer('resume_id').unsigned();
-      table.string('book_isbn', 15);
+      table.string('book_isbn');
 
       table.foreign('resume_id').references('id').inTable('resumes');
 

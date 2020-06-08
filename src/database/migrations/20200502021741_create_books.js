@@ -1,6 +1,6 @@
 exports.up = async function (knex) {
   return knex.schema.createTable('books', (table) => {
-    table.string('isbn', 15).primary();
+    table.string('isbn').primary();
     table.string('name').notNullable();
     table.string('publishing_company');
     table.string('cover');
