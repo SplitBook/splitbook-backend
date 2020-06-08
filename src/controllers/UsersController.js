@@ -9,6 +9,7 @@ const { encript } = require('../utils/PasswordUtils');
 const { generateId } = require('../utils/UserUtils');
 const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
 const { EnumEmailTypes } = require('../email');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /*
@@ -36,6 +37,8 @@ module.exports = {
 
       pagination.data = pagination.data.map((user) => {
         user.password = undefined;
+        user.photo = IpUtils.getImagesAddress(user.photo);
+
         return user;
       });
 
@@ -48,7 +51,7 @@ module.exports = {
   async get(req, res) {
     const { id } = req.params;
 
-    const user = await knex('users')
+    let user = await knex('users')
       .select('*')
       .where('id', id)
       .whereNull('deleted_at')
@@ -71,6 +74,8 @@ module.exports = {
             .select('*'),
         ]);
 
+      user.photo = IpUtils.getImagesAddress(user.photo);
+
       return res.json(user);
     }
 
@@ -85,7 +90,7 @@ module.exports = {
       const id = generateId();
       const password = await encript('null');
 
-      const [user] = await knex('users')
+      let [user] = await knex('users')
         .insert({
           id,
           username,
@@ -96,6 +101,8 @@ module.exports = {
           photo,
         })
         .returning('*');
+
+      user.photo = IpUtils.getImagesAddress(user.photo);
 
       user.password = undefined;
 
@@ -133,7 +140,7 @@ module.exports = {
     const email_confirmed = !email;
 
     try {
-      const { statusCode, data: user } = await softUpdate('users', id, {
+      let { statusCode, data: user } = await softUpdate('users', id, {
         username,
         active,
         email,
@@ -154,6 +161,7 @@ module.exports = {
         });
       }
 
+      user.photo = IpUtils.getImagesAddress(user.photo);
       user.password = undefined;
 
       return res.status(statusCode).json(user);

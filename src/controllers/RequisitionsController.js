@@ -170,9 +170,7 @@ module.exports = {
         )
         .orderBy('books.subject_id', 'books.name');
 
-      requisition.cover = requisition.cover
-        ? IpUtils.getImagesAddress() + requisition.cover
-        : null;
+      requisition.cover = IpUtils.getImagesAddress(requisition.cover);
 
       return res.json(requisition);
     }

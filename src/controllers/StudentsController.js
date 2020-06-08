@@ -1,13 +1,14 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { createPagination } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   async index(req, res, next) {
     const { search, page, limit, orderBy, desc } = req.query;
 
     try {
-      const pagination = await createPagination(
+      let pagination = await createPagination(
         'students',
         { search, page, limit },
         {
@@ -20,6 +21,11 @@ module.exports = {
           ],
         }
       );
+
+      pagination.data = pagination.data.map((student) => {
+        student.photo = IpUtils.getImagesAddress(student.photo);
+        return student;
+      });
 
       return res.json(pagination);
     } catch (err) {
@@ -34,9 +40,11 @@ module.exports = {
     number = String(number).padStart('7', '0');
 
     try {
-      const [student] = await knex('students')
+      let [student] = await knex('students')
         .insert({ name, number, photo, born_date })
         .returning('*');
+
+      student.photo = IpUtils.getImagesAddress(student.photo);
 
       return res.json(student);
     } catch (err) {
@@ -49,12 +57,14 @@ module.exports = {
     const { name, photo, born_date, active } = req.body;
 
     try {
-      const { statusCode, data } = await softUpdate('students', id, {
+      let { statusCode, data } = await softUpdate('students', id, {
         name,
         photo,
         born_date,
         active,
       });
+
+      data.photo = IpUtils.getImagesAddress(data.photo);
 
       return res.status(statusCode).json(data);
     } catch (err) {

@@ -172,9 +172,8 @@ module.exports = {
 
       schoolEnrollment.book_requisitions = schoolEnrollment.book_requisitions.map(
         (book_requisition) => {
-          book_requisition = book_requisition.cover
-            ? IpUtils.getImagesAddress() + book_requisition.cover
-            : null;
+          book_requisition = IpUtils.getImagesAddress(book_requisition);
+          return book_requisition;
         }
       );
 

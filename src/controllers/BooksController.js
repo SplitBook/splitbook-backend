@@ -30,9 +30,7 @@ module.exports = {
       );
 
       pagination.data = pagination.data.map((book) => {
-        book.cover = book.cover
-          ? IpUtils.getImagesAddress() + book.cover
-          : null;
+        book.cover = IpUtils.getImagesAddress(book.cover);
 
         return book;
       });
@@ -55,7 +53,7 @@ module.exports = {
       .first();
 
     if (book) {
-      book.cover = book.cover ? IpUtils.getImagesAddress() + book.cover : null;
+      book.cover = IpUtils.getImagesAddress(book.cover);
 
       return res.json(book);
     }
@@ -68,7 +66,7 @@ module.exports = {
     const cover = req.file ? req.file.filename : undefined;
 
     try {
-      const [book] = await knex('books')
+      let [book] = await knex('books')
         .insert({
           name,
           isbn,
@@ -78,6 +76,8 @@ module.exports = {
           code,
         })
         .returning('*');
+
+      book.cover = IpUtils.getImagesAddress(book.cover);
 
       return res.json(book);
     } catch (err) {
@@ -94,7 +94,7 @@ module.exports = {
     if (delete_cover && cover === undefined) cover = null;
 
     try {
-      const { statusCode, data } = await softUpdate(
+      let { statusCode, data } = await softUpdate(
         'books',
         isbn,
         {
@@ -106,6 +106,8 @@ module.exports = {
         },
         'isbn'
       );
+
+      data.cover = IpUtils.getImagesAddress(data.cover);
 
       return res.status(statusCode).json(data);
     } catch (err) {

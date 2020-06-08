@@ -14,7 +14,7 @@ module.exports = {
 
   get: celebrate({
     [Segments.PARAMS]: Joi.object({
-      id: Joi.string().length(10).required(),
+      id: Joi.string().length(36).required(),
     }),
   }),
 
@@ -37,7 +37,7 @@ module.exports = {
       born_date: Joi.date().allow(null).less('now'),
     }),
     [Segments.PARAMS]: Joi.object({
-      id: Joi.string().length(10).required(),
+      id: Joi.string().length(36).required(),
     }),
     [Segments.QUERY]: Joi.object({
       delete_photo: Joi.boolean().default(false),
@@ -46,7 +46,7 @@ module.exports = {
 
   delete: celebrate({
     [Segments.PARAMS]: Joi.object({
-      id: Joi.string().length(10).required(),
+      id: Joi.string().length(36).required(),
     }),
   }),
 };

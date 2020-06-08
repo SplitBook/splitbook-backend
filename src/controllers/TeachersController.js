@@ -1,6 +1,7 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { createPagination } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /**
@@ -14,7 +15,7 @@ module.exports = {
   async index(req, res, next) {
     const { search, page, limit, orderBy, desc } = req.query;
     try {
-      const pagination = await createPagination(
+      let pagination = await createPagination(
         'teachers',
         { search, page, limit },
         {
@@ -37,6 +38,12 @@ module.exports = {
           leftJoins: [['users', 'users.id', 'teachers.user_id']],
         }
       );
+
+      pagination.data = pagination.data.map((teacher) => {
+        teacher.photo = IpUtils.getImagesAddress(teacher.photo);
+        return teacher;
+      });
+
       return res.json(pagination);
     } catch (err) {
       return res.status(406).send(err);
@@ -46,7 +53,7 @@ module.exports = {
   async get(req, res) {
     const { id } = req.params;
 
-    const teacher = await knex('teachers')
+    let teacher = await knex('teachers')
       .select(
         'teachers.*',
         'users.email',
@@ -61,6 +68,8 @@ module.exports = {
       .first();
 
     if (teacher) {
+      teacher.photo = IpUtils.getImagesAddress(teacher.photo);
+
       teacher.classes = await knex('classes')
         .select(
           'classes.*',

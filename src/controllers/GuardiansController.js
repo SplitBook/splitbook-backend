@@ -1,6 +1,7 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { createPagination } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /**
@@ -15,7 +16,7 @@ module.exports = {
     const { search, page, limit, orderBy, desc } = req.query;
 
     try {
-      const pagination = await createPagination(
+      let pagination = await createPagination(
         'guardians',
         { search, page, limit },
         {
@@ -40,6 +41,11 @@ module.exports = {
         }
       );
 
+      pagination.data = pagination.data.map((guardian) => {
+        guardian.photo = IpUtils.getImagesAddress(guardian.photo);
+        return guardian;
+      });
+
       return res.json(pagination);
     } catch (err) {
       return res.status(406).json(err);
@@ -49,7 +55,7 @@ module.exports = {
   async get(req, res) {
     const { id } = req.params;
 
-    const guardian = await knex('guardians')
+    let guardian = await knex('guardians')
       .select(
         'guardians.*',
         'users.email',
@@ -64,13 +70,21 @@ module.exports = {
       .first();
 
     if (guardian) {
-      const students = await knex('school_enrollments')
+      guardian.photo = IpUtils.getImagesAddress(guardian.photo);
+
+      let students = await knex('school_enrollments')
         .select('students.*')
         .distinct()
         .where('school_enrollments.school_year_id', req.school_year_id)
         .where('school_enrollments.guardian_id', id)
         .innerJoin('students', 'students.id', 'school_enrollments.student_id')
         .whereNull('school_enrollments.deleted_at');
+
+      students = students.map((student) => {
+        student.photo = IpUtils.getImagesAddress(student.photo);
+
+        return student;
+      });
 
       guardian.students = students;
 

@@ -2,6 +2,7 @@ const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const EnumCharges = require('../utils/enums/EnumCharges');
 const { createPagination } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /**
@@ -16,7 +17,7 @@ module.exports = {
     const { search, page, limit, orderBy, desc } = req.query;
 
     try {
-      const pagination = await createPagination(
+      let pagination = await createPagination(
         'accounts',
         { search, page, limit },
         {
@@ -41,6 +42,11 @@ module.exports = {
         }
       );
 
+      pagination.data = pagination.data.map((account) => {
+        account.photo = IpUtils.getImagesAddress(account.photo);
+        return account;
+      });
+
       return res.json(pagination);
     } catch (err) {
       return res.status(406).json(err);
@@ -50,7 +56,7 @@ module.exports = {
   async get(req, res) {
     const { id } = req.params;
 
-    const account = await knex('accounts')
+    let account = await knex('accounts')
       .select(
         'accounts.*',
         'users.email',
@@ -65,6 +71,8 @@ module.exports = {
       .first();
 
     if (account) {
+      account.photo = IpUtils.getImagesAddress(account.photo);
+
       return res.json(account);
     }
 
