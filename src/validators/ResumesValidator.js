@@ -8,6 +8,10 @@ module.exports = {
       desc: Joi.boolean().default(false),
       limit: Joi.number().integer().min(5).max(100).default(5),
       page: Joi.number().integer().min(1).default(1),
+      school_subject_id: Joi.string().trim(),
+      school_year_id: Joi.string().trim(),
+      class_id: Joi.string().trim(),
+      current_school_year: Joi.boolean().default(false),
     }),
   }),
 

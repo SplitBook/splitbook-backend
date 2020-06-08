@@ -294,7 +294,16 @@ routes.delete(
 );
 
 // Adopted Books
-routes.get('/adopted-books', AdoptedBooksController.index);
+routes.get(
+  '/adopted-books',
+  AdoptedBooksValidator.index,
+  AdoptedBooksController.index
+);
+routes.get(
+  '/adopted-books/:id',
+  AdoptedBooksValidator.get,
+  AdoptedBooksController.get
+);
 routes.post(
   '/adopted-books',
   AdoptedBooksValidator.insert,
