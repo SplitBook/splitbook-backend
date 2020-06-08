@@ -17,7 +17,7 @@ exports.up = async function (knex) {
     })
     .then(() =>
       knex.raw(
-        'ALTER TABLE teachers ADD CONSTRAINT UQ_teachers UNIQUE (user_id, deleted_at);'
+        'CREATE UNIQUE INDEX UQ_teachers ON teachers (user_id, deleted_at) WHERE user_id IS NOT NULL;'
       )
     );
 };

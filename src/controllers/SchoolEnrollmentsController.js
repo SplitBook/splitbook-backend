@@ -4,6 +4,7 @@ const {
   createPagination,
   getFiltersFromObject,
 } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /**
@@ -103,7 +104,7 @@ module.exports = {
   async get(req, res) {
     const { id } = req.params;
 
-    const schoolEnrollment = await knex('school_enrollments')
+    let schoolEnrollment = await knex('school_enrollments')
       .select(
         'school_enrollments.*',
         'students.name as student_name',
@@ -168,6 +169,14 @@ module.exports = {
           .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
           .orderBy('books.subject_id', 'books.name');
       }
+
+      schoolEnrollment.book_requisitions = schoolEnrollment.book_requisitions.map(
+        (book_requisition) => {
+          book_requisition = book_requisition.cover
+            ? IpUtils.getImagesAddress() + book_requisition.cover
+            : null;
+        }
+      );
 
       return res.json(schoolEnrollment);
     }

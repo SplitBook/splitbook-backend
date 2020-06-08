@@ -18,7 +18,7 @@ exports.up = async function (knex) {
     })
     .then(() =>
       knex.raw(
-        'ALTER TABLE guardians ADD CONSTRAINT UQ_guardians UNIQUE (user_id, deleted_at);'
+        'CREATE UNIQUE INDEX UQ_guardians ON guardians (user_id, deleted_at) WHERE user_id IS NOT NULL;'
       )
     );
 };

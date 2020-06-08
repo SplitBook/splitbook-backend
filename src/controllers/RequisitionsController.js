@@ -5,6 +5,7 @@ const {
   createPagination,
   getFiltersFromObject,
 } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /**
@@ -168,6 +169,10 @@ module.exports = {
           'book_requisitions.id'
         )
         .orderBy('books.subject_id', 'books.name');
+
+      requisition.cover = requisition.cover
+        ? IpUtils.getImagesAddress() + requisition.cover
+        : null;
 
       return res.json(requisition);
     }

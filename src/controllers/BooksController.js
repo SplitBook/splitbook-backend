@@ -1,13 +1,14 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { createPagination } = require('../utils/PaginatorUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   async index(req, res, next) {
     const { search, page, limit, orderBy, desc } = req.query;
 
     try {
-      const pagination = await createPagination(
+      let pagination = await createPagination(
         'books',
         { search, page, limit },
         {
@@ -28,6 +29,14 @@ module.exports = {
         }
       );
 
+      pagination.data = pagination.data.map((book) => {
+        book.cover = book.cover
+          ? IpUtils.getImagesAddress() + book.cover
+          : null;
+
+        return book;
+      });
+
       return res.json(pagination);
     } catch (err) {
       return res.status(406).json(err);
@@ -37,7 +46,7 @@ module.exports = {
   async get(req, res) {
     const { isbn } = req.params;
 
-    const book = await knex('books')
+    let book = await knex('books')
       .select('books.*', 'school_subjects.school_subject')
       .where('isbn', isbn)
       .whereNull('books.deleted_at')
@@ -46,6 +55,8 @@ module.exports = {
       .first();
 
     if (book) {
+      book.cover = book.cover ? IpUtils.getImagesAddress() + book.cover : null;
+
       return res.json(book);
     }
 
