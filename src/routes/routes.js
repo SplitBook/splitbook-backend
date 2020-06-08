@@ -343,7 +343,16 @@ routes.delete(
 );
 
 // Requisitions
-routes.get('/requisitions', RequisitionsController.index);
+routes.get(
+  '/requisitions',
+  RequisitionsValidator.index,
+  RequisitionsController.index
+);
+routes.get(
+  '/requisitions/:id',
+  RequisitionsValidator.get,
+  RequisitionsController.get
+);
 routes.post(
   '/requisitions',
   RequisitionsValidator.insert,

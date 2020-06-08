@@ -151,6 +151,7 @@ module.exports = {
             'books.isbn',
             'books.cover',
             'books.subject_id',
+            'school_subjects.school_subject',
             'books.name'
           )
           .where(
@@ -164,11 +165,7 @@ module.exports = {
             'book_requisitions.adopted_book_id'
           )
           .innerJoin('books', 'books.isbn', 'adopted_books.book_isbn')
-          .leftJoin(
-            'school_subjects',
-            'school_subjects.id',
-            'books.school_subject_id'
-          )
+          .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
           .orderBy('books.subject_id', 'books.name');
       }
 
@@ -186,7 +183,7 @@ module.exports = {
         .insert({
           student_id,
           guardian_id,
-          school_year_id,
+          school_year_id: school_year_id || req.school_year_id,
           class_id,
         })
         .returning('*');

@@ -21,7 +21,7 @@ module.exports = {
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       class_id: Joi.number().integer().min(1).required(),
-      school_year_id: Joi.number().integer().min(1).required(),
+      school_year_id: Joi.number().integer().min(1),
       head_class_id: Joi.number().integer().min(1),
       active: Joi.boolean().default(true),
     }),

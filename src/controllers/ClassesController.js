@@ -102,7 +102,11 @@ module.exports = {
 
     try {
       const [classObject] = await knex('classes')
-        .insert({ class_id, school_year_id, head_class_id })
+        .insert({
+          class_id,
+          school_year_id: school_year_id || req.school_year_id,
+          head_class_id,
+        })
         .returning('*');
 
       return res.json(classObject);
