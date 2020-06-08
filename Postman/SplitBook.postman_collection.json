@@ -1,112 +1,2992 @@
 {
-  "info": {
-    "_postman_id": "9ad08e2d-151f-4fe1-a6f5-a39e0aa09120",
-    "name": "SplitBook",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Handbooks",
-      "item": [
-        {
-          "name": "Add Handbook",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"isbn\":\"978-972-47-5485-7\",\n\t\"name\":\"Matemática A - 12º Ano - Volume 3\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{URL}}/handbooks",
-              "host": ["{{URL}}"],
-              "path": ["handbooks"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Handbooks",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{URL}}/handbooks/19",
-              "host": ["{{URL}}"],
-              "path": ["handbooks", "19"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Index Handbooks",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{URL}}/handbooks",
-              "host": ["{{URL}}"],
-              "path": ["handbooks"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Edit Handbook",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"isbn\":\"122\",\n\t\"name\":\"Novo Matemática\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{URL}}/handbooks/20",
-              "host": ["{{URL}}"],
-              "path": ["handbooks", "20"]
-            }
-          },
-          "response": []
-        }
-      ],
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "id": "6a3959e7-eb9e-4cc6-91fb-32a3913e88fa",
-            "type": "text/javascript",
-            "exec": [""]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "id": "7c398b27-8d6a-44b7-99ce-33c64fcf089b",
-            "type": "text/javascript",
-            "exec": [""]
-          }
-        }
-      ],
-      "protocolProfileBehavior": {}
-    }
-  ],
-  "variable": [
-    {
-      "id": "3857560d-781e-4c50-912f-ba867fe75fbb",
-      "key": "URL",
-      "value": "http://localhost:8085",
-      "type": "string"
-    }
-  ],
-  "protocolProfileBehavior": {}
+	"info": {
+		"_postman_id": "fd82cab4-bf55-4bce-bcbb-8292b99c35a2",
+		"name": "SplitBook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SchoolYears",
+			"item": [
+				{
+					"name": "Index SchoolYears",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-years",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-years"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add SchoolYear",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_year\":\"2021/2022\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-years",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-years"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit SchoolYear",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_year\":\"2022/2023\",\n\t\"active\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-years/15",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-years",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete SchoolYears",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-years/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-years",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b548c936-130e-4db3-8039-2f9e5cb11780",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c20959e-b191-4e7c-ad4b-41c173200f58",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "SchoolSubjects",
+			"item": [
+				{
+					"name": "Index SchoolSubjects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-subjects",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add SchoolSubjects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_subject\":\"Matemática A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-subjects",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit SchoolSubjects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_subject\":\"MACS\",\n\t\"active\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-subjects/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-subjects",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete SchoolSubjects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisition-states/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GeneralClasses",
+			"item": [
+				{
+					"name": "Index GeneralClasses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/general-classes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"general-classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add GeneralClasses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"class\":\"5º C\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/general-classes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"general-classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit GeneralClasses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"class\":\"5º C\",\n\t\"active\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/general-classes/21",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"general-classes",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete GeneralClasses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/general-classes/6",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"general-classes",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Classes",
+			"item": [
+				{
+					"name": "Index Classes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/classes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"classes"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "20",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Class",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/classes/1/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"classes",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Classes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"class_id\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/classes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"classes"
+							]
+						},
+						"description": "If school_year_id not passed, it will use current school_year_id"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Classes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"head_class_id\":1,\n\t\"active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/classes/1/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"classes",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Classes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/classes/1/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"classes",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Index Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"books"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "123-456-7",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/books/123-456-782",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"books",
+								"123-456-782"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "isbn",
+									"value": "123-456-782",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "New Hands On - 12º Ano",
+									"type": "text"
+								},
+								{
+									"key": "subject_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/C:/Users/NunoAlves/Pictures/new-hands-on.jpg"
+								},
+								{
+									"key": "code",
+									"value": "ING",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Português",
+									"type": "text"
+								},
+								{
+									"key": "subject_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/C:/Users/NunoAlves/Pictures/Fotografia.png",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/books/123-456-781",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"books",
+								"123-456-781"
+							],
+							"query": [
+								{
+									"key": "delete_cover",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/books/123-1234-123",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"books",
+								"123-1234-123"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PhysicalBooks",
+			"item": [
+				{
+					"name": "Index PhysicalBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/physical-books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"physical-books"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "Português",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add PhysicalBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"book_isbn\":\"123-456-781\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/physical-books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"physical-books"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit PhysicalBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Matemática A",
+									"type": "text"
+								},
+								{
+									"key": "subject_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/C:/Users/NunoAlves/Pictures/Fotografia.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/physical-books/12",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"physical-books",
+								"12"
+							],
+							"query": [
+								{
+									"key": "delete_cover",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete PhysicalBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/physical-books/123-1234-123",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"physical-books",
+								"123-1234-123"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "BookLocations",
+			"item": [
+				{
+					"name": "Index BookLocations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/book.locations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book.locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add BookLocation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"location\":\"Pavilhão 2ª Secção\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/book-locations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit BookLocation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_year\":\"2022/2023\",\n\t\"active\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-years/15",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-years",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete BookLocation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-years/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-years",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "139da1e6-f5b5-4c97-8208-b697a740d50e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d2ec81a9-f227-4ec2-8bd8-2be2d597f30c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "BookStates",
+			"item": [
+				{
+					"name": "Index BookStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/book-states",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add BookStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"state\":\"Novo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/book-states",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit BookStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"state\":\"Estragado\",\n\t\"active\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/book-states/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-states",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete BookStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/book-states/6",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-states",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f9c55f98-7cfd-469f-ad29-c44c63f088ac",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ae0db8c-91af-4565-8eea-4f805d508a0c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "SchoolEnrollments",
+			"item": [
+				{
+					"name": "Index SchoolEnrollments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-enrollments",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-enrollments"
+							],
+							"query": [
+								{
+									"key": "school_year_id",
+									"value": "1, 2",
+									"disabled": true
+								},
+								{
+									"key": "class_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "current_school_year",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "guardian_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get SchoolEnrollment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-enrollments/6",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-enrollments",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add SchoolEnrollment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"guardian_id\": 1,\n\t\"student_id\": 2,\n\t\"class_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-enrollments",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-enrollments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit SchoolEnrollment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"student_id\": 1,\n\t\"guardian_id\": 1,\n\t\"school_year_id\":2,\n\t\"class_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/school-enrollments/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-enrollments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Requisitions",
+			"item": [
+				{
+					"name": "Index Requisitions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisitions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "17",
+									"disabled": true
+								},
+								{
+									"key": "current_school_year",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Requisitions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisitions/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Requisitions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_enrollment_id\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/requisitions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Requisitions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"state\":\"Simples\",\n\t\"active\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/requisition-states/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Requisitions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisition-states/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "RequisitionStates",
+			"item": [
+				{
+					"name": "Index RequisitionStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisition-states",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add RequisitionStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"state\":\"Encerrado   \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/requisition-states",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit RequisitionStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"state\":\"Simples\",\n\t\"active\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/requisition-states/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete RequisitionStates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisition-states/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition-states",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Index Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users?search=",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "email_confirmed",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/e0f6101e94",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"e0f6101e94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Guiomar Alves",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "guiomar.francisco@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "born_date",
+									"value": "2002-06-25",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/NunoAlves/Pictures/myAvatar.png"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Pat Dinis",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "nuno.alves02@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "born_date",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/NunoAlves/Pictures/Fotografia.png",
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/a9212927-8756-4d86-a14b-49bce3e96fde",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"a9212927-8756-4d86-a14b-49bce3e96fde"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/a0138cfe1a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"a0138cfe1a"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Index Accounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/accounts",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/accounts/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Ângela\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/accounts",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Guiomar Alves\",\n\t\"user_id\": \"2648ea43cf\",\n\t\"active\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/accounts/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/accounts/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "edbb73a9-7f73-498b-b8d6-c11de01bb842",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "99e407ea-865a-4788-80dc-0350d243c843",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Teachers",
+			"item": [
+				{
+					"name": "Index Teachers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/teachers",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/teachers/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"teachers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Bárbara Nascimento\"\n\t\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/teachers",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Patrícia Dinís\",\n\t\"user_id\":\"0e1e208518\",\n\t\"active\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/teachers/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"teachers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/teachers/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"teachers",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "feab1c80-37a7-45c1-a10e-b69b15a48146",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "61e1983a-ed47-4be9-95a9-64bd96e846ab",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Guardians",
+			"item": [
+				{
+					"name": "Index Guardians",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/guardians",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"guardians"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Guardian",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/guardians/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"guardians",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Guardians",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"João Valério\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/guardians",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"guardians"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Guardians",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Guiomar Alves\",\n\t\"user_id\": \"2648ea43cf\",\n\t\"active\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/guardians/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"guardians",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Guardians",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/guardians/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"guardians",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed107066-5e26-4877-b773-d21fbe20714f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8809555-64e3-4ee7-9712-ac49a8a33cee",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "Index Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/students",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"students"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "desc",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": "photo",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Nuno Alves\",\n\t\"number\":\"599/17\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/students",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"NunoAlves\",\n\t\"born_date\": \"2019-6-25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/students/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"students",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/students/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"students",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Configs",
+			"item": [
+				{
+					"name": "Index Configs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/configs",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"configs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Config",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"key\": \"current_school_year_id\",\n\t\"value\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/configs",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"configs"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7042be75-dd8d-4cbf-b8d8-141bf6f2f5c4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5af1128a-70e4-441d-9fc0-fe271461fe05",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Login ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"admin@splitbook.com\",\n\t\"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Profile",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"profile_id\":\"1\",\n\t\"charge\":\"Administrador\",\n\t\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDgyNTRjZTRlMyIsInR5cGUiOiJsZyIsImlhdCI6MTU5MTIyMDQ3OSwiZXhwIjoxNTkxNjUyNDc5fQ.ZKjMxyHfiWwPIXXiEiblLG4x4by6VPkbZYhBkdlojMA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/login/profile",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"login",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recover Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"nuno.alves02@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/recover-password",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"recover-password"
+					],
+					"query": [
+						{
+							"key": "change_password",
+							"value": "true",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"password\":\"Simple123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/change-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRncHNpMTcyMEBnbWFpbC5jb20iLCJ0eXBlIjoiZW0iLCJpYXQiOjE1OTAwNTUzMDcsImV4cCI6MTU5MDMxNDUwN30.9NwEBSw8uUWthuffoyNl0WYqJEny5lpaQIXhGgUUS7w",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"change-password"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRncHNpMTcyMEBnbWFpbC5jb20iLCJ0eXBlIjoiZW0iLCJpYXQiOjE1OTAwNTUzMDcsImV4cCI6MTU5MDMxNDUwN30.9NwEBSw8uUWthuffoyNl0WYqJEny5lpaQIXhGgUUS7w"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Images",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/images",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"images"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "97d5222b-f6ed-41ef-886e-501891c6afd1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "52c82735-b7cf-4ea4-b845-8e95235bd0bb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8036db8e-6c59-4762-aff0-cb73e391f7cf",
+			"key": "URL",
+			"value": "http://localhost:8085",
+			"type": "string"
+		},
+		{
+			"id": "8019efcd-3c1b-402d-9bd6-95a3b2c03273",
+			"key": "TOKEN",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDgyNTRjZTRlMyIsInByb2ZpbGVfaWQiOjEsImNoYXJnZSI6IkFkbWluaXN0cmFkb3IiLCJ0eXBlIjoibGciLCJpYXQiOjE1OTEyMjA1MTEsImV4cCI6MTU5MTY1MjUxMX0.B9q02PU7xg85kioZ77A20dvxD8Z8mqgbfV50PWen_GM",
+			"type": "string"
+		},
+		{
+			"id": "e4a9759a-f21a-4a95-8a72-2b1609f07c4d",
+			"key": "LOGIN_TOKEN",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
 }
