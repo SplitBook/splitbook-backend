@@ -7,9 +7,10 @@ const knex = require('../database');
 const softDelete = async (tableName, id, column_id = 'id') => {
   try {
     const result = await knex(tableName)
-      .update({ deleted_at: new Date() })
+      // .update({ deleted_at: new Date() })
       .where({ [column_id]: id })
-      .whereNull('deleted_at');
+      .del();
+    // .whereNull('deleted_at');
 
     if (result > 0) {
       return 204;
@@ -17,9 +18,7 @@ const softDelete = async (tableName, id, column_id = 'id') => {
       return 404;
     }
   } catch (err) {
-    console.warn(err);
-
-    return 500;
+    return 406;
   }
 };
 

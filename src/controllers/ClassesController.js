@@ -143,9 +143,10 @@ module.exports = {
 
     try {
       const result = await knex('classes')
-        .update({ deleted_at: new Date() })
-        .where({ class_id, school_year_id })
-        .whereNull('deleted_at');
+        .del()
+        // .update({ deleted_at: new Date() })
+        .where({ class_id, school_year_id });
+      // .whereNull('deleted_at');
 
       if (result > 0) {
         result = 204;
@@ -154,7 +155,7 @@ module.exports = {
       }
       return res.status(result).send();
     } catch (err) {
-      return res.status(500).json(err);
+      return res.status(406).send();
     }
   },
 };

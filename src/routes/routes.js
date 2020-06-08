@@ -283,7 +283,8 @@ routes.delete(
 );
 
 // Resumes
-routes.get('/resumes', ResumesController.index);
+routes.get('/resumes', ResumesValidator.index, ResumesController.index);
+routes.get('/resumes/:id', ResumesValidator.get, ResumesController.get);
 routes.post('/resumes', ResumesValidator.insert, ResumesController.store);
 routes.put('/resumes/:id', ResumesValidator.update, ResumesController.update);
 routes.delete(
