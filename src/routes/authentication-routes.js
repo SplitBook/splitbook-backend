@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const LoginController = require('../controllers/LoginController');
 const PasswordController = require('../controllers/PasswordController');
@@ -7,6 +8,11 @@ const LoginValidator = require('../validators/LoginValidator');
 const PasswordValidator = require('../validators/PasswordValidator');
 
 const routes = express.Router();
+
+routes.use(
+  '/images',
+  express.static(path.resolve(__dirname, '..', '..', 'tmp', 'uploads'))
+);
 
 routes.post('/login', LoginValidator.login, LoginController.login);
 routes.post('/login/profile', LoginValidator.profile, LoginController.profile);

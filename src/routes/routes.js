@@ -55,11 +55,6 @@ const ConfigsValidator = require('../validators/ConfigsValidator');
 
 const routes = express.Router();
 
-routes.use(
-  '/images',
-  express.static(path.resolve(__dirname, '..', '..', 'tmp', 'uploads'))
-);
-
 // School Years
 routes.get('/school-years', SchoolYearsController.index);
 routes.post(
