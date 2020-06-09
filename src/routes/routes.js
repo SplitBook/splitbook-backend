@@ -29,6 +29,7 @@ const ReturnsController = require('../controllers/ReturnsController');
 const AccountsController = require('../controllers/AccountsController');
 const ConfigsController = require('../controllers/ConfigsController');
 const ResumesAdoptedBooksController = require('../controllers/ResumesAdoptedBooksController');
+const RequisitionAdoptedBooksController = require('../controllers/RequisitionAdoptedBooksController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -54,6 +55,7 @@ const ReturnsValidator = require('../validators/ReturnsValidator');
 const AccountsValidator = require('../validators/AccountsValidator');
 const ConfigsValidator = require('../validators/ConfigsValidator');
 const ResumesAdoptedBooksValidator = require('../validators/ResumesAdoptedBooksValidator');
+const RequisitionAdoptedBooksValidator = require('../validators/RequisitionAdoptedBooksValidator');
 
 const routes = express.Router();
 
@@ -381,6 +383,13 @@ routes.delete(
   '/requisitions/:id',
   RequisitionsValidator.delete,
   RequisitionsController.delete
+);
+
+// Requisition Adopted Books
+routes.post(
+  '/requisition/adopted-books',
+  RequisitionAdoptedBooksValidator.insert,
+  RequisitionAdoptedBooksController.store
 );
 
 // Book Requisitions

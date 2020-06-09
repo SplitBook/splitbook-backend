@@ -1,9 +1,4 @@
 const knex = require('../database');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const {
-  createPagination,
-  getFiltersFromObject,
-} = require('../utils/PaginatorUtils');
 const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
