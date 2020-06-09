@@ -28,6 +28,7 @@ const DeliveriesController = require('../controllers/DeliveriesController');
 const ReturnsController = require('../controllers/ReturnsController');
 const AccountsController = require('../controllers/AccountsController');
 const ConfigsController = require('../controllers/ConfigsController');
+const ResumesAdoptedBooksController = require('../controllers/ResumesAdoptedBooksController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -52,6 +53,7 @@ const DeliveriesValidator = require('../validators/DeliveriesValidator');
 const ReturnsValidator = require('../validators/ReturnsValidator');
 const AccountsValidator = require('../validators/AccountsValidator');
 const ConfigsValidator = require('../validators/ConfigsValidator');
+const ResumesAdoptedBooksValidator = require('../validators/ResumesAdoptedBooksValidator');
 
 const routes = express.Router();
 
@@ -280,6 +282,13 @@ routes.delete(
   '/physical-books/:id',
   PhysicalBooksValidator.delete,
   PhysicalBooksController.delete
+);
+
+// Resumes AdoptedBooks
+routes.get(
+  '/resumes/adopted-books',
+  ResumesAdoptedBooksValidator.index,
+  ResumesAdoptedBooksController.index
 );
 
 // Resumes

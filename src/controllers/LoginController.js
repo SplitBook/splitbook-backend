@@ -73,7 +73,7 @@ module.exports = {
 
       return res.status(404).json({ error: 'Profile not found.' });
     } catch (err) {
-      return res.status(401).json({ error: 'Invalid token.' });
+      return res.status(401).json({ error: 'Invalid token or charge.' });
     }
   },
 
