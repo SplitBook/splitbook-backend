@@ -1,7 +1,10 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { generateCode } = require('../utils/PhysicalBookUtils');
-const { createPagination } = require('../utils/PaginatorUtils');
+const {
+  createPagination,
+  getFiltersFromObject,
+} = require('../utils/PaginatorUtils');
 const Config = require('../utils/ConfigUtils');
 
 module.exports = {
@@ -14,7 +17,11 @@ module.exports = {
    * Publishing Company
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const { search, page, limit, orderBy, desc, book_isbn } = req.query;
+
+    const filter = getFiltersFromObject({
+      book_isbn,
+    });
 
     try {
       const pagination = await createPagination(
@@ -22,6 +29,7 @@ module.exports = {
         { search, page, limit },
         {
           orderBy: orderBy || 'physical_books.updated_at',
+          filter,
           desc: orderBy ? desc : true,
           selects: [
             'physical_books.*',

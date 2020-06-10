@@ -1,6 +1,7 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const Config = require('../utils/ConfigUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   // async index(req, res, next) {
@@ -11,6 +12,49 @@ module.exports = {
 
   //   return res.json(book_requisitions);
   // },
+
+  async get(req, res) {
+    const { id } = req.params;
+
+    const bookRequisition = await knex('book_requisitions')
+      .select(
+        'book_requisitions.*',
+        'books.isbn',
+        'books.cover',
+        'books.subject_id',
+        'school_subjects.school_subject',
+        'books.name',
+        'requisitions_physical_book.id as requisition_physical_book_id',
+        'requisitions_physical_book.physical_book_id',
+        'requisitions_physical_book.delivery_date',
+        'requisitions_physical_book.return_date'
+      )
+      .where('book_requisitions.id', id)
+      .whereNull('book_requisitions.deleted_at')
+      .whereNull('requisitions_physical_book.deleted_at')
+      .innerJoin(
+        'adopted_books',
+        'adopted_books.id',
+        'book_requisitions.adopted_book_id'
+      )
+      .innerJoin('books', 'books.isbn', 'adopted_books.book_isbn')
+      .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
+      .leftJoin(
+        'requisitions_physical_book',
+        'requisitions_physical_book.book_requisition_id',
+        'book_requisitions.id'
+      )
+      .orderBy('books.subject_id', 'books.name')
+      .first();
+
+    if (bookRequisition) {
+      bookRequisition.cover = IpUtils.getImagesAddress(bookRequisition.cover);
+
+      return res.json(bookRequisition);
+    }
+
+    return res.status(404).json({ error: 'Book Requisition not found.' });
+  },
 
   async store(req, res, next) {
     const { adopted_book_id, requisition_id } = req.body;

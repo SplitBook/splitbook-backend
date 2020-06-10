@@ -394,6 +394,11 @@ routes.post(
 
 // Book Requisitions
 // routes.get('/book-requisitions', BookRequisitionsController.index);
+routes.get(
+  '/book-requisitions/:id',
+  BookRequisitionsValidator.get,
+  BookRequisitionsController.get
+);
 routes.post(
   '/book-requisitions',
   BookRequisitionsValidator.insert,

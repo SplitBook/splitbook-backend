@@ -150,6 +150,8 @@ module.exports = {
           'books.subject_id',
           'school_subjects.school_subject',
           'books.name',
+          'requisitions_physical_book.id as requisition_physical_book_id',
+          'requisitions_physical_book.physical_book_id',
           'requisitions_physical_book.delivery_date',
           'requisitions_physical_book.return_date'
         )
