@@ -33,11 +33,13 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
     query.leftJoin(...elm);
   });
 
-  query.where((builder) => {
-    searchColumns.forEach((elm) => {
-      builder.orWhere(`${elm}`, 'like', `%${search}%`);
+  if (search) {
+    query.where((builder) => {
+      searchColumns.forEach((elm) => {
+        builder.orWhere(`${elm}`, 'like', `%${search}%`);
+      });
     });
-  });
+  }
 
   query.where((builder) => {
     Object.keys(filter).forEach((key) => {

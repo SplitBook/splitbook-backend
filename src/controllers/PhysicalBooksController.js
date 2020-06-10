@@ -17,10 +17,23 @@ module.exports = {
    * Publishing Company
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc, book_isbn } = req.query;
+    const {
+      search,
+      page,
+      limit,
+      orderBy,
+      desc,
+      book_isbn,
+      available,
+      state_id,
+      location_id,
+    } = req.query;
 
     const filter = getFiltersFromObject({
       book_isbn,
+      available,
+      state_id,
+      location_id,
     });
 
     try {

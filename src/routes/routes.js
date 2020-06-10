@@ -418,6 +418,7 @@ routes.delete(
 // Book Requisitions
 routes.get(
   '/requisitions-physical-book',
+  RequisitionsPhysicalBookValidator.index,
   RequisitionsPhysicalBookController.index
 );
 routes.post(
