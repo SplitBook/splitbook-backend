@@ -393,17 +393,17 @@ routes.post(
 );
 
 // Book Requisitions
-routes.get('/book-requisitions', BookRequisitionsController.index);
+// routes.get('/book-requisitions', BookRequisitionsController.index);
 routes.post(
   '/book-requisitions',
   BookRequisitionsValidator.insert,
   BookRequisitionsController.store
 );
-routes.put(
-  '/book-requisitions/:id',
-  BookRequisitionsValidator.update,
-  BookRequisitionsController.update
-);
+// routes.put(
+//   '/book-requisitions/:id',
+//   BookRequisitionsValidator.update,
+//   BookRequisitionsController.update
+// );
 routes.delete(
   '/book-requisitions/:id',
   BookRequisitionsValidator.delete,

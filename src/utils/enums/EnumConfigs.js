@@ -8,6 +8,10 @@ const configs = {
     key: 'default_book_state_id',
     defaultValue: 1,
   },
+  BLOCKED_REQUISITION_IDS: {
+    key: 'blocked_requisition_ids',
+    defaultValue: '2,3,4',
+  },
 };
 
 module.exports = configs;

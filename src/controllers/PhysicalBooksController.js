@@ -74,8 +74,8 @@ module.exports = {
       .first();
 
     if (book) {
-      const defaultBookStateId = parseInt(
-        await Config.getConfig(Config.EnumConfigs.DEFAULT_BOOK_STATE_ID.key)
+      const defaultBookStateId = await Config.getConfig(
+        Config.EnumConfigs.DEFAULT_BOOK_STATE_ID.key
       );
 
       const trx = await knex.transaction();

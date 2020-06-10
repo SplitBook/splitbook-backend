@@ -37,8 +37,8 @@ module.exports = async (req, res, next) => {
     req.profile_id = decoded.profile_id;
 
     try {
-      req.school_year_id = parseInt(
-        await Config.getConfig(Config.EnumConfigs.CURRENT_SCHOOL_YEAR_ID.key)
+      req.school_year_id = await Config.getConfig(
+        Config.EnumConfigs.CURRENT_SCHOOL_YEAR_ID.key
       );
     } catch (err) {
       req.school_year_id = 1;

@@ -124,13 +124,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/school-years/5",
+							"raw": "{{URL}}/school-years/1",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"school-years",
-								"5"
+								"1"
 							]
 						}
 					},
@@ -1447,6 +1447,480 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete SchoolEnrollment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/school-enrollments/6",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"school-enrollments",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "AdoptedBooks",
+			"item": [
+				{
+					"name": "Index AdoptedBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopted-books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopted-books"
+							],
+							"query": [
+								{
+									"key": "school_year_id",
+									"value": "1, 2",
+									"disabled": true
+								},
+								{
+									"key": "class_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "current_school_year",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "AEMA",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get AdoptedBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopted-books/6",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopted-books",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add AdoptedBook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"resume_id\":4,\n\t\"book_isbn\":\"123-456-782\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/adopted-books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopted-books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit AdoptedBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"student_id\": 1,\n\t\"guardian_id\": 1,\n\t\"school_year_id\":2,\n\t\"class_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/adopted-books/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopted-books",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete AdoptedBook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopted-books/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopted-books",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Resumes",
+			"item": [
+				{
+					"name": "Index Resumes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/resumes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resumes"
+							],
+							"query": [
+								{
+									"key": "school_year_id",
+									"value": "1, 2",
+									"disabled": true
+								},
+								{
+									"key": "class_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "current_school_year",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Resume",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/resumes/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resumes",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Resume",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_subject_id\": 8,\n\t\"class_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/resumes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resumes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Resume",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"school_subject_id\": 2,\n\t\"class_id\": 1,\n\t\"school_year_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/resumes/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resumes",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Resume",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/resumes/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resumes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ResumesAdoptedBooks",
+			"item": [
+				{
+					"name": "Index ResumesAdoptedBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/resumes/adopted-books?school_enrollment_id=1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resumes",
+								"adopted-books"
+							],
+							"query": [
+								{
+									"key": "school_enrollment_id",
+									"value": "1"
+								},
+								{
+									"key": "class_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "school_year_id",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "RequisitionAdoptedBooks",
+			"item": [
+				{
+					"name": "Add RequisitionAdoptedBooks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school_enrollment_id\": 1,\n    \"adopted_books_ids\":[6,4]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/requisition/adopted-books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisition",
+								"adopted-books"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -1514,13 +1988,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/requisitions/2",
+							"raw": "{{URL}}/requisitions/1",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"requisitions",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -2840,7 +3314,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"profile_id\":\"1\",\n\t\"charge\":\"Administrador\",\n\t\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDgyNTRjZTRlMyIsInR5cGUiOiJsZyIsImlhdCI6MTU5MTIyMDQ3OSwiZXhwIjoxNTkxNjUyNDc5fQ.ZKjMxyHfiWwPIXXiEiblLG4x4by6VPkbZYhBkdlojMA\"\n}",
+					"raw": "{\n\t\"profile_id\":\"1\",\n\t\"charge\":\"Administrador\",\n\t\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTkyMTI5MjctODc1Ni00ZDg2LWExNGItNDliY2UzZTk2ZmRlIiwidHlwZSI6ImxnIiwiaWF0IjoxNTkxNzAwMTI1LCJleHAiOjE1OTIxMzIxMjV9.Z4zw9n2oFNOl09zLeEZkVOpN5IPD7xnmzP2XJET-bt4\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2970,19 +3444,19 @@
 	],
 	"variable": [
 		{
-			"id": "8036db8e-6c59-4762-aff0-cb73e391f7cf",
+			"id": "7edf1476-eb0b-4fdc-88c4-56b34ef50ed2",
 			"key": "URL",
 			"value": "http://localhost:8085",
 			"type": "string"
 		},
 		{
-			"id": "8019efcd-3c1b-402d-9bd6-95a3b2c03273",
+			"id": "9b742c51-a27a-4e44-bbc0-578ccfcd5357",
 			"key": "TOKEN",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDgyNTRjZTRlMyIsInByb2ZpbGVfaWQiOjEsImNoYXJnZSI6IkFkbWluaXN0cmFkb3IiLCJ0eXBlIjoibGciLCJpYXQiOjE1OTEyMjA1MTEsImV4cCI6MTU5MTY1MjUxMX0.B9q02PU7xg85kioZ77A20dvxD8Z8mqgbfV50PWen_GM",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTkyMTI5MjctODc1Ni00ZDg2LWExNGItNDliY2UzZTk2ZmRlIiwicHJvZmlsZV9pZCI6MSwiY2hhcmdlIjoiQWRtaW5pc3RyYWRvciIsInR5cGUiOiJsZyIsImlhdCI6MTU5MTcwMDMyOCwiZXhwIjoxNTkyMTMyMzI4fQ.o6vrSvUzpDI5nIsWT8K32eWq4d6k6q_iN9LbqL9Pkek",
 			"type": "string"
 		},
 		{
-			"id": "e4a9759a-f21a-4a95-8a72-2b1609f07c4d",
+			"id": "e4d0c199-3c6a-4058-9c6f-9f4dc21f6f4a",
 			"key": "LOGIN_TOKEN",
 			"value": "",
 			"type": "string"

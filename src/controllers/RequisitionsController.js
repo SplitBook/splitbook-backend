@@ -181,10 +181,8 @@ module.exports = {
   async store(req, res, next) {
     const { school_enrollment_id, state_id } = req.body;
 
-    const defaultStateId = parseInt(
-      await Config.getConfig(
-        Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
-      )
+    const defaultStateId = await Config.getConfig(
+      Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
     );
 
     try {
@@ -203,11 +201,10 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { school_enrollment_id, state_id, active } = req.body;
+    const { state_id, active } = req.body;
 
     try {
       const { statusCode, data } = await softUpdate('requisitions', id, {
-        school_enrollment_id,
         state_id,
         active,
       });

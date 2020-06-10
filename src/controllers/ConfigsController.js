@@ -15,8 +15,6 @@ module.exports = {
       ({ key: keyValue }) => keyValue
     );
 
-    console.log('config Keys', configKeys);
-
     key = configKeys.find((elm) => elm === key);
 
     if (!key) {

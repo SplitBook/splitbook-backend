@@ -3,20 +3,18 @@ const Config = require('../utils/ConfigUtils');
 
 module.exports = {
   async store(req, res) {
-    const { school_enrollment_id, state_id, adopted_books_ids } = req.body;
+    const { school_enrollment_id, adopted_books_ids } = req.body;
     const trx = await knex.transaction();
 
     try {
-      const defaultStateId = parseInt(
-        await Config.getConfig(
-          Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
-        )
+      const defaultStateId = await Config.getConfig(
+        Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
       );
 
       const [requisition] = await trx('requisitions')
         .insert({
           school_enrollment_id,
-          state_id: state_id || defaultStateId,
+          state_id: defaultStateId,
         })
         .returning('*');
 

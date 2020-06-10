@@ -33,7 +33,6 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      school_enrollment_id: Joi.number().integer().min(1),
       state_id: Joi.number().integer().min(1),
       active: Joi.boolean().default(true),
     }),
