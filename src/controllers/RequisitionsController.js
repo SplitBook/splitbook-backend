@@ -6,6 +6,7 @@ const {
   getFiltersFromObject,
 } = require('../utils/PaginatorUtils');
 const IpUtils = require('../utils/IpUtils');
+const EnumReportTypes = require('../utils/enums/EnumReportTypes');
 
 module.exports = {
   /**
@@ -142,6 +143,48 @@ module.exports = {
       .first();
 
     if (requisition) {
+      try {
+        requisition.reports = await knex('reports')
+          .select('*')
+          .whereNull('reports.deleted_at')
+          .where('reports.requisition_id', id)
+          .orderBy([
+            { column: 'reports.type', order: 'asc' },
+            { column: 'reports.updated_at', order: 'desc' },
+          ]);
+      } catch (err) {
+        console.log(err);
+      }
+
+      for (let i = 0; i < requisition.reports.length; i++) {
+        const { table } = Object.values(EnumReportTypes).find(
+          ({ type }) => type === requisition.reports[i].type
+        );
+
+        const objects = await knex(table)
+          .select(
+            `${table}.*`,
+            'book_states.state',
+            'requisitions_physical_book.physical_book_id',
+            'physical_books.book_isbn'
+          )
+          .where(`${table}.report_id`, requisition.reports[i].id)
+          .whereNull(`${table}.deleted_at`)
+          .innerJoin(
+            'requisitions_physical_book',
+            'requisitions_physical_book.id',
+            `${table}.requisition_physical_book_id`
+          )
+          .innerJoin('book_states', 'book_states.id', `${table}.book_state_id`)
+          .innerJoin(
+            'physical_books',
+            'physical_books.id',
+            'requisitions_physical_book.physical_book_id'
+          );
+
+        requisition.reports[i][`${table}`] = objects;
+      }
+
       requisition.book_requisitions = await knex('book_requisitions')
         .select(
           'book_requisitions.*',

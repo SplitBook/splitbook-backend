@@ -108,6 +108,9 @@ module.exports = {
     }
   },
 
+  // TODO get
+  // TODO set delivery date when guardian submit report signed
+
   async store(req, res, next) {
     let { requisitions_physical_book, delivery_date } = req.body;
 
