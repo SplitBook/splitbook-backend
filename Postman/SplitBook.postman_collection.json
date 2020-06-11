@@ -839,13 +839,23 @@
 							],
 							"query": [
 								{
-									"key": "search",
-									"value": "Português",
+									"key": "page",
+									"value": "3",
 									"disabled": true
 								},
 								{
-									"key": "page",
-									"value": "1",
+									"key": "available",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "book_isbn",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "ING",
 									"disabled": true
 								}
 							]
@@ -1186,7 +1196,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"state\":\"Novo\"\n}",
+							"raw": "{\n\t\"state\":\"Usado\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1576,7 +1586,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"resume_id\":4,\n\t\"book_isbn\":\"123-456-782\"\n}",
+							"raw": "{\n\t\"resume_id\":2,\n\t\"book_isbn\":\"123-456-782\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1861,10 +1871,6 @@
 							],
 							"query": [
 								{
-									"key": "school_enrollment_id",
-									"value": "1"
-								},
-								{
 									"key": "class_id",
 									"value": "1",
 									"disabled": true
@@ -1873,6 +1879,10 @@
 									"key": "school_year_id",
 									"value": "2",
 									"disabled": true
+								},
+								{
+									"key": "school_enrollment_id",
+									"value": "1"
 								}
 							]
 						}
@@ -1902,7 +1912,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"school_enrollment_id\": 1,\n    \"adopted_books_ids\":[6,4]\n}",
+							"raw": "{\n    \"school_enrollment_id\": 1,\n    \"adopted_books_ids\":[2,8]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1988,13 +1998,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/requisitions/1",
+							"raw": "{{URL}}/requisitions/10",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"requisitions",
-								"1"
+								"10"
 							]
 						}
 					},
@@ -2053,7 +2063,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"state\":\"Simples\",\n\t\"active\":false\n}",
+							"raw": "{\n\t\"state_id\": 2\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2061,13 +2071,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/requisition-states/5",
+							"raw": "{{URL}}/requisitions/10",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"requisition-states",
-								"5"
+								"requisitions",
+								"10"
 							]
 						}
 					},
@@ -2089,13 +2099,248 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/requisition-states/5",
+							"raw": "{{URL}}/requisitions/1",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"requisition-states",
-								"5"
+								"requisitions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "RequisitionsPhysicalBook",
+			"item": [
+				{
+					"name": "Index RequisitionsPhysicalBook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisitions-physical-book",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions-physical-book"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "17",
+									"disabled": true
+								},
+								{
+									"key": "current_school_year",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get RequisitionPhysicalBook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisitions-physical-book/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions-physical-book",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add RequisitionPhysicalBook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requisitions_physical_book\": [\n        {\n            \"book_requisition_id\": 5,\n            \"physical_book_id\": \"ING-d3071b\",\n            \"book_state_id\": 2\n        },\n        {\n            \"book_requisition_id\": 4,\n            \"physical_book_id\": \"PT-9e2fcc\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/requisitions-physical-book",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions-physical-book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete RequisitionPhysicalBook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/requisitions-physical-book/19",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"requisitions-physical-book",
+								"19"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "BookRequisitions",
+			"item": [
+				{
+					"name": "Get BookRequisition",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/book-requisitions/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-requisitions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Book Requisition",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"adopted_book_id\":5,\n\t\"requisition_id\":8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/book-requisitions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-requisitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book Requisition",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/book-requisitions/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"book-requisitions",
+								"1"
 							]
 						}
 					},
@@ -2992,13 +3237,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/guardians/1",
+							"raw": "{{URL}}/guardians/100",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"guardians",
-								"1"
+								"100"
 							]
 						}
 					},
@@ -3444,19 +3689,19 @@
 	],
 	"variable": [
 		{
-			"id": "7edf1476-eb0b-4fdc-88c4-56b34ef50ed2",
+			"id": "e9892f57-3639-4a78-95e8-88811daccade",
 			"key": "URL",
 			"value": "http://localhost:8085",
 			"type": "string"
 		},
 		{
-			"id": "9b742c51-a27a-4e44-bbc0-578ccfcd5357",
+			"id": "b75fd0da-8f60-4540-b92e-18079551dc57",
 			"key": "TOKEN",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTkyMTI5MjctODc1Ni00ZDg2LWExNGItNDliY2UzZTk2ZmRlIiwicHJvZmlsZV9pZCI6MSwiY2hhcmdlIjoiQWRtaW5pc3RyYWRvciIsInR5cGUiOiJsZyIsImlhdCI6MTU5MTcwMDMyOCwiZXhwIjoxNTkyMTMyMzI4fQ.o6vrSvUzpDI5nIsWT8K32eWq4d6k6q_iN9LbqL9Pkek",
 			"type": "string"
 		},
 		{
-			"id": "e4d0c199-3c6a-4058-9c6f-9f4dc21f6f4a",
+			"id": "d9b219af-17a7-4392-80f5-78044d6034ed",
 			"key": "LOGIN_TOKEN",
 			"value": "",
 			"type": "string"
