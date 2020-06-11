@@ -19,6 +19,7 @@ exports.up = async function (knex) {
       return knex('requisition_states').insert([
         { state: EnumRequisitionStates.PROCESS },
         { state: EnumRequisitionStates.PENDING },
+        { state: EnumRequisitionStates.ACCEPTED },
         { state: EnumRequisitionStates.COMPLETED },
         { state: EnumRequisitionStates.REFUSED },
       ]);

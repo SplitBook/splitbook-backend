@@ -27,8 +27,12 @@ exports.up = async function (knex) {
           value: EnumConfigs.BLOCKED_REQUISITION_IDS.defaultValue,
         },
         {
-          key: EnumConfigs.ACCEPTED_REQUISITION_IDS.key,
-          value: EnumConfigs.ACCEPTED_REQUISITION_IDS.defaultValue,
+          key: EnumConfigs.ACCEPTED_REQUISITION_IDS_TO_DELIVER.key,
+          value: EnumConfigs.ACCEPTED_REQUISITION_IDS_TO_RETURN.defaultValue,
+        },
+        {
+          key: EnumConfigs.ACCEPTED_REQUISITION_IDS_TO_RETURN.key,
+          value: EnumConfigs.ACCEPTED_REQUISITION_IDS_TO_RETURN.defaultValue,
         },
       ]);
     });

@@ -24,7 +24,7 @@ module.exports = {
     }),
   }),
 
-  insert: celebrate({
+  deliveries: celebrate({
     [Segments.BODY]: Joi.object().keys({
       requisitions_physical_book: Joi.array()
         .items(
@@ -35,12 +35,25 @@ module.exports = {
               .min(9)
               .max(12)
               .required(),
-            delivery_date: Joi.date(),
-            book_state_id: Joi.number().integer().min(1),
+            book_state_id: Joi.number().integer().min(1).required(),
           })
         )
         .min(1),
       delivery_date: Joi.date().default(new Date()),
+    }),
+  }),
+
+  returns: celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      requisitions_physical_book: Joi.array()
+        .items(
+          Joi.object({
+            id: Joi.number().integer().min(1).required(),
+            book_state_id: Joi.number().integer().min(1).required(),
+          })
+        )
+        .min(1),
+      return_date: Joi.date().default(new Date()),
     }),
   }),
 

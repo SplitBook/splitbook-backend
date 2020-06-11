@@ -1,8 +1,8 @@
 const express = require('express');
-const path = require('path');
 const multer = require('multer');
 
 const multerImagesConfig = require('../config/multerImagesConfig');
+const multerReportsConfig = require('../config/multerReportsConfig');
 
 // const HandbookController = require('./controllers/HandbookController');
 const SchoolYearsController = require('../controllers/SchoolYearsController');
@@ -30,6 +30,7 @@ const AccountsController = require('../controllers/AccountsController');
 const ConfigsController = require('../controllers/ConfigsController');
 const ResumesAdoptedBooksController = require('../controllers/ResumesAdoptedBooksController');
 const RequisitionAdoptedBooksController = require('../controllers/RequisitionAdoptedBooksController');
+const ReportsController = require('../controllers/ReportsController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -56,6 +57,7 @@ const AccountsValidator = require('../validators/AccountsValidator');
 const ConfigsValidator = require('../validators/ConfigsValidator');
 const ResumesAdoptedBooksValidator = require('../validators/ResumesAdoptedBooksValidator');
 const RequisitionAdoptedBooksValidator = require('../validators/RequisitionAdoptedBooksValidator');
+const ReportsValidator = require('../validators/ReportsValidator');
 
 const routes = express.Router();
 
@@ -415,7 +417,7 @@ routes.delete(
   BookRequisitionsController.delete
 );
 
-// Book Requisitions
+// Requisitions Physical Book
 routes.get(
   '/requisitions-physical-book',
   RequisitionsPhysicalBookValidator.index,
@@ -427,48 +429,25 @@ routes.get(
   RequisitionsPhysicalBookController.get
 );
 routes.post(
-  '/requisitions-physical-book',
-  RequisitionsPhysicalBookValidator.insert,
-  RequisitionsPhysicalBookController.store
+  '/physical-books/deliveries',
+  RequisitionsPhysicalBookValidator.deliveries,
+  RequisitionsPhysicalBookController.deliveries
 );
-// routes.put(
-//   '/requisitions-physical-book/:id',
-//   RequisitionsPhysicalBookValidator.update,
-//   RequisitionsPhysicalBookController.update
-// );
-routes.delete(
-  '/requisitions-physical-book/:id',
-  RequisitionsPhysicalBookValidator.delete,
-  RequisitionsPhysicalBookController.delete
+routes.post(
+  '/physical-books/returns',
+  RequisitionsPhysicalBookValidator.returns,
+  RequisitionsPhysicalBookController.returns
 );
 
 // Deliveries
-routes.get('/deliveries', DeliveriesController.index);
-routes.post(
-  '/deliveries',
-  DeliveriesValidator.insert,
-  DeliveriesController.store
-);
 routes.put(
   '/deliveries/:id',
   DeliveriesValidator.update,
   DeliveriesController.update
 );
-routes.delete(
-  '/deliveries/:id',
-  DeliveriesValidator.delete,
-  DeliveriesController.delete
-);
 
 // Returns
-routes.get('/returns', ReturnsController.index);
-routes.post('/returns', ReturnsValidator.insert, ReturnsController.store);
 routes.put('/returns/:id', ReturnsValidator.update, ReturnsController.update);
-routes.delete(
-  '/returns/:id',
-  ReturnsValidator.delete,
-  ReturnsController.delete
-);
 
 // Accounts
 routes.get('/accounts', AccountsValidator.index, AccountsController.index);
@@ -483,6 +462,21 @@ routes.delete(
   '/accounts/:id',
   AccountsValidator.delete,
   AccountsController.delete
+);
+
+// Reports
+routes.get('/reports', ReportsValidator.index, ReportsController.index);
+routes.get('/reports/:id', ReportsValidator.get, ReportsController.get);
+routes.put(
+  '/reports/:id',
+  multer(multerReportsConfig).single('file_signed'),
+  ReportsValidator.update,
+  ReportsController.update
+);
+routes.delete(
+  '/reports/:id',
+  ReportsValidator.delete,
+  ReportsController.delete
 );
 
 // Configs

@@ -6,6 +6,7 @@ exports.up = async function (knex) {
 
       table.integer('state_id').unsigned().notNullable();
 
+      table.text('reason', 'longtext');
       table.foreign('state_id').references('requisition_states.id');
       table.foreign('school_enrollment_id').references('school_enrollments.id');
 

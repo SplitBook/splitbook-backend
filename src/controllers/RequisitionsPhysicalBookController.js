@@ -178,9 +178,7 @@ module.exports = {
       .json({ error: 'Requisition Physical Book not found.' });
   },
 
-  // TODO set delivery date when guardian submit report signed
-
-  async store(req, res, next) {
+  async deliveries(req, res, next) {
     let { requisitions_physical_book, delivery_date } = req.body;
 
     const bookRequisition = await knex('book_requisitions')
@@ -197,7 +195,7 @@ module.exports = {
       .first();
 
     const acceptedStateIds = await Config.getConfig(
-      Config.EnumConfigs.ACCEPTED_REQUISITION_IDS.key
+      Config.EnumConfigs.ACCEPTED_REQUISITION_IDS_TO_DELIVER.key
     );
 
     if (!acceptedStateIds.includes(bookRequisition.state_id)) {
@@ -213,16 +211,8 @@ module.exports = {
       const requisitionsPhysicalBook = await trx('requisitions_physical_book')
         .insert(
           requisitions_physical_book.map((requisition) => {
-            requisition.delivery_date =
-              requisition.delivery_date || delivery_date;
-
-            const {
-              physical_book_id,
-              book_requisition_id,
-              deliveryDate,
-            } = requisition;
+            const { physical_book_id, book_requisition_id } = requisition;
             return {
-              delivery_date: deliveryDate,
               physical_book_id,
               book_requisition_id,
             };
@@ -231,12 +221,14 @@ module.exports = {
         .returning('*');
 
       const report_id = uuid();
+      const report_date = delivery_date;
 
       await trx('reports')
         .insert({
           id: report_id,
           requisition_id: bookRequisition.requisition_id,
           type: EnumReportTypes.DELIVERY.type,
+          report_date,
         })
         .returning('*');
 
@@ -258,48 +250,84 @@ module.exports = {
         )
         .returning('*');
 
-      for (let i = 0; i < deliveries.length; i++) {
-        await trx('physical_books')
-          .where('id', requisitions_physical_book[i].physical_book_id)
-          .update({ state_id: deliveries[i].book_state_id });
-      }
-
       await trx.commit();
-      return res.json(requisitionsPhysicalBook);
+      return res.json(deliveries);
     } catch (err) {
       await trx.rollback();
       return res.status(406).json(err);
     }
   },
 
-  // async update(req, res) {
-  //   const { id } = req.params;
-  //   const { physical_book_id, book_requisition_id, active } = req.body;
+  async returns(req, res, next) {
+    let { requisitions_physical_book, return_date } = req.body;
 
-  //   try {
-  //     const { statusCode, data } = await softUpdate(
-  //       'requisitions_physical_book',
-  //       id,
-  //       {
-  //         physical_book_id,
-  //         book_requisition_id,
-  //         delivery_date,
-  //         return_date,
-  //         active,
-  //       }
-  //     );
+    const bookRequisitions = await knex('requisitions_physical_book')
+      .select('requisitions_physical_book.*')
+      .whereIn(
+        'requisitions_physical_book.id',
+        requisitions_physical_book.map((requisition) => requisition.id)
+      )
+      .andWhereNotNull('requisitions_physical_book.delivery_date');
 
-  //     return res.status(statusCode).json(data);
-  //   } catch (err) {
-  //     return res.status(406).json(err);
-  //   }
-  // },
+    if (bookRequisitions.length !== requisitions_physical_book.length) {
+      return res
+        .status(406)
+        .json({ error: 'There are some requisitions physical book invalids.' });
+    }
 
-  async delete(req, res) {
-    const { id } = req.params;
+    const requisition = await knex('book_requisitions')
+      .select('book_requisitions.requisition_id', 'requisitions.state_id')
+      .where('book_requisitions.id', bookRequisitions[0].book_requisition_id)
+      .innerJoin(
+        'requisitions',
+        'requisitions.id',
+        'book_requisitions.requisition_id'
+      )
+      .first();
 
-    return res
-      .status(await softDelete('requisitions_physical_book', id))
-      .send();
+    const acceptedStateIds = await Config.getConfig(
+      Config.EnumConfigs.ACCEPTED_REQUISITION_IDS_TO_RETURN.key
+    );
+
+    if (!acceptedStateIds.includes(requisition.state_id)) {
+      return res.status(403).json({
+        error:
+          'Requisition is not allowed to return books. Please change requisition state.',
+      });
+    }
+
+    const trx = await knex.transaction();
+
+    try {
+      const report_id = uuid();
+      const report_date = return_date;
+
+      await trx('reports')
+        .insert({
+          id: report_id,
+          requisition_id: requisition.requisition_id,
+          type: EnumReportTypes.RETURN.type,
+          report_date,
+        })
+        .returning('*');
+
+      const returns = await trx('returns')
+        .insert(
+          bookRequisitions.map((requisition, idx) => {
+            return {
+              requisition_physical_book_id: requisition.id,
+              book_state_id: requisitions_physical_book[idx].book_state_id,
+              report_id,
+            };
+          })
+        )
+        .returning('*');
+
+      await trx.commit();
+      return res.json(returns);
+    } catch (err) {
+      await trx.rollback();
+      return res.status(406).json(err);
+    }
   },
 };

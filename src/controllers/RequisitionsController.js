@@ -143,20 +143,23 @@ module.exports = {
       .first();
 
     if (requisition) {
-      try {
-        requisition.reports = await knex('reports')
-          .select('*')
-          .whereNull('reports.deleted_at')
-          .where('reports.requisition_id', id)
-          .orderBy([
-            { column: 'reports.type', order: 'asc' },
-            { column: 'reports.updated_at', order: 'desc' },
-          ]);
-      } catch (err) {
-        console.log(err);
-      }
+      requisition.reports = await knex('reports')
+        .select('*')
+        .whereNull('reports.deleted_at')
+        .where('reports.requisition_id', id)
+        .orderBy([
+          { column: 'reports.type', order: 'asc' },
+          { column: 'reports.updated_at', order: 'desc' },
+        ]);
 
       for (let i = 0; i < requisition.reports.length; i++) {
+        requisition.reports[i].file_signed = IpUtils.getReportsAddress(
+          requisition.reports[i].file_signed
+        );
+        requisition.reports[i].file = IpUtils.getReportsAddress(
+          requisition.reports[i].file
+        );
+
         const { table } = Object.values(EnumReportTypes).find(
           ({ type }) => type === requisition.reports[i].type
         );

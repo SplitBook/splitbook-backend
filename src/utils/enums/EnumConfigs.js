@@ -12,8 +12,12 @@ const configs = {
     key: 'blocked_requisition_ids',
     defaultValue: '2,3,4',
   },
-  ACCEPTED_REQUISITION_IDS: {
+  ACCEPTED_REQUISITION_IDS_TO_DELIVER: {
     key: 'accepted_requisition_ids_to_deliver_a_book',
+    defaultValue: '2,4',
+  },
+  ACCEPTED_REQUISITION_IDS_TO_RETURN: {
+    key: 'accepted_requisition_ids_to_return_a_book',
     defaultValue: '2,4',
   },
 };

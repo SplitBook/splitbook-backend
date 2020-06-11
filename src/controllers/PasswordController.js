@@ -73,6 +73,7 @@ module.exports = {
         await knex('users').where('id', user.id).update({
           email_confirmed: true,
           password: user.password,
+          updated_at: new Date(),
         });
 
         return res.status(204).send();
