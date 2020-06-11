@@ -108,7 +108,76 @@ module.exports = {
     }
   },
 
-  // TODO get
+  async get(req, res) {
+    const { id } = req.params;
+
+    let requisitionPhysicalBook = await knex('requisitions_physical_book')
+      .select(
+        'requisitions_physical_book.*',
+        'book_requisitions.requisition_id',
+        'book_requisitions.adopted_book_id',
+        'physical_books.book_isbn',
+        'physical_books.available',
+        'physical_books.state_id',
+        'book_states.state',
+        'physical_books.location_id',
+        'book_locations.location',
+        'physical_books.description',
+        'books.name',
+        'books.publishing_company',
+        'books.cover',
+        'books.subject_id',
+        'school_subjects.school_subject',
+        'deliveries.id as delivery_id',
+        'deliveries.report_id as delivery_report_id',
+        'returns.id as return_id',
+        'returns.report_id as return_report_id'
+      )
+      .where('requisitions_physical_book.id', id)
+      .whereNull('requisitions_physical_book.deleted_at')
+      .innerJoin(
+        'book_requisitions',
+        'book_requisitions.id',
+        'requisitions_physical_book.book_requisition_id'
+      )
+      .innerJoin(
+        'physical_books',
+        'physical_books.id',
+        'requisitions_physical_book.physical_book_id'
+      )
+      .innerJoin('books', 'books.isbn', 'physical_books.book_isbn')
+      .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id')
+      .leftJoin(
+        'book_locations',
+        'book_locations.id',
+        'physical_books.location_id'
+      )
+      .leftJoin('book_states', 'book_states.id', 'physical_books.state_id')
+      .leftJoin(
+        'deliveries',
+        'deliveries.requisition_physical_book_id',
+        'requisitions_physical_book.id'
+      )
+      .leftJoin(
+        'returns',
+        'returns.requisition_physical_book_id',
+        'requisitions_physical_book.id'
+      )
+      .first();
+
+    if (requisitionPhysicalBook) {
+      requisitionPhysicalBook.cover = IpUtils.getImagesAddress(
+        requisitionPhysicalBook.cover
+      );
+
+      return res.json(requisitionPhysicalBook);
+    }
+
+    return res
+      .status(406)
+      .json({ error: 'Requisition Physical Book not found.' });
+  },
+
   // TODO set delivery date when guardian submit report signed
 
   async store(req, res, next) {

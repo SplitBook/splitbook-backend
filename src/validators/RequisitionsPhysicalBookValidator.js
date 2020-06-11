@@ -20,7 +20,7 @@ module.exports = {
 
   get: celebrate({
     [Segments.PARAMS]: Joi.object({
-      isbn: Joi.string().trim().required(),
+      id: Joi.number().integer().min(1).required(),
     }),
   }),
 

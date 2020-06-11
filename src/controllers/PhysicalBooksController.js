@@ -134,7 +134,7 @@ module.exports = {
       );
     }
 
-    return res.status(406).json({ error: 'Book not found.' });
+    return res.status(406).json({ error: 'Physical Book not found.' });
   },
 
   async update(req, res) {

@@ -421,6 +421,11 @@ routes.get(
   RequisitionsPhysicalBookValidator.index,
   RequisitionsPhysicalBookController.index
 );
+routes.get(
+  '/requisitions-physical-book/:id',
+  RequisitionsPhysicalBookValidator.get,
+  RequisitionsPhysicalBookController.get
+);
 routes.post(
   '/requisitions-physical-book',
   RequisitionsPhysicalBookValidator.insert,
