@@ -227,7 +227,7 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { school_enrollment_id, state_id } = req.body;
+    const { school_enrollment_id, state_id, reason } = req.body;
 
     const defaultStateId = await Config.getConfig(
       Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
@@ -238,6 +238,7 @@ module.exports = {
         .insert({
           school_enrollment_id,
           state_id: state_id || defaultStateId,
+          reason,
         })
         .returning('*');
 
@@ -249,12 +250,13 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { state_id, active } = req.body;
+    const { state_id, reason, active } = req.body;
 
     try {
       const { statusCode, data } = await softUpdate('requisitions', id, {
         state_id,
         active,
+        reason,
       });
 
       return res.status(statusCode).json(data);

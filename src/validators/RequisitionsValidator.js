@@ -28,6 +28,7 @@ module.exports = {
       school_enrollment_id: Joi.number().integer().min(1).required(),
       state_id: Joi.number().integer().min(1),
       active: Joi.boolean().default(true),
+      reason: Joi.string().trim(),
     }),
   }),
 
@@ -35,6 +36,7 @@ module.exports = {
     [Segments.BODY]: Joi.object().keys({
       state_id: Joi.number().integer().min(1),
       active: Joi.boolean().default(true),
+      reason: Joi.string().trim(),
     }),
     [Segments.PARAMS]: Joi.object({
       id: Joi.number().integer().min(1).required(),

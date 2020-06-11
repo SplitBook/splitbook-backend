@@ -31,6 +31,7 @@ const ConfigsController = require('../controllers/ConfigsController');
 const ResumesAdoptedBooksController = require('../controllers/ResumesAdoptedBooksController');
 const RequisitionAdoptedBooksController = require('../controllers/RequisitionAdoptedBooksController');
 const ReportsController = require('../controllers/ReportsController');
+const GenerateController = require('../controllers/GenerateController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -58,6 +59,7 @@ const ConfigsValidator = require('../validators/ConfigsValidator');
 const ResumesAdoptedBooksValidator = require('../validators/ResumesAdoptedBooksValidator');
 const RequisitionAdoptedBooksValidator = require('../validators/RequisitionAdoptedBooksValidator');
 const ReportsValidator = require('../validators/ReportsValidator');
+const GenerateValidator = require('../validators/GenerateValidator');
 
 const routes = express.Router();
 
@@ -477,6 +479,13 @@ routes.delete(
   '/reports/:id',
   ReportsValidator.delete,
   ReportsController.delete
+);
+
+// Generate
+routes.get(
+  '/generate/report/:report_id',
+  GenerateValidator.generateReport,
+  GenerateController.generateReport
 );
 
 // Configs
