@@ -426,11 +426,11 @@ routes.post(
   RequisitionsPhysicalBookValidator.insert,
   RequisitionsPhysicalBookController.store
 );
-routes.put(
-  '/requisitions-physical-book/:id',
-  RequisitionsPhysicalBookValidator.update,
-  RequisitionsPhysicalBookController.update
-);
+// routes.put(
+//   '/requisitions-physical-book/:id',
+//   RequisitionsPhysicalBookValidator.update,
+//   RequisitionsPhysicalBookController.update
+// );
 routes.delete(
   '/requisitions-physical-book/:id',
   RequisitionsPhysicalBookValidator.delete,

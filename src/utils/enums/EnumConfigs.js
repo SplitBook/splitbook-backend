@@ -12,6 +12,10 @@ const configs = {
     key: 'blocked_requisition_ids',
     defaultValue: '2,3,4',
   },
+  ACCEPTED_REQUISITION_IDS: {
+    key: 'accepted_requisition_ids_to_deliver_a_book',
+    defaultValue: '2,4',
+  },
 };
 
 module.exports = configs;
