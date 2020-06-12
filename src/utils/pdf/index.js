@@ -134,7 +134,7 @@ const generatePDF = (
     properties
   );
 
-  fs.writeFileSync('index.html', html);
+  // fs.writeFileSync('index.html', html);
 
   const options = { format: 'A4' };
 

@@ -77,7 +77,6 @@ module.exports = {
               adopted_book_id,
               requisition_id,
             })
-            .where()
             .returning('*');
 
           return res.json(bookRequisition);
