@@ -4,4 +4,10 @@ module.exports = {
 
     return url;
   },
+
+  getReportsAddress(filename) {
+    const url = filename ? 'http://localhost:8085/reports/' + filename : null;
+
+    return url;
+  },
 };

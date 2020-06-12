@@ -77,7 +77,6 @@ module.exports = {
           'general_classes.class'
         )
         .where('classes.head_class_id', id)
-        .where('')
         .whereNull('classes.deleted_at')
         .innerJoin('school_years', 'school_years.id', 'classes.school_year_id')
         .innerJoin('general_classes', 'general_classes.id', 'classes.class_id');

@@ -1,11 +1,19 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const { createPagination } = require('../utils/PaginatorUtils');
+const {
+  createPagination,
+  getFiltersFromObject,
+} = require('../utils/PaginatorUtils');
 const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const { search, page, limit, orderBy, desc, code, subject_id } = req.query;
+
+    const filter = getFiltersFromObject({
+      code,
+      subject_id,
+    });
 
     try {
       let pagination = await createPagination(
@@ -14,6 +22,7 @@ module.exports = {
         {
           orderBy: orderBy || 'books.name',
           desc,
+          filter,
           selects: ['books.*', 'school_subjects.school_subject'],
           searchColumns: [
             'isbn',

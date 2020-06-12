@@ -14,6 +14,11 @@ routes.use(
   express.static(path.resolve(__dirname, '..', '..', 'tmp', 'uploads'))
 );
 
+routes.use(
+  '/reports',
+  express.static(path.resolve(__dirname, '..', '..', 'tmp', 'reports'))
+);
+
 routes.post('/login', LoginValidator.login, LoginController.login);
 routes.post('/login/profile', LoginValidator.profile, LoginController.profile);
 routes.post(

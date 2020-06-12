@@ -7,5 +7,10 @@ node_modules/
 #Tmp Files
 tmp/uploads/*
 tmp/reports/*
+tmp/qr-codes/*
+tmp/csv/*
+
 !tmp/uploads/.gitkeep
 !tmp/reports/.gitkeep
+!tmp/qr-codes/.gitkeep
+!tmp/csv/example.csv

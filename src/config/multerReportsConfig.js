@@ -1,13 +1,12 @@
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
-const sharp = require('sharp');
 
 module.exports = {
-  dest: path.resolve(__dirname, '..', '..', 'tmp', 'uploads'),
+  dest: path.resolve(__dirname, '..', '..', 'tmp', 'reports'),
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.resolve(__dirname, '..', '..', 'tmp', 'uploads'));
+      cb(null, path.resolve(__dirname, '..', '..', 'tmp', 'reports'));
     },
     filename: (req, file, cb) => {
       crypto.randomBytes(5, (err, hash) => {
@@ -22,10 +21,10 @@ module.exports = {
     },
   }),
   limits: {
-    filesize: 2 * 1024 * 1024,
+    filesize: 20 * 1024 * 1024,
   },
   fileFilter: (req, file, cb) => {
-    const allowedMimes = ['image/jpeg', 'image/pjpeg', 'image/png'];
+    const allowedMimes = ['application/pdf', 'image/jpeg', 'image/png'];
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {

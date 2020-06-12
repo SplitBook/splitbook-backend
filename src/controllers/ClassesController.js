@@ -57,7 +57,6 @@ module.exports = {
       .first();
 
     if (classObject) {
-      // TODO Return students and Adopted Books
       const students = await knex('students')
         .select(
           'school_enrollments.id as school_enrollment_id',

@@ -6,6 +6,7 @@ const {
   getFiltersFromObject,
 } = require('../utils/PaginatorUtils');
 const IpUtils = require('../utils/IpUtils');
+const EnumReportTypes = require('../utils/enums/EnumReportTypes');
 
 module.exports = {
   /**
@@ -142,6 +143,51 @@ module.exports = {
       .first();
 
     if (requisition) {
+      requisition.reports = await knex('reports')
+        .select('*')
+        .whereNull('reports.deleted_at')
+        .where('reports.requisition_id', id)
+        .orderBy([
+          { column: 'reports.type', order: 'asc' },
+          { column: 'reports.updated_at', order: 'desc' },
+        ]);
+
+      for (let i = 0; i < requisition.reports.length; i++) {
+        requisition.reports[i].file_signed = IpUtils.getReportsAddress(
+          requisition.reports[i].file_signed
+        );
+        requisition.reports[i].file = IpUtils.getReportsAddress(
+          requisition.reports[i].file
+        );
+
+        const { table } = Object.values(EnumReportTypes).find(
+          ({ type }) => type === requisition.reports[i].type
+        );
+
+        const objects = await knex(table)
+          .select(
+            `${table}.*`,
+            'book_states.state',
+            'requisitions_physical_book.physical_book_id',
+            'physical_books.book_isbn'
+          )
+          .where(`${table}.report_id`, requisition.reports[i].id)
+          .whereNull(`${table}.deleted_at`)
+          .innerJoin(
+            'requisitions_physical_book',
+            'requisitions_physical_book.id',
+            `${table}.requisition_physical_book_id`
+          )
+          .innerJoin('book_states', 'book_states.id', `${table}.book_state_id`)
+          .innerJoin(
+            'physical_books',
+            'physical_books.id',
+            'requisitions_physical_book.physical_book_id'
+          );
+
+        requisition.reports[i][`${table}`] = objects;
+      }
+
       requisition.book_requisitions = await knex('book_requisitions')
         .select(
           'book_requisitions.*',
@@ -150,6 +196,8 @@ module.exports = {
           'books.subject_id',
           'school_subjects.school_subject',
           'books.name',
+          'requisitions_physical_book.id as requisition_physical_book_id',
+          'requisitions_physical_book.physical_book_id',
           'requisitions_physical_book.delivery_date',
           'requisitions_physical_book.return_date'
         )
@@ -170,7 +218,14 @@ module.exports = {
         )
         .orderBy('books.subject_id', 'books.name');
 
-      requisition.cover = IpUtils.getImagesAddress(requisition.cover);
+      requisition.book_requisitions = requisition.book_requisitions.map(
+        (bookRequisition) => {
+          bookRequisition.cover = IpUtils.getImagesAddress(
+            bookRequisition.cover
+          );
+          return bookRequisition;
+        }
+      );
 
       return res.json(requisition);
     }
@@ -179,12 +234,10 @@ module.exports = {
   },
 
   async store(req, res, next) {
-    const { school_enrollment_id, state_id } = req.body;
+    const { school_enrollment_id, state_id, reason } = req.body;
 
-    const defaultStateId = parseInt(
-      await Config.getConfig(
-        Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
-      )
+    const defaultStateId = await Config.getConfig(
+      Config.EnumConfigs.DEFAULT_REQUISITION_STATE_ID.key
     );
 
     try {
@@ -192,6 +245,7 @@ module.exports = {
         .insert({
           school_enrollment_id,
           state_id: state_id || defaultStateId,
+          reason,
         })
         .returning('*');
 
@@ -203,13 +257,13 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { school_enrollment_id, state_id, active } = req.body;
+    const { state_id, reason, active } = req.body;
 
     try {
       const { statusCode, data } = await softUpdate('requisitions', id, {
-        school_enrollment_id,
         state_id,
         active,
+        reason,
       });
 
       return res.status(statusCode).json(data);

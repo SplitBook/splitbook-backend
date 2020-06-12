@@ -1,7 +1,10 @@
 const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 const { generateCode } = require('../utils/PhysicalBookUtils');
-const { createPagination } = require('../utils/PaginatorUtils');
+const {
+  createPagination,
+  getFiltersFromObject,
+} = require('../utils/PaginatorUtils');
 const Config = require('../utils/ConfigUtils');
 
 module.exports = {
@@ -14,7 +17,24 @@ module.exports = {
    * Publishing Company
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const {
+      search,
+      page,
+      limit,
+      orderBy,
+      desc,
+      book_isbn,
+      available,
+      state_id,
+      location_id,
+    } = req.query;
+
+    const filter = getFiltersFromObject({
+      book_isbn,
+      available,
+      state_id,
+      location_id,
+    });
 
     try {
       const pagination = await createPagination(
@@ -22,6 +42,7 @@ module.exports = {
         { search, page, limit },
         {
           orderBy: orderBy || 'physical_books.updated_at',
+          filter,
           desc: orderBy ? desc : true,
           selects: [
             'physical_books.*',
@@ -74,8 +95,8 @@ module.exports = {
       .first();
 
     if (book) {
-      const defaultBookStateId = parseInt(
-        await Config.getConfig(Config.EnumConfigs.DEFAULT_BOOK_STATE_ID.key)
+      const defaultBookStateId = await Config.getConfig(
+        Config.EnumConfigs.DEFAULT_BOOK_STATE_ID.key
       );
 
       const trx = await knex.transaction();
@@ -113,7 +134,7 @@ module.exports = {
       );
     }
 
-    return res.status(406).json({ error: 'Book not found.' });
+    return res.status(406).json({ error: 'Physical Book not found.' });
   },
 
   async update(req, res) {

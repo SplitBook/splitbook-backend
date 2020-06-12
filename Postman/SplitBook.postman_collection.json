@@ -3966,19 +3966,19 @@
 	],
 	"variable": [
 		{
-			"id": "a19e229a-2412-498b-befb-38d28e43cf59",
+			"id": "5a206c02-0fa3-4062-95ee-bd3b843abc78",
 			"key": "URL",
 			"value": "http://localhost:8085",
 			"type": "string"
 		},
 		{
-			"id": "76524b15-4de4-41df-a90d-694f868ba615",
+			"id": "35608b77-d467-4839-89de-76c24d09e228",
 			"key": "TOKEN",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTkyMTI5MjctODc1Ni00ZDg2LWExNGItNDliY2UzZTk2ZmRlIiwicHJvZmlsZV9pZCI6MSwiY2hhcmdlIjoiQWRtaW5pc3RyYWRvciIsInR5cGUiOiJsZyIsImlhdCI6MTU5MTcwMDMyOCwiZXhwIjoxNTkyMTMyMzI4fQ.o6vrSvUzpDI5nIsWT8K32eWq4d6k6q_iN9LbqL9Pkek",
 			"type": "string"
 		},
 		{
-			"id": "10cfdba7-352b-4889-bd95-806d5da48fec",
+			"id": "7c66f210-b3ff-43e0-a655-16e59c300b43",
 			"key": "LOGIN_TOKEN",
 			"value": "",
 			"type": "string"

@@ -9,6 +9,12 @@ module.exports = {
     }),
   }),
 
+  get: celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    }),
+  }),
+
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       adopted_book_id: Joi.number().integer().min(1).required(),

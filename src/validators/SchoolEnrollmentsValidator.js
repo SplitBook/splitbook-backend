@@ -35,10 +35,10 @@ module.exports = {
 
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
-      student_id: Joi.number().integer().min(1).required(),
-      guardian_id: Joi.number().integer().min(1).required(),
-      school_year_id: Joi.number().integer().min(1).required(),
-      class_id: Joi.number().integer().min(1).required(),
+      student_id: Joi.number().integer().min(1),
+      guardian_id: Joi.number().integer().min(1),
+      school_year_id: Joi.number().integer().min(1),
+      class_id: Joi.number().integer().min(1),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

@@ -2,24 +2,27 @@ const knex = require('../database');
 const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
 
 module.exports = {
-  async index(req, res, next) {
-    const deliveries = await knex('deliveries')
-      .select('*')
-      .whereNull('deleted_at')
-      .orderBy('created_at');
-
-    return res.json(deliveries);
-  },
-
-  async store(req, res, next) {
-    const { requisition_physical_book_id, book_state_id } = req.body;
+  async store(req, res) {
+    const { requisition_physical_book_id, book_state_id, report_id } = req.body;
 
     try {
+      const report = await knex('reports')
+        .select('reports.*')
+        .where('reports.id', report_id)
+        .whereNull('reports.deleted_at');
+
+      if (!report) {
+        return res.status(404).json({ error: 'Report not found' });
+      }
+
+      if (report.is_file_signed) {
+        return res.status(403).json({
+          error: 'Report cannot be changed, because was already signed',
+        });
+      }
+
       const [delivery] = await knex('deliveries')
-        .insert({
-          requisition_physical_book_id,
-          book_state_id,
-        })
+        .insert({ requisition_physical_book_id, book_state_id, report_id })
         .returning('*');
 
       return res.json(delivery);
@@ -30,13 +33,27 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { requisition_physical_book_id, book_state_id, active } = req.body;
+    const { book_state_id } = req.body;
 
     try {
+      const report = await knex('deliveries')
+        .select('reports.*')
+        .where('deliveries.id', id)
+        .whereNull('deliveries.deleted_at')
+        .innerJoin('reports', 'reports.id', 'deliveries.report_id');
+
+      if (!report) {
+        return res.status(404).json({ error: 'Delivery not found' });
+      }
+
+      if (report.is_file_signed) {
+        return res.status(403).json({
+          error: 'Report cannot be changed, because was already signed',
+        });
+      }
+
       const { statusCode, data } = await softUpdate('deliveries', id, {
-        requisition_physical_book_id,
         book_state_id,
-        active,
       });
 
       return res.status(statusCode).json(data);
@@ -48,6 +65,28 @@ module.exports = {
   async delete(req, res) {
     const { id } = req.params;
 
-    return res.status(await softDelete('deliveries', id)).send();
+    try {
+      const report = await knex('deliveries')
+        .select('reports.*')
+        .where('deliveries.id', id)
+        .whereNull('deliveries.deleted_at')
+        .innerJoin('reports', 'reports.id', 'deliveries.report_id');
+
+      if (!report) {
+        return res.status(404).json({ error: 'Delivery not found' });
+      }
+
+      if (report.is_file_signed) {
+        return res.status(403).json({
+          error: 'Report cannot be changed, because was already signed',
+        });
+      }
+
+      const { statusCode, data } = await softDelete('deliveries', id);
+
+      return res.status(statusCode).json(data);
+    } catch (err) {
+      return res.status(406).json(err);
+    }
   },
 };

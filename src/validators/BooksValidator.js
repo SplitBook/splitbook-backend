@@ -8,6 +8,8 @@ module.exports = {
       desc: Joi.boolean().default(false),
       limit: Joi.number().integer().min(5).max(100).default(5),
       page: Joi.number().integer().min(1).default(1),
+      code: Joi.string().trim(),
+      subject_id: Joi.string().trim(),
     }),
   }),
 

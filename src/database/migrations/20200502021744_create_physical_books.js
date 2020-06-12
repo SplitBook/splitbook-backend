@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     table.boolean('available').defaultTo(true);
     table.integer('state_id').unsigned();
     table.integer('location_id').unsigned();
-    table.string('description');
+    table.text('description', 'longtext');
 
     table.foreign('state_id').references('id').inTable('book_states');
     table.foreign('location_id').references('id').inTable('book_locations');
