@@ -3,6 +3,7 @@ const path = require('path');
 const multer = require('multer');
 
 const multerImagesConfig = require('../config/multerImagesConfig');
+const multerCsvConfig = require('../config/multerCsvConfig');
 
 // const HandbookController = require('./controllers/HandbookController');
 const SchoolYearsController = require('../controllers/SchoolYearsController');
@@ -28,6 +29,7 @@ const DeliveriesController = require('../controllers/DeliveriesController');
 const ReturnsController = require('../controllers/ReturnsController');
 const AccountsController = require('../controllers/AccountsController');
 const ConfigsController = require('../controllers/ConfigsController');
+const ImportController = require('../controllers/ImportController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -52,6 +54,7 @@ const DeliveriesValidator = require('../validators/DeliveriesValidator');
 const ReturnsValidator = require('../validators/ReturnsValidator');
 const AccountsValidator = require('../validators/AccountsValidator');
 const ConfigsValidator = require('../validators/ConfigsValidator');
+const ImportValidator = require('../validators/ImportValidator');
 
 const routes = express.Router();
 
@@ -454,6 +457,14 @@ routes.delete(
   '/accounts/:id',
   AccountsValidator.delete,
   AccountsController.delete
+);
+
+// Import
+routes.post(
+  '/import/school-enrollments',
+  multer(multerCsvConfig).single('file'),
+  ImportValidator.importSchoolEnrollmentByClass,
+  ImportController.importSchoolEnrollmentsByClass
 );
 
 // Configs
