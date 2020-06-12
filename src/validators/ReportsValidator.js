@@ -9,6 +9,9 @@ module.exports = {
       limit: Joi.number().integer().min(5).max(100).default(5),
       page: Joi.number().integer().min(1).default(1),
       is_file_signed: Joi.boolean(),
+      valid: Joi.boolean(),
+      school_enrollment_id: Joi.number().integer().min(1),
+      requisition_id: Joi.number().integer().min(1),
     }),
   }),
 

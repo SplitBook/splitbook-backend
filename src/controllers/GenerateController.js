@@ -1,6 +1,7 @@
 const knex = require('../database');
 const PDF = require('../utils/pdf');
 const IpUtils = require('../utils/IpUtils');
+const fs = require('fs');
 
 module.exports = {
   async generateReport(req, res) {
@@ -19,8 +20,23 @@ module.exports = {
 
       return res.json({ file: IpUtils.getReportsAddress(reportFilename) });
     } catch (err) {
-      console.log(err);
       return res.status(406).json(err);
     }
+  },
+
+  async generateQRCodes(req, res) {
+    const { codes } = req.query;
+
+    const stream = await PDF.generateQRCodes(
+      codes.split(',').map((code) => code.trim())
+    );
+
+    const path = stream.path;
+
+    res.setHeader('content-type', 'application/pdf');
+
+    return stream.pipe(res).on('finish', () => {
+      fs.unlinkSync(path);
+    });
   },
 };

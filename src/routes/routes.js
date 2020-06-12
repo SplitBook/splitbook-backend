@@ -487,6 +487,11 @@ routes.get(
   GenerateValidator.generateReport,
   GenerateController.generateReport
 );
+routes.get(
+  '/generate/qr-codes',
+  GenerateValidator.generateQRCodes,
+  GenerateController.generateQRCodes
+);
 
 // Configs
 routes.get('/configs', ConfigsController.index);

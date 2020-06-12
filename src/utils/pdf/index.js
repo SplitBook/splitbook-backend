@@ -4,6 +4,25 @@ const fs = require('fs');
 const pug = require('pug');
 const pdf = require('html-pdf');
 const EnumReportTypes = require('../enums/EnumReportTypes');
+const crypto = require('crypto');
+
+const folderReportsPath = path.resolve(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'tmp',
+  'reports'
+);
+
+const folderQRCodesPath = path.resolve(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'tmp',
+  'qr-codes'
+);
 
 const generateReport = async (report_id) => {
   let report = await knex('reports')
@@ -78,23 +97,48 @@ const generateReport = async (report_id) => {
     ...report,
   };
 
+  return await generatePDF(report_id, 'ReportTemplate', properties);
+};
+
+const generateQRCodes = async (codes) => {
+  const properties = { codes };
+  const filename = crypto.randomBytes(5).toString('HEX');
+
+  return fs.createReadStream(
+    path.resolve(
+      folderQRCodesPath,
+      await generatePDF(
+        filename,
+        'QRCodesTemplate',
+        properties,
+        folderQRCodesPath
+      )
+    )
+  );
+};
+
+const deleteReport = (filename) => {
+  if (fs.existsSync(filename)) {
+    fs.unlinkSync(filename);
+  }
+};
+
+const generatePDF = (
+  filename,
+  templateName,
+  properties = {},
+  folderPath = folderReportsPath
+) => {
   const html = pug.renderFile(
-    path.resolve(__dirname, 'templates', `ReportTemplate.pug`),
+    path.resolve(__dirname, 'templates', `${templateName}.pug`),
     properties
   );
 
-  const options = { format: 'A4' };
-  const filename = report_id;
+  fs.writeFileSync('index.html', html);
 
-  const filePath = path.resolve(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    'tmp',
-    'reports',
-    `${filename}.pdf`
-  );
+  const options = { format: 'A4' };
+
+  const filePath = path.resolve(folderPath, `${filename}.pdf`);
 
   return new Promise((resolve, reject) => {
     pdf.create(html, options).toFile(filePath, (err, res) => {
@@ -105,10 +149,4 @@ const generateReport = async (report_id) => {
   });
 };
 
-const deleteReport = (filename) => {
-  if (fs.existsSync(filename)) {
-    fs.unlinkSync(filename);
-  }
-};
-
-module.exports = { generateReport, deleteReport };
+module.exports = { generateReport, generateQRCodes };

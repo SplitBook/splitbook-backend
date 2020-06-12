@@ -15,8 +15,23 @@ module.exports = {
    * Report description
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc, is_file_signed } = req.query;
-    const filter = getFiltersFromObject({ is_file_signed });
+    const {
+      search,
+      page,
+      limit,
+      orderBy,
+      desc,
+      is_file_signed,
+      valid,
+      school_enrollment_id,
+      requisition_id,
+    } = req.query;
+    const filter = getFiltersFromObject({
+      is_file_signed,
+      valid,
+      school_enrollment_id,
+      requisition_id,
+    });
 
     try {
       let pagination = await createPagination(
