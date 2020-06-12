@@ -3,8 +3,8 @@ const multer = require('multer');
 
 const multerImagesConfig = require('../config/multerImagesConfig');
 const multerReportsConfig = require('../config/multerReportsConfig');
+const multerCsvConfig = require('../config/multerCsvConfig');
 
-// const HandbookController = require('./controllers/HandbookController');
 const SchoolYearsController = require('../controllers/SchoolYearsController');
 const GeneralClassesController = require('../controllers/GeneralClassesController');
 const RequisitionStatesController = require('../controllers/RequisitionStatesController');
@@ -32,6 +32,7 @@ const ResumesAdoptedBooksController = require('../controllers/ResumesAdoptedBook
 const RequisitionAdoptedBooksController = require('../controllers/RequisitionAdoptedBooksController');
 const ReportsController = require('../controllers/ReportsController');
 const GenerateController = require('../controllers/GenerateController');
+const ImportController = require('../controllers/ImportController');
 
 const SchoolYearsValidator = require('../validators/SchoolYearsValidator');
 const GeneralClassesValidator = require('../validators/GeneralClassesValidator');
@@ -60,6 +61,7 @@ const ResumesAdoptedBooksValidator = require('../validators/ResumesAdoptedBooksV
 const RequisitionAdoptedBooksValidator = require('../validators/RequisitionAdoptedBooksValidator');
 const ReportsValidator = require('../validators/ReportsValidator');
 const GenerateValidator = require('../validators/GenerateValidator');
+const ImportValidator = require('../validators/ImportValidator');
 
 const routes = express.Router();
 
@@ -491,6 +493,14 @@ routes.get(
   '/generate/qr-codes',
   GenerateValidator.generateQRCodes,
   GenerateController.generateQRCodes
+);
+
+// Import
+routes.post(
+  '/import/school-enrollments',
+  multer(multerCsvConfig).single('file'),
+  ImportValidator.importSchoolEnrollmentByClass,
+  ImportController.importSchoolEnrollmentsByClass
 );
 
 // Configs
