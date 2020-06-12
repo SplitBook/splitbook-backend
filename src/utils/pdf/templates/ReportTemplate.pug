@@ -38,7 +38,7 @@ html(lang="en")
             td= val.name
             td= val.physical_book_id
             td= val.state
-            td= val.signature
+            td= val.signature ? '' : '-'
     footer
       .information
         h4 Instituto dos Pupilos do Exército

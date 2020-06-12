@@ -14,7 +14,8 @@ const generateReport = async (report_id) => {
       'reports.report_date',
       'students.name as student_name',
       'students.number as student_number',
-      'guardians.name as guardian_name'
+      'guardians.name as guardian_name',
+      'school_years.school_year'
     )
     .whereNull('reports.deleted_at')
     .where('reports.id', report_id)
@@ -38,7 +39,7 @@ const generateReport = async (report_id) => {
   }
 
   if (report.file) {
-    PDF.deleteReport(report.file);
+    deleteReport(report.file);
   }
 
   const { table } = Object.values(EnumReportTypes).find(
@@ -59,7 +60,16 @@ const generateReport = async (report_id) => {
       'requisitions_physical_book.id',
       `${table}.requisition_physical_book_id`
     )
-    .innerJoin('book_states', 'book_states.id', `${table}.book_state_id`);
+    .innerJoin('book_states', 'book_states.id', `${table}.book_state_id`)
+    .innerJoin(
+      'physical_books',
+      'physical_books.id',
+      'requisitions_physical_book.physical_book_id'
+    )
+    .innerJoin('books', 'books.isbn', 'physical_books.book_isbn')
+    .leftJoin('school_subjects', 'school_subjects.id', 'books.subject_id');
+
+  report.report_date = `${report.report_date.getDate()}-${report.report_date.getMonth()}-${report.report_date.getFullYear()}`;
 
   const properties = {
     objects: objects.map((obj) => {
@@ -74,6 +84,7 @@ const generateReport = async (report_id) => {
   );
 
   const options = { format: 'A4' };
+  const filename = report_id;
 
   const filePath = path.resolve(
     __dirname,

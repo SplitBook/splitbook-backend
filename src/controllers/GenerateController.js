@@ -19,6 +19,7 @@ module.exports = {
 
       return res.json({ file: IpUtils.getReportsAddress(reportFilename) });
     } catch (err) {
+      console.log(err);
       return res.status(406).json(err);
     }
   },

@@ -218,7 +218,14 @@ module.exports = {
         )
         .orderBy('books.subject_id', 'books.name');
 
-      requisition.cover = IpUtils.getImagesAddress(requisition.cover);
+      requisition.book_requisitions = requisition.book_requisitions.map(
+        (bookRequisition) => {
+          bookRequisition.cover = IpUtils.getImagesAddress(
+            bookRequisition.cover
+          );
+          return bookRequisition;
+        }
+      );
 
       return res.json(requisition);
     }
