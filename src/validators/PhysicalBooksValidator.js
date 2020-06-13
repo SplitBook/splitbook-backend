@@ -15,6 +15,16 @@ module.exports = {
     }),
   }),
 
+  get: celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      id: Joi.string()
+        .pattern(new RegExp(/[A-Z]{2,5}-.{6}/))
+        .min(9)
+        .max(12)
+        .required(),
+    }),
+  }),
+
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       book_isbn: Joi.string().trim().required(),

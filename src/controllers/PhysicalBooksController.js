@@ -6,6 +6,7 @@ const {
   getFiltersFromObject,
 } = require('../utils/PaginatorUtils');
 const Config = require('../utils/ConfigUtils');
+const IpUtils = require('../utils/IpUtils');
 
 module.exports = {
   /*
@@ -75,6 +76,78 @@ module.exports = {
     } catch (err) {
       return res.status(406).json(err);
     }
+  },
+
+  async get(req, res) {
+    const { id } = req.params;
+
+    let physicalBook = await knex('physical_books')
+      .where('physical_books.id', id)
+      .select(
+        'physical_books.*',
+        'book_locations.location',
+        'book_states.state',
+        'books.name',
+        'books.publishing_company',
+        'books.cover'
+      )
+      .innerJoin('books', 'books.isbn', 'physical_books.book_isbn')
+      .leftJoin(
+        'book_locations',
+        'book_locations.id',
+        'physical_books.location_id'
+      )
+      .leftJoin('book_states', 'book_states.id', 'physical_books.state_id')
+      .whereNull('physical_books.deleted_at')
+      .first();
+
+    if (physicalBook) {
+      physicalBook.cover = IpUtils.getImagesAddress(physicalBook.cover);
+
+      let students = await knex('requisitions_physical_book')
+        .select(
+          'requisitions_physical_book.delivery_date',
+          'requisitions_physical_book.return_date',
+          'students.id as student_id',
+          'students.name',
+          'students.number',
+          'students.photo',
+          'school_years.id as school_year_id',
+          'school_years.school_year'
+        )
+        .where('requisitions_physical_book.physical_book_id', id)
+        .innerJoin(
+          'book_requisitions',
+          'book_requisitions.id',
+          'requisitions_physical_book.book_requisition_id'
+        )
+        .innerJoin(
+          'requisitions',
+          'requisitions.id',
+          'book_requisitions.requisition_id'
+        )
+        .innerJoin(
+          'school_enrollments',
+          'school_enrollments.id',
+          'requisitions.school_enrollment_id'
+        )
+        .innerJoin('students', 'students.id', 'school_enrollments.student_id')
+        .innerJoin(
+          'school_years',
+          'school_years.id',
+          'school_enrollments.school_year_id'
+        )
+        .orderBy('school_years.school_year', 'asc');
+
+      students = students.map((student) => {
+        student.photo = IpUtils.getImagesAddress(student.photo);
+        return student;
+      });
+
+      return res.json({ ...physicalBook, students });
+    }
+
+    return res.status(404).json({ error: 'Physical Book not Found' });
   },
 
   async store(req, res, next) {

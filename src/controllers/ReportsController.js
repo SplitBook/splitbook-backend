@@ -139,7 +139,7 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { valid, description, report_date } = req.body;
+    let { valid, description, report_date } = req.body;
     const { delete_file_signed } = req.query;
     let file_signed = req.file ? req.file.filename : undefined;
 
@@ -152,6 +152,8 @@ module.exports = {
       : undefined;
 
     const trx = await knex.transaction();
+
+    valid = !!file_signed || valid;
 
     try {
       let { statusCode, data: report } = await softUpdate('reports', id, {
@@ -166,7 +168,7 @@ module.exports = {
         report.file_signed = IpUtils.getReportsAddress(report.file_signed);
         report.file = IpUtils.getReportsAddress(report.file);
 
-        if (is_file_signed) {
+        if (is_file_signed || valid) {
           const { table } = Object.values(EnumReportTypes).find(
             ({ type }) => type === report.type
           );
