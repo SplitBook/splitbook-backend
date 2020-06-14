@@ -1,8 +1,6 @@
 const redis = require('redis');
+const redisConfig = require('../config/redisConfig');
 
-const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
-
-const client = redis.createClient(REDIS_PORT, REDIS_HOST);
+const client = redis.createClient(redisConfig.port, redisConfig.host);
 
 module.exports = client;
