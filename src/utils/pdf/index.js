@@ -31,6 +31,7 @@ const generateReport = async (report_id) => {
       'reports.type',
       'reports.file',
       'reports.report_date',
+      'reports.description',
       'students.name as student_name',
       'students.number as student_number',
       'guardians.name as guardian_name',
@@ -134,7 +135,7 @@ const generatePDF = (
     properties
   );
 
-  // fs.writeFileSync('index.html', html);
+  fs.writeFileSync('index.html', html);
 
   const options = { format: 'A4' };
 

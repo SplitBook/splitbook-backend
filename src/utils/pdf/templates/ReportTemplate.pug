@@ -39,6 +39,10 @@ html(lang="en")
             td= val.physical_book_id
             td= val.state
             td= val.signature ? '' : '-'
+      .observations(class=description?'':'hidden')
+        h4 Observações:
+        p #{description}
+
     footer
       .information
         h4 Instituto dos Pupilos do Exército

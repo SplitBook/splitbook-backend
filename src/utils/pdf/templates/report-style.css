@@ -121,3 +121,23 @@ footer {
 footer .information p {
   font-size: 12px;
 }
+
+.hidden {
+  display: none;
+}
+
+.observations {
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #0f0f0f;
+  width: 100%;
+  min-height: 75px;
+}
+
+.observations p {
+  font-size: 12px;
+}
+
+.observations h4 {
+  margin-bottom: 5px;
+}

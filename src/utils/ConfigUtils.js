@@ -8,7 +8,7 @@ function getConfig(key) {
       if (err) throw reject(err);
 
       if (data) {
-        return resolve(convertToArray(data));
+        return resolve(convertToArray(data, key));
       }
 
       knex('configs')
@@ -18,7 +18,7 @@ function getConfig(key) {
         .then((config) => {
           if (config) {
             redis.setex(key, 3600, config.value);
-            return resolve(convertToArray(config.value));
+            return resolve(convertToArray(config.value, key));
           }
 
           throw 'Config not found';
@@ -28,7 +28,7 @@ function getConfig(key) {
   });
 }
 
-function convertToArray(data) {
+function convertToArray(data, key = '') {
   const values = String(data)
     .split(',')
     .map((value) => {
@@ -36,7 +36,10 @@ function convertToArray(data) {
       return value.match(/^\d*$/) ? parseInt(value) : value;
     });
 
-  return values.length > 1 ? values : values[0];
+  return values.length > 1 ||
+    Object.values(EnumConfigs).find((conf) => conf.key === key).array
+    ? values
+    : values[0];
 }
 
 async function setConfig(key, value) {

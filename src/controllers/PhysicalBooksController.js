@@ -202,9 +202,7 @@ module.exports = {
 
       await trx.commit();
 
-      return res.json(
-        physicalBooks.length > 1 ? physicalBooks : physicalBooks[0]
-      );
+      return res.json(physicalBooks);
     }
 
     return res.status(406).json({ error: 'Physical Book not found.' });
