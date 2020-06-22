@@ -179,7 +179,7 @@ module.exports = {
   },
 
   async deliveries(req, res, next) {
-    let { requisitions_physical_book, delivery_date } = req.body;
+    let { requisitions_physical_book, delivery_date, description } = req.body;
 
     const bookRequisition = await knex('book_requisitions')
       .select('book_requisitions.requisition_id', 'requisitions.state_id')
@@ -229,6 +229,7 @@ module.exports = {
           requisition_id: bookRequisition.requisition_id,
           type: EnumReportTypes.DELIVERY.type,
           report_date,
+          description,
         })
         .returning('*');
 
@@ -259,7 +260,7 @@ module.exports = {
   },
 
   async returns(req, res, next) {
-    let { requisitions_physical_book, return_date } = req.body;
+    let { requisitions_physical_book, return_date, description } = req.body;
 
     const bookRequisitions = await knex('requisitions_physical_book')
       .select('requisitions_physical_book.*')
@@ -308,6 +309,7 @@ module.exports = {
           requisition_id: requisition.requisition_id,
           type: EnumReportTypes.RETURN.type,
           report_date,
+          description,
         })
         .returning('*');
 

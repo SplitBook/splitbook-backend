@@ -40,6 +40,7 @@ module.exports = {
         )
         .min(1),
       delivery_date: Joi.date().default(new Date()),
+      description: Joi.string().trim().allow(null),
     }),
   }),
 
@@ -54,6 +55,7 @@ module.exports = {
         )
         .min(1),
       return_date: Joi.date().default(new Date()),
+      description: Joi.string().trim().allow(null),
     }),
   }),
 
