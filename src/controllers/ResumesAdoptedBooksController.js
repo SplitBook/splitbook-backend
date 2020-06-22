@@ -70,7 +70,7 @@ module.exports = {
           .where('adopted_books.resume_id', resumes[i].id)
           .whereNull('adopted_books.deleted_at')
           .innerJoin('books', 'books.isbn', 'adopted_books.book_isbn')
-          .innerJoin(
+          .leftJoin(
             'school_subjects',
             'school_subjects.id',
             'books.subject_id'

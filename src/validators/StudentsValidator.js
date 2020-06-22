@@ -18,7 +18,7 @@ module.exports = {
         .pattern(new RegExp(/([0-9]{1,4})\b\/([0-9]{2})\b/))
         .max(7)
         .required(),
-      born_date: Joi.date().less('now'),
+      born_date: Joi.date().allow(null).less('now'),
       active: Joi.boolean().default(true),
     }),
   }),
@@ -26,7 +26,7 @@ module.exports = {
   update: celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().trim(),
-      born_date: Joi.date().less('now'),
+      born_date: Joi.date().allow(null).less('now'),
       active: Joi.boolean().default(true),
     }),
     [Segments.PARAMS]: Joi.object({

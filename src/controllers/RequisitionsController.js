@@ -30,6 +30,7 @@ module.exports = {
       guardian_id,
       student_id,
       class_id,
+      head_class_id,
       state_id,
     } = req.query;
 
@@ -37,6 +38,7 @@ module.exports = {
       school_year_id: current_school_year ? req.school_year_id : school_year_id,
       guardian_id,
       student_id,
+      head_class_id,
       class_id,
       state_id,
     });
@@ -67,6 +69,19 @@ module.exports = {
             'class',
             'school_year',
             'requisition_states.state',
+          ],
+          multipleInnerJoins: [
+            {
+              table: 'classes',
+              joins: [
+                [
+                  'classes.school_year_id',
+                  '=',
+                  'school_enrollments.school_year_id',
+                ],
+                ['classes.class_id', '=', 'school_enrollments.class_id'],
+              ],
+            },
           ],
           innerJoins: [
             [

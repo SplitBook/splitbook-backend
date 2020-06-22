@@ -1,9 +1,7 @@
 const requisitionStates = {
-  PROCESS: 'Em processamento',
-  PENDING: 'Pendente',
+  PROCESS: 'Aguardar Aprovação',
   ACCEPTED: 'Aceite',
   REFUSED: 'Recusado',
-  COMPLETED: 'Concluido',
 };
 
 module.exports = requisitionStates;

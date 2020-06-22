@@ -12,6 +12,7 @@ module.exports = {
       current_school_year: Joi.boolean().default(false),
       student_id: Joi.string().trim(),
       guardian_id: Joi.string().trim(),
+      head_class_id: Joi.string().trim(),
       class_id: Joi.string().trim(),
       state_id: Joi.string().trim(),
     }),

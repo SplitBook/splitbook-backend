@@ -146,6 +146,10 @@ module.exports = {
       schoolEnrollment.book_requisitions = [];
 
       if (schoolEnrollment.requisition_id) {
+        schoolEnrollment.reports = await knex('reports')
+          .whereNull('reports.deleted_at')
+          .where('reports.requisition_id', schoolEnrollment.requisition_id);
+
         schoolEnrollment.book_requisitions = await knex('book_requisitions')
           .select(
             'book_requisitions.*',
@@ -172,7 +176,9 @@ module.exports = {
 
       schoolEnrollment.book_requisitions = schoolEnrollment.book_requisitions.map(
         (book_requisition) => {
-          book_requisition = IpUtils.getImagesAddress(book_requisition);
+          book_requisition.cover = IpUtils.getImagesAddress(
+            book_requisition.cover
+          );
           return book_requisition;
         }
       );

@@ -17,6 +17,7 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
     selects = [`${tableName}.*`],
     innerJoins = [],
     leftJoins = [],
+    multipleInnerJoins = [],
     searchColumns = [],
     filter = {},
     orderBy = `${tableName}.created_at`,
@@ -31,6 +32,14 @@ async function createPagination(tableName, paginationOptions, queryOptions) {
 
   leftJoins.forEach((elm) => {
     query.leftJoin(...elm);
+  });
+
+  multipleInnerJoins.forEach((elm) => {
+    query.innerJoin(elm.table, (obj) => {
+      elm.joins.forEach((e) => {
+        obj.on(...e);
+      });
+    });
   });
 
   if (search) {
