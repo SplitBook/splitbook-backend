@@ -35,7 +35,9 @@ module.exports = {
     } = req.query;
 
     const filter = getFiltersFromObject({
-      school_year_id: current_school_year ? req.school_year_id : school_year_id,
+      ['school_enrollments.school_year_id']: current_school_year
+        ? req.school_year_id
+        : school_year_id,
       guardian_id,
       student_id,
       head_class_id,
