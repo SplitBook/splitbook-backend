@@ -1,5 +1,8 @@
 const knex = require('../database');
-const { createPagination } = require('../utils/PaginatorUtils');
+const {
+  createPagination,
+  getFiltersFromObject,
+} = require('../utils/PaginatorUtils');
 
 module.exports = {
   /**
@@ -8,7 +11,21 @@ module.exports = {
    * Class
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const {
+      search,
+      page,
+      limit,
+      orderBy,
+      desc,
+      school_year_id,
+      class_id,
+      current_school_year,
+    } = req.query;
+
+    const filter = getFiltersFromObject({
+      school_year_id: current_school_year ? req.school_year_id : school_year_id,
+      class_id,
+    });
 
     try {
       const pagination = await createPagination(
@@ -17,6 +34,7 @@ module.exports = {
         {
           orderBy: orderBy || ['school_year', 'class'],
           desc,
+          filter,
           selects: [
             'classes.*',
             'school_years.school_year',
