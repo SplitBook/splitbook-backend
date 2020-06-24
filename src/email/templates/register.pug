@@ -2,10 +2,14 @@ doctype html
 html
   head
     title #{subject}
-
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    style
+      include styles.css
   body
-    p.
-      Conta criada com sucesso. Por favor confirme a sua conta, clicando no seguinte link:
+    .container
+      img(src='http://localhost:8085/images/logo.png')
+      p.
+        Conta criada com sucesso. Por favor confirme a sua conta, clicando no seguinte link:
 
-    a(href=`${url}?token=${token}`).
-      Confirmar palavra-passe
+      a(href=`${url}?token=${token}`,class="button").
+        Registar Utilizador
