@@ -14,4 +14,4 @@ tmp/csv/*
 !tmp/reports/.gitkeep
 !tmp/qr-codes/.gitkeep
 !tmp/csv/example.csv
-tmp/uploads/logo.png
+!tmp/uploads/logo.png
