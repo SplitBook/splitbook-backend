@@ -36,9 +36,9 @@ html(lang="en")
         each val in objects
           tr(class=val.signature?'block':'')
             td= val.name
-            td= val.physical_book_id
-            td= val.state
-            td= val.signature ? '' : '-'
+            td= val.physical_book_id || '-'
+            td= val.state || '-'
+            td(class=val.signature && 'bold')= val.signature || '' 
       .observations(class=description?'':'hidden')
         h4 Observações:
         p #{description}

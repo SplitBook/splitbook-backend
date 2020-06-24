@@ -35,7 +35,8 @@ const generateReport = async (report_id) => {
       'students.name as student_name',
       'students.number as student_number',
       'guardians.name as guardian_name',
-      'school_years.school_year'
+      'school_years.school_year',
+      'reports.requisition_id'
     )
     .whereNull('reports.deleted_at')
     .where('reports.id', report_id)
@@ -62,11 +63,11 @@ const generateReport = async (report_id) => {
     deleteReport(report.file);
   }
 
-  const { table } = Object.values(EnumReportTypes).find(
+  const { table, column } = Object.values(EnumReportTypes).find(
     ({ type }) => type === report.type
   );
 
-  const objects = await knex(table)
+  const objectsToSign = await knex(table)
     .select(
       `${table}.*`,
       'book_states.state',
@@ -91,10 +92,56 @@ const generateReport = async (report_id) => {
 
   report.report_date = `${report.report_date.getDate()}-${report.report_date.getMonth()}-${report.report_date.getFullYear()}`;
 
+  const otherObjects = await knex('book_requisitions')
+    .select(
+      `${table}.*`,
+      'book_states.state',
+      'requisitions_physical_book.physical_book_id',
+      'books.name',
+      `requisitions_physical_book.${column}`
+    )
+    .whereNull('book_requisitions.deleted_at')
+    .where('book_requisitions.requisition_id', report.requisition_id)
+    .innerJoin(
+      'adopted_books',
+      'adopted_books.id',
+      'book_requisitions.adopted_book_id'
+    )
+    .innerJoin('books', 'books.isbn', 'adopted_books.book_isbn')
+    .leftJoin(
+      'requisitions_physical_book',
+      'requisitions_physical_book.book_requisition_id',
+      'book_requisitions.id'
+    )
+    .leftJoin(
+      `${table}`,
+      `${table}.requisition_physical_book_id`,
+      'requisitions_physical_book.id'
+    )
+    .leftJoin('book_states', 'book_states.id', `${table}.book_state_id`);
+
+  let objects = [];
+
+  objectsToSign.forEach((obj) => {
+    objects.push({ ...obj, signature: null });
+  });
+
+  otherObjects
+    .filter(
+      (obj) => !objectsToSign.find((objToFind) => objToFind.id === obj.id)
+    )
+    .forEach((obj) => {
+      const signature = !obj.physical_book_id
+        ? 'Por entregar'
+        : obj[column]
+        ? 'Assinado'
+        : '---';
+
+      objects.push({ ...obj, signature });
+    });
+
   const properties = {
-    objects: objects.map((obj) => {
-      return { ...obj, signature: true };
-    }),
+    objects,
     ...report,
   };
 

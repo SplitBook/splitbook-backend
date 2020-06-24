@@ -138,6 +138,14 @@ footer .information p {
   font-size: 12px;
 }
 
+.block {
+  background-color: #f0f0f0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
 .observations h4 {
   margin-bottom: 5px;
 }

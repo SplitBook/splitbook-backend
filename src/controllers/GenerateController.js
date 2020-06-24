@@ -16,7 +16,7 @@ module.exports = {
 
       await knex('reports')
         .where('id', report_id)
-        .update({ file: reportFilename });
+        .update({ file: reportFilename, updated_at: new Date() });
 
       return res.json({ file: IpUtils.getReportsAddress(reportFilename) });
     } catch (err) {
@@ -27,9 +27,15 @@ module.exports = {
   async generateQRCodes(req, res) {
     const { codes } = req.query;
 
-    const stream = await PDF.generateQRCodes(
-      codes.split(',').map((code) => code.trim())
-    );
+    const splittedCodes = codes.split(',').map((code) => code.trim());
+
+    if (splittedCodes.length > 40 || splittedCodes.length < 0) {
+      return res
+        .status(406)
+        .json({ error: 'Invalid number of qrcodes. Min is 1 and max is 40.' });
+    }
+
+    const stream = await PDF.generateQRCodes(splittedCodes);
 
     const path = stream.path;
 
