@@ -6,6 +6,7 @@ module.exports = {
       school_enrollment_id: Joi.number().integer().min(1).required(),
       adopted_books_ids: Joi.array()
         .items(Joi.number().integer().min(1))
+        .min(1)
         .required(),
     }),
   }),

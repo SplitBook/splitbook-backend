@@ -268,7 +268,7 @@ module.exports = {
         'requisitions_physical_book.id',
         requisitions_physical_book.map((requisition) => requisition.id)
       )
-      .andWhereNotNull('requisitions_physical_book.delivery_date');
+      .whereNotNull('requisitions_physical_book.delivery_date');
 
     if (bookRequisitions.length !== requisitions_physical_book.length) {
       return res

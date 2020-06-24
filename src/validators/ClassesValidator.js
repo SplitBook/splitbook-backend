@@ -10,6 +10,7 @@ module.exports = {
       page: Joi.number().integer().min(1).default(1),
       school_year_id: Joi.string().trim(),
       class_id: Joi.string().trim(),
+      head_class_id: Joi.string().trim(),
       current_school_year: Joi.boolean().default(false),
     }),
   }),
@@ -25,7 +26,7 @@ module.exports = {
     [Segments.BODY]: Joi.object().keys({
       class_id: Joi.number().integer().min(1).required(),
       school_year_id: Joi.number().integer().min(1),
-      head_class_id: Joi.number().integer().min(1),
+      head_class_id: Joi.number().integer().min(1).allow(null),
       active: Joi.boolean().default(true),
     }),
   }),
