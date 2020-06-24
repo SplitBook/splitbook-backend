@@ -1,6 +1,8 @@
 const knex = require('../database');
 const UserUtils = require('./UserUtils');
 const PasswordUtils = require('./PasswordUtils');
+const { generate, EnumTokenTypes } = require('./TokenUtils');
+const { EnumEmailTypes } = require('../email');
 
 const createSchoolEnrollment = async (
   class_id,
@@ -14,6 +16,7 @@ const createSchoolEnrollment = async (
   student_number = String(student_number).padStart('7', '0');
 
   const trx = await knex.transaction();
+  let sendEmailToUser = false;
 
   try {
     let student = await trx('students')
@@ -67,6 +70,8 @@ const createSchoolEnrollment = async (
           .returning('*');
 
         user.password = undefined;
+
+        sendEmailToUser = true;
       }
 
       [guardian] = await trx('guardians')
@@ -99,6 +104,27 @@ const createSchoolEnrollment = async (
     }
 
     await trx.commit();
+
+    if (sendEmailToUser) {
+      const token = generate(
+        {
+          email: guardian_email,
+        },
+        EnumTokenTypes.EMAIL,
+        '3 days'
+      );
+
+      // Show token to change password
+      // console.log('Token', token)
+
+      const Queue = require('../stack');
+
+      await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
+        to: guardian_email,
+        emailType: EnumEmailTypes.REGISTER,
+        properties: { token },
+      });
+    }
 
     return schoolEnrollment;
   } catch (err) {
