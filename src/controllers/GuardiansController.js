@@ -73,11 +73,21 @@ module.exports = {
       guardian.photo = IpUtils.getImagesAddress(guardian.photo);
 
       let students = await knex('school_enrollments')
-        .select('students.*')
+        .select(
+          'students.*',
+          'school_enrollments.id as school_enrollment_id',
+          'school_enrollments.class_id',
+          'general_classes.class'
+        )
         .distinct()
         .where('school_enrollments.school_year_id', req.school_year_id)
         .where('school_enrollments.guardian_id', id)
         .innerJoin('students', 'students.id', 'school_enrollments.student_id')
+        .innerJoin(
+          'general_classes',
+          'general_classes.id',
+          'school_enrollments.class_id'
+        )
         .whereNull('school_enrollments.deleted_at');
 
       students = students.map((student) => {
