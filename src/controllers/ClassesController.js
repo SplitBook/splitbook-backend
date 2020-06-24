@@ -59,7 +59,9 @@ module.exports = {
   },
 
   async get(req, res) {
-    const { school_year_id, class_id } = req.params;
+    let { school_year_id, class_id } = req.params;
+
+    if (!school_year_id) school_year_id = req.school_year_id;
 
     const classObject = await knex('classes')
       .select(
@@ -136,8 +138,10 @@ module.exports = {
 
   async update(req, res) {
     const { head_class_id } = req.body;
-    const { class_id, school_year_id } = req.params;
+    let { class_id, school_year_id } = req.params;
     let result;
+
+    if (!school_year_id) school_year_id = req.school_year_id;
 
     try {
       const [data] = await knex('classes')

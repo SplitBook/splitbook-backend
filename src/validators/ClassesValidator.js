@@ -22,6 +22,12 @@ module.exports = {
     }),
   }),
 
+  getByDefaultSchoolYear: celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      class_id: Joi.number().integer().min(1).required(),
+    }),
+  }),
+
   insert: celebrate({
     [Segments.BODY]: Joi.object().keys({
       class_id: Joi.number().integer().min(1).required(),
@@ -39,6 +45,16 @@ module.exports = {
     [Segments.PARAMS]: Joi.object().keys({
       class_id: Joi.number().integer().min(1).required(),
       school_year_id: Joi.number().integer().min(1).required(),
+    }),
+  }),
+
+  updateByDefaultSchoolYear: celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      head_class_id: Joi.number().integer().min(1).allow(null),
+      active: Joi.boolean().default(true),
+    }),
+    [Segments.PARAMS]: Joi.object().keys({
+      class_id: Joi.number().integer().min(1).required(),
     }),
   }),
 

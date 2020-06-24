@@ -218,11 +218,21 @@ routes.delete(
 // Classes
 routes.get('/classes', ClassesValidator.index, ClassesController.index);
 routes.get(
+  '/classes/:class_id',
+  ClassesValidator.getByDefaultSchoolYear,
+  ClassesController.get
+);
+routes.get(
   '/classes/:class_id/:school_year_id',
   ClassesValidator.get,
   ClassesController.get
 );
 routes.post('/classes', ClassesValidator.insert, ClassesController.store);
+routes.put(
+  '/classes/:class_id',
+  ClassesValidator.updateByDefaultSchoolYear,
+  ClassesController.update
+);
 routes.put(
   '/classes/:class_id/:school_year_id',
   ClassesValidator.update,
