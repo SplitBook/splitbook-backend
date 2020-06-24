@@ -21,7 +21,8 @@ module.exports = {
     },
   }),
   fileFilter: (req, file, cb) => {
-    const allowedMimes = ['text/csv'];
+    const allowedMimes = ['text/csv', 'application/vnd.ms-excel'];
+    console.log('file.mimetype', file.mimetype);
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
