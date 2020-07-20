@@ -1,6 +1,9 @@
 const redis = require('redis');
 const redisConfig = require('../config/redisConfig');
 
-const client = redis.createClient(redisConfig.port, redisConfig.host);
-
-module.exports = client;
+try {
+  const client = redis.createClient(redisConfig.port, redisConfig.host);
+  module.exports = client;
+} catch {
+  module.exports = null;
+}
