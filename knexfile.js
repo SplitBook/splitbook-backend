@@ -4,7 +4,7 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    client: 'mssql',
+    client: 'pg',
     connection: {
       server: process.env.DATABASE_SERVER,
       user: process.env.DATABASE_USER,
