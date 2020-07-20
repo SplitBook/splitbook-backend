@@ -23,21 +23,22 @@ body {
 }
 
 p {
-  margin: 20px 0;
+  margin: 20px 0 40px 0;
 }
 
 .button {
-  padding: 5px 15px;
+  padding: 10px 25px;
   color: #fff;
   background-color: #0092da;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
   border-radius: 3px;
+  letter-spacing: 1px;
 }
 
 .container {
-  justify-content: center;
+  text-align: center;
   align-items: center;
   width: 100%;
   max-width: 720px;
