@@ -18,7 +18,6 @@ module.exports = {
     seeds: {
       directory: path.resolve(__dirname, 'src', 'database', 'seeds'),
     },
-    debug: true,
   },
 
   tests: {
