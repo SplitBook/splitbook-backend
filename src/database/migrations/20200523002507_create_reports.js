@@ -5,7 +5,7 @@ exports.up = async function (knex) {
     table.string('type').notNullable();
     table.string('file_signed');
     table.string('file');
-    table.date('report_date').defaultTo(new Date());
+    table.date('report_date').defaultTo(knex.fn.now());
     table.boolean('valid').defaultTo(false);
     table.boolean('is_file_signed').defaultTo(false);
     table.text('description', 'longtext');

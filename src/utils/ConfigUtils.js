@@ -4,27 +4,42 @@ const EnumConfigs = require('./enums/EnumConfigs');
 
 function getConfig(key) {
   return new Promise((resolve, reject) => {
-    redis.get(key, (err, data) => {
-      if (err) throw reject(err);
-
-      if (data) {
-        return resolve(convertToArray(data, key));
-      }
-
+    if (!redis) {
       knex('configs')
         .select('value')
         .where({ key })
         .first()
         .then((config) => {
           if (config) {
-            redis.setex(key, 3600, config.value);
             return resolve(convertToArray(config.value, key));
           }
 
           throw 'Config not found';
         })
         .catch((err) => reject(err));
-    });
+    } else {
+      redis.get(key, (err, data) => {
+        if (err) throw reject(err);
+
+        if (data) {
+          return resolve(convertToArray(data, key));
+        }
+
+        knex('configs')
+          .select('value')
+          .where({ key })
+          .first()
+          .then((config) => {
+            if (config) {
+              redis.setex(key, 3600, config.value);
+              return resolve(convertToArray(config.value, key));
+            }
+
+            throw 'Config not found';
+          })
+          .catch((err) => reject(err));
+      });
+    }
   });
 }
 
