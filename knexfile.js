@@ -19,7 +19,22 @@ module.exports = {
       directory: path.resolve(__dirname, 'src', 'database', 'seeds'),
     },
   },
-
+  production: {
+    client: 'mssql',
+    connection: process.env.DATABASE_URL || {
+      server: process.env.DATABASE_SERVER,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+    },
+    migrations: {
+      tableName: 'knex_migrations',
+      directory: path.resolve(__dirname, 'src', 'database', 'migrations'),
+    },
+    seeds: {
+      directory: path.resolve(__dirname, 'src', 'database', 'seeds'),
+    },
+  },
   tests: {
     client: 'sqlite3',
     connection: {
