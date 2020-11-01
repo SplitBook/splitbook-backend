@@ -5,3 +5,4 @@ scripts/database
 .git
 .gitignore
 Docker
+.env
