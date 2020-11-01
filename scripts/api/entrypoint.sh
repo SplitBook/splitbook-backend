@@ -1,0 +1,1 @@
+/home/node/app/scripts/api/run-initialization.sh

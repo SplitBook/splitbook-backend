@@ -2,8 +2,9 @@ version: '3.8'
 
 services:
   api:
-    build: .
-    command: npm start
+    build:
+      context: .
+      dockerfile: ./Docker/api.Dockerfile
     container_name: api
     ports:
       - 8085:8085
@@ -14,21 +15,20 @@ services:
     depends_on:
       - mssql
       - redis
-    environment:
-      - DATABASE_SERVER=mssql-server
-      - REDIS_HOST=redis-server
     restart: always
 
   mssql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
+    build: 
+      context: .
+      dockerfile: ./Docker/mssql.Dockerfile
     container_name: mssql-server
     volumes:
       - mssql-data:/var/opt/mssql/data
     ports:
       - 1433:1433
     environment:
-      - ACCEPT_EULA=Y
-      - 'SA_PASSWORD=${DATABASE_PASSWORD}'
+      - SA_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
     restart: always
 
   redis:
@@ -37,5 +37,6 @@ services:
     restart: always
     ports:
       - 6379:6379
+
 volumes:
   mssql-data:
