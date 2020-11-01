@@ -1,4 +1,7 @@
-../node_modules
-../.env.example
-../Postman
-../scripts/database
+node_modules
+.env.example
+Postman
+scripts/database
+.git
+.gitignore
+Docker
