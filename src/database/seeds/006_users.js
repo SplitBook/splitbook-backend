@@ -7,27 +7,20 @@ exports.seed = async function (knex) {
   const id = await generateId();
   const password = await encript('admin');
 
-  return knex('users')
-    .del()
-    .then(async function () {
+  return knex('accounts').del().then(async () => knex('users')
+    .del())
+    .then(async () =>
       // Inserts seed entries
-      return knex('users').insert({
+      knex('users').insert({
         id,
         username: 'Admin',
         email: 'admin@splitbook.com',
         email_confirmed: true,
         password,
-      });
-    })
-    .then(() =>
-      knex('accounts')
-        .del()
-        .then(() => {
-          return knex('accounts').insert({
-            user_id: id,
-            name: 'Administrador',
-            charge: EnumCharges.ADMIN.charge,
-          });
-        })
-    );
+      }))
+    .then(async () => knex('accounts').insert({
+      user_id: id,
+      name: 'Administrador',
+      charge: EnumCharges.ADMIN.charge,
+    }));
 };

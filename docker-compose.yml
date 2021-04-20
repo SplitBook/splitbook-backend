@@ -2,40 +2,59 @@ version: '3.8'
 
 services:
   api:
-    build: .
-    command: npm start
-    container_name: api
+    image: node:fermium
+    container_name: splitbook-api
+    working_dir: /usr/api
+    command: bash -c "yarn && yarn db && yarn dev"
     ports:
       - 8085:8085
-    links:
-      - redis
-      - mssql
-
     depends_on:
-      - mssql
+      - postgresql
       - redis
-    environment:
-      - DATABASE_SERVER=mssql-server
-      - REDIS_HOST=redis-server
-    restart: always
-
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    container_name: mssql-server
     volumes:
-      - mssql-data:/var/opt/mssql/data
-    ports:
-      - 1433:1433
+      - ./src:/usr/api/src
+      - ./package.json:/usr/api/package.json
+      - ./yarn.lock:/usr/api/yarn.lock
+      - ./knexfile.js:/usr/api/knexfile.js
+    env_file:
+      - .env
     environment:
-      - ACCEPT_EULA=Y
-      - 'SA_PASSWORD=${DATABASE_PASSWORD}'
+      - DATABASE_SERVER=postgresql
+      - REDIS_HOST=redis
     restart: always
+    networks:
+      - splitbook_backend
+
+  postgresql:
+    image: bitnami/postgresql
+    container_name: splitbook-postgresql
+    ports:
+      - 3306:3306
+    environment:
+      - POSTGRESQL_DATABASE=${DATABASE_NAME}
+      - POSTGRESQL_USER=${DATABASE_USER}
+      - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRESQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    restart: always
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+    networks:
+      - splitbook_backend
 
   redis:
-    image: redis:alpine
-    container_name: redis-server
-    restart: always
+    image: bitnami/redis
+    container_name: splitbook-redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports:
       - 6379:6379
+    restart: always
+    networks:
+      - splitbook_backend
+
 volumes:
-  mssql-data:
+  postgresql_data:
+    driver: local
+
+networks:
+  splitbook_backend:
