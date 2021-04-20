@@ -7,6 +7,7 @@
     "start:server": "node src/server.js",
     "start:queue": "node src/queue.js",
     "db": "knex migrate:latest",
+    "db:seed": "knex seed:run",
     "dev": "npm-run-all -p dev:*",
     "dev:server": "nodemon src/server.js",
     "dev:queue": "nodemon src/queue.js",
