@@ -1,15 +1,15 @@
-const knex = require('../database');
-const Queue = require('../stack');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
+const knex = require('../database')
+const Queue = require('../stack')
+const { softDelete, softUpdate } = require('../utils/DatabaseOperations')
 const {
   createPagination,
-  getFiltersFromObject,
-} = require('../utils/PaginatorUtils');
-const { encript } = require('../utils/PasswordUtils');
-const { generateId } = require('../utils/UserUtils');
-const { generate, EnumTokenTypes } = require('../utils/TokenUtils');
-const { EnumEmailTypes } = require('../email');
-const IpUtils = require('../utils/IpUtils');
+  getFiltersFromObject
+} = require('../utils/PaginatorUtils')
+const { encript } = require('../utils/PasswordUtils')
+const { generateId } = require('../utils/UserUtils')
+const { generate, EnumTokenTypes } = require('../utils/TokenUtils')
+const { EnumEmailTypes } = require('../email')
+const IpUtils = require('../utils/IpUtils')
 
 module.exports = {
   /*
@@ -17,11 +17,10 @@ module.exports = {
    * Email
    * Username
    * Phone
-   * Born Date
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc, email_confirmed } = req.query;
-    const filter = getFiltersFromObject({ email_confirmed });
+    const { search, page, limit, orderBy, desc, email_confirmed } = req.query
+    const filter = getFiltersFromObject({ email_confirmed })
 
     try {
       let pagination = await createPagination(
@@ -31,34 +30,34 @@ module.exports = {
           orderBy: orderBy || ['users.updated_at'],
           desc: orderBy ? desc : true,
           filter,
-          searchColumns: ['email', 'username', 'phone', 'born_date'],
+          searchColumns: ['email', 'username', 'phone']
         }
-      );
+      )
 
-      pagination.data = pagination.data.map((user) => {
-        user.password = undefined;
-        user.photo = IpUtils.getImagesAddress(user.photo);
+      pagination.data = pagination.data.map(user => {
+        user.password = undefined
+        user.photo = IpUtils.getImagesAddress(user.photo)
 
-        return user;
-      });
+        return user
+      })
 
-      return res.json(pagination);
+      return res.json(pagination)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async get(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
     let user = await knex('users')
       .select('*')
       .where('id', id)
       .whereNull('deleted_at')
-      .first();
+      .first()
 
     if (user) {
-      user.password = undefined;
+      user.password = undefined
 
       user.profiles = await knex('accounts')
         .where('user_id', user.id)
@@ -71,24 +70,24 @@ module.exports = {
           knex('teachers')
             .where('user_id', user.id)
             .whereNull('deleted_at')
-            .select('*'),
-        ]);
+            .select('*')
+        ])
 
-      user.photo = IpUtils.getImagesAddress(user.photo);
+      user.photo = IpUtils.getImagesAddress(user.photo)
 
-      return res.json(user);
+      return res.json(user)
     }
 
-    return res.status(404).json({ error: 'User not found.' });
+    return res.status(404).json({ error: 'User not found.' })
   },
 
   async store(req, res, next) {
-    const { username, email, born_date, phone } = req.body;
-    const photo = req.file ? req.file.filename : undefined;
+    const { username, email, born_date, phone } = req.body
+    const photo = req.file ? req.file.filename : undefined
 
     try {
-      const id = generateId();
-      const password = await encript('null');
+      const id = generateId()
+      const password = await encript('null')
 
       let [user] = await knex('users')
         .insert({
@@ -98,21 +97,21 @@ module.exports = {
           password,
           born_date,
           phone,
-          photo,
+          photo
         })
-        .returning('*');
+        .returning('*')
 
-      user.photo = IpUtils.getImagesAddress(user.photo);
+      user.photo = IpUtils.getImagesAddress(user.photo)
 
-      user.password = undefined;
+      user.password = undefined
 
       const token = generate(
         {
-          email,
+          email
         },
         EnumTokenTypes.EMAIL,
         '3 days'
-      );
+      )
 
       // Show token to change password
       // console.log('Token', token)
@@ -120,24 +119,24 @@ module.exports = {
       await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
         to: email,
         emailType: EnumEmailTypes.REGISTER,
-        properties: { token },
-      });
+        properties: { token }
+      })
 
-      return res.json(user);
+      return res.json(user)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async update(req, res) {
-    const { id } = req.params;
-    const { delete_photo } = req.query;
-    const { username, email, phone, born_date, active } = req.body;
-    let photo = req.file ? req.file.filename : undefined;
+    const { id } = req.params
+    const { delete_photo } = req.query
+    const { username, email, phone, born_date, active } = req.body
+    let photo = req.file ? req.file.filename : undefined
 
-    if (delete_photo && photo === undefined) photo = null;
+    if (delete_photo && photo === undefined) photo = null
 
-    const email_confirmed = !email;
+    const email_confirmed = !email
 
     try {
       let { statusCode, data: user } = await softUpdate('users', id, {
@@ -147,8 +146,8 @@ module.exports = {
         born_date,
         phone,
         photo,
-        email_confirmed,
-      });
+        email_confirmed
+      })
 
       // Show token to change password
       // console.log('Token', token)
@@ -157,22 +156,22 @@ module.exports = {
         await Queue.add(Queue.EnumQueuesTypes.SEND_MAIL, {
           to: email,
           emailType: EnumEmailTypes.USER_CHANGE,
-          properties: { token },
-        });
+          properties: { token }
+        })
       }
 
-      user.photo = IpUtils.getImagesAddress(user.photo);
-      user.password = undefined;
+      user.photo = IpUtils.getImagesAddress(user.photo)
+      user.password = undefined
 
-      return res.status(statusCode).json(user);
+      return res.status(statusCode).json(user)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async delete(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
-    return res.status(await softDelete('users', id)).send();
-  },
-};
+    return res.status(await softDelete('users', id)).send()
+  }
+}

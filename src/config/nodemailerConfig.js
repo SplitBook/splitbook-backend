@@ -1,5 +1,3 @@
-const nodemailer = require('nodemailer');
-
 module.exports = {
   development: {
     host: process.env.EMAIL_HOST,

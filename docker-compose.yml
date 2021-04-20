@@ -14,6 +14,7 @@ services:
     volumes:
       - ./src:/usr/api/src
       - ./package.json:/usr/api/package.json
+      - ./tmp:/usr/api/tmp
       - ./yarn.lock:/usr/api/yarn.lock
       - ./knexfile.js:/usr/api/knexfile.js
     env_file:

@@ -1,8 +1,8 @@
-const knex = require('../database');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const EnumCharges = require('../utils/enums/EnumCharges');
-const { createPagination } = require('../utils/PaginatorUtils');
-const IpUtils = require('../utils/IpUtils');
+const knex = require('../database')
+const { softDelete, softUpdate } = require('../utils/DatabaseOperations')
+const EnumCharges = require('../utils/enums/EnumCharges')
+const { createPagination } = require('../utils/PaginatorUtils')
+const IpUtils = require('../utils/IpUtils')
 
 module.exports = {
   /**
@@ -10,11 +10,10 @@ module.exports = {
    * Name
    * Email
    * Phone
-   * Born Date
    * Username
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query
 
     try {
       let pagination = await createPagination(
@@ -29,32 +28,31 @@ module.exports = {
             'users.phone',
             'users.born_date',
             'users.photo',
-            'users.username',
+            'users.username'
           ],
           searchColumns: [
             'name',
             'users.email',
             'users.phone',
-            'users.born_date',
-            'users.username',
+            'users.username'
           ],
-          leftJoins: [['users', 'users.id', 'accounts.user_id']],
+          leftJoins: [['users', 'users.id', 'accounts.user_id']]
         }
-      );
+      )
 
-      pagination.data = pagination.data.map((account) => {
-        account.photo = IpUtils.getImagesAddress(account.photo);
-        return account;
-      });
+      pagination.data = pagination.data.map(account => {
+        account.photo = IpUtils.getImagesAddress(account.photo)
+        return account
+      })
 
-      return res.json(pagination);
+      return res.json(pagination)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async get(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
     let account = await knex('accounts')
       .select(
@@ -68,62 +66,58 @@ module.exports = {
       .where('accounts.id', id)
       .whereNull('accounts.deleted_at')
       .leftJoin('users', 'users.id', 'accounts.user_id')
-      .first();
+      .first()
 
     if (account) {
-      account.photo = IpUtils.getImagesAddress(account.photo);
+      account.photo = IpUtils.getImagesAddress(account.photo)
 
-      return res.json(account);
+      return res.json(account)
     }
 
-    return res.status(404).json({ error: 'Account not found.' });
+    return res.status(404).json({ error: 'Account not found.' })
   },
 
   async store(req, res) {
-    const { name, user_id, administrator } = req.body;
-    const { charge } = administrator
-      ? EnumCharges.ADMIN
-      : EnumCharges.SECRETARY;
+    const { name, user_id, administrator } = req.body
+    const { charge } = administrator ? EnumCharges.ADMIN : EnumCharges.SECRETARY
 
     try {
       const [account] = await knex('accounts')
         .insert({
           name,
           user_id,
-          charge,
+          charge
         })
-        .returning('*');
+        .returning('*')
 
-      return res.json(account);
+      return res.json(account)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async update(req, res) {
-    const { id } = req.params;
-    const { name, user_id, administrator, active } = req.body;
-    const { charge } = administrator
-      ? EnumCharges.ADMIN
-      : EnumCharges.SECRETARY;
+    const { id } = req.params
+    const { name, user_id, administrator, active } = req.body
+    const { charge } = administrator ? EnumCharges.ADMIN : EnumCharges.SECRETARY
 
     try {
       const { statusCode, data } = await softUpdate('accounts', id, {
         name,
         user_id,
         charge,
-        active,
-      });
+        active
+      })
 
-      return res.status(statusCode).json(data);
+      return res.status(statusCode).json(data)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async delete(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
-    return res.status(await softDelete('accounts', id)).send();
-  },
-};
+    return res.status(await softDelete('accounts', id)).send()
+  }
+}
