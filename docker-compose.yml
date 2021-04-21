@@ -20,7 +20,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_SERVER=postgresql
+      - DATABASE_HOST=postgresql
       - REDIS_HOST=redis
     restart: always
     networks:
@@ -29,8 +29,6 @@ services:
   postgresql:
     image: bitnami/postgresql
     container_name: splitbook-postgresql
-    ports:
-      - 3306:3306
     environment:
       - POSTGRESQL_DATABASE=${DATABASE_NAME}
       - POSTGRESQL_USER=${DATABASE_USER}
