@@ -1,7 +1,7 @@
-const knex = require('../database');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const { createPagination } = require('../utils/PaginatorUtils');
-const IpUtils = require('../utils/IpUtils');
+const knex = require('../database')
+const { softDelete, softUpdate } = require('../utils/DatabaseOperations')
+const { createPagination } = require('../utils/PaginatorUtils')
+const IpUtils = require('../utils/IpUtils')
 
 module.exports = {
   /**
@@ -9,11 +9,10 @@ module.exports = {
    * Name
    * Email
    * Phone
-   * Born Date
    * Username
    */
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query
 
     try {
       let pagination = await createPagination(
@@ -28,32 +27,31 @@ module.exports = {
             'users.phone',
             'users.born_date',
             'users.photo',
-            'users.username',
+            'users.username'
           ],
           searchColumns: [
             'name',
             'users.email',
             'users.phone',
-            'users.born_date',
-            'users.username',
+            'users.username'
           ],
-          leftJoins: [['users', 'users.id', 'guardians.user_id']],
+          leftJoins: [['users', 'users.id', 'guardians.user_id']]
         }
-      );
+      )
 
-      pagination.data = pagination.data.map((guardian) => {
-        guardian.photo = IpUtils.getImagesAddress(guardian.photo);
-        return guardian;
-      });
+      pagination.data = pagination.data.map(guardian => {
+        guardian.photo = IpUtils.getImagesAddress(guardian.photo)
+        return guardian
+      })
 
-      return res.json(pagination);
+      return res.json(pagination)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async get(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
     let guardian = await knex('guardians')
       .select(
@@ -67,10 +65,10 @@ module.exports = {
       .where('guardians.id', id)
       .leftJoin('users', 'users.id', 'guardians.user_id')
       .whereNull('guardians.deleted_at')
-      .first();
+      .first()
 
     if (guardian) {
-      guardian.photo = IpUtils.getImagesAddress(guardian.photo);
+      guardian.photo = IpUtils.getImagesAddress(guardian.photo)
 
       let students = await knex('school_enrollments')
         .select(
@@ -88,56 +86,56 @@ module.exports = {
           'general_classes.id',
           'school_enrollments.class_id'
         )
-        .whereNull('school_enrollments.deleted_at');
+        .whereNull('school_enrollments.deleted_at')
 
-      students = students.map((student) => {
-        student.photo = IpUtils.getImagesAddress(student.photo);
+      students = students.map(student => {
+        student.photo = IpUtils.getImagesAddress(student.photo)
 
-        return student;
-      });
+        return student
+      })
 
-      guardian.students = students;
+      guardian.students = students
 
-      return res.json(guardian);
+      return res.json(guardian)
     }
 
-    return res.status(404).json({ error: 'Guardian not found.' });
+    return res.status(404).json({ error: 'Guardian not found.' })
   },
 
   async store(req, res, next) {
-    const { name, user_id } = req.body;
+    const { name, user_id } = req.body
 
     try {
       const [guardian] = await knex('guardians')
         .insert({ name, user_id })
-        .returning('*');
+        .returning('*')
 
-      return res.json(guardian);
+      return res.json(guardian)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async update(req, res) {
-    const { id } = req.params;
-    const { name, user_id, active } = req.body;
+    const { id } = req.params
+    const { name, user_id, active } = req.body
 
     try {
       const { statusCode, data } = await softUpdate('guardians', id, {
         name,
         user_id,
-        active,
-      });
+        active
+      })
 
-      return res.status(statusCode).json(data);
+      return res.status(statusCode).json(data)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async delete(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
-    return res.status(await softDelete('guardians', id)).send();
-  },
-};
+    return res.status(await softDelete('guardians', id)).send()
+  }
+}

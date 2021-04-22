@@ -9,7 +9,6 @@ module.exports = {
    * Name
    * Email
    * Phone
-   * Born Date
    * Username
    */
   async index(req, res, next) {
@@ -32,7 +31,6 @@ module.exports = {
           searchColumns: [
             'name',
             'users.email',
-            'users.born_date',
             'users.username',
           ],
           leftJoins: [['users', 'users.id', 'teachers.user_id']],

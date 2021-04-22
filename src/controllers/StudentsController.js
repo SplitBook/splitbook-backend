@@ -1,11 +1,11 @@
-const knex = require('../database');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const { createPagination } = require('../utils/PaginatorUtils');
-const IpUtils = require('../utils/IpUtils');
+const knex = require('../database')
+const { softDelete, softUpdate } = require('../utils/DatabaseOperations')
+const { createPagination } = require('../utils/PaginatorUtils')
+const IpUtils = require('../utils/IpUtils')
 
 module.exports = {
   async index(req, res, next) {
-    const { search, page, limit, orderBy, desc } = req.query;
+    const { search, page, limit, orderBy, desc } = req.query
 
     try {
       let pagination = await createPagination(
@@ -14,67 +14,63 @@ module.exports = {
         {
           orderBy: orderBy || 'students.number',
           desc,
-          searchColumns: [
-            'students.number',
-            'students.name',
-            'students.born_date',
-          ],
+          searchColumns: ['students.number', 'students.name']
         }
-      );
+      )
 
-      pagination.data = pagination.data.map((student) => {
-        student.photo = IpUtils.getImagesAddress(student.photo);
-        return student;
-      });
+      pagination.data = pagination.data.map(student => {
+        student.photo = IpUtils.getImagesAddress(student.photo)
+        return student
+      })
 
-      return res.json(pagination);
+      return res.json(pagination)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async store(req, res, next) {
-    const { name, photo, born_date } = req.body;
-    let { number } = req.body;
+    const { name, photo, born_date } = req.body
+    let { number } = req.body
 
-    number = String(number).padStart('7', '0');
+    number = String(number).padStart('7', '0')
 
     try {
       let [student] = await knex('students')
         .insert({ name, number, photo, born_date })
-        .returning('*');
+        .returning('*')
 
-      student.photo = IpUtils.getImagesAddress(student.photo);
+      student.photo = IpUtils.getImagesAddress(student.photo)
 
-      return res.json(student);
+      return res.json(student)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async update(req, res) {
-    const { id } = req.params;
-    const { name, photo, born_date, active } = req.body;
+    const { id } = req.params
+    const { name, photo, born_date, active } = req.body
 
     try {
       let { statusCode, data } = await softUpdate('students', id, {
         name,
         photo,
         born_date,
-        active,
-      });
+        active
+      })
 
-      data.photo = IpUtils.getImagesAddress(data.photo);
+      data.photo = IpUtils.getImagesAddress(data.photo)
 
-      return res.status(statusCode).json(data);
+      return res.status(statusCode).json(data)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async delete(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
-    return res.status(await softDelete('students', id)).send();
-  },
-};
+    return res.status(await softDelete('students', id)).send()
+  }
+}

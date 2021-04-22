@@ -1,4 +1,4 @@
-# SplitBook 
+# SplitBook
 
 ![LoginPage](.github/assets/login_page.png)
 
@@ -15,3 +15,5 @@ yarn # Install dependencies
 cp .env.example .env # Fill environment variables
 docker-compose up # Run instances (API / PostgreSQL / Redis)
 ```
+
+If it's the first time, run `docker exec -it splitbook-api yarn db:seed` to populate database.
