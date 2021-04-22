@@ -1,8 +1,7 @@
-const dbConfig = require('../../knexfile');
+const dbConfig = require('../../knexfile')
 
-const configuration =
-  process.env.NODE_ENV === 'test' ? dbConfig.tests : dbConfig.development;
+const configuration = dbConfig.development
 
-const knex = require('knex')(configuration);
+const knex = require('knex')(configuration)
 
-module.exports = knex;
+module.exports = knex

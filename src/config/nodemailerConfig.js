@@ -5,11 +5,10 @@ module.exports = {
     secure: process.env.EMAIL_SECURE === 'true',
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
+      pass: process.env.EMAIL_PASSWORD
     },
     tls: {
-      rejectUnauthorized: false,
-    }, // TODO: Revise this option
-  },
-  tests: {},
-};
+      rejectUnauthorized: false
+    } // TODO: Revise this option
+  }
+}
