@@ -1,13 +1,15 @@
+const fileProviderConfig = require('../config/fileProviderConfig')
+
 module.exports = {
   getImagesAddress(filename) {
-    const url = filename ? 'http://localhost:8085/images/' + filename : null;
+    const url = filename ? fileProviderConfig.images + filename : null
 
-    return url;
+    return url
   },
 
   getReportsAddress(filename) {
-    const url = filename ? 'http://localhost:8085/reports/' + filename : null;
+    const url = filename ? fileProviderConfig.reports + filename : null
 
-    return url;
-  },
-};
+    return url
+  }
+}

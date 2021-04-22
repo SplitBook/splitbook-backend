@@ -35,6 +35,8 @@ services:
       - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRESQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
     restart: always
+    ports:
+      - 5432:5432
     volumes:
       - postgresql_data:/bitnami/postgresql
     networks:
