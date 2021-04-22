@@ -4,6 +4,7 @@ const path = require('path')
 const LoginController = require('../controllers/LoginController')
 const PasswordController = require('../controllers/PasswordController')
 const PhysicalBooksController = require('../controllers/PhysicalBooksController')
+const TokenController = require('../controllers/TokenController')
 
 const LoginValidator = require('../validators/LoginValidator')
 const PasswordValidator = require('../validators/PasswordValidator')
@@ -33,6 +34,9 @@ routes.post(
   PasswordValidator.changePassword,
   PasswordController.changePassword
 )
+
+// JWT Token Config
+routes.get('/jwt/public-key', TokenController.getPublicKey)
 
 routes.get(
   '/app/physical-books/:id',

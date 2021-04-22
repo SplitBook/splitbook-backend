@@ -1,8 +1,10 @@
-const jwt = require('jsonwebtoken');
-const EnumTokenTypes = require('../utils/enums/EnumTokenTypes');
-
-const SECRET = process.env.TOKEN_SECRET || 'basic_secret123';
-const expiresInLogin = process.env.TOKEN_EXPIRES_IN || '5 days';
+const jwt = require('jsonwebtoken')
+const EnumTokenTypes = require('../utils/enums/EnumTokenTypes')
+const {
+  signOptions,
+  privateKey,
+  publicKey
+} = require('../config/jwtTokenConfig')
 
 module.exports = {
   EnumTokenTypes,
@@ -10,22 +12,20 @@ module.exports = {
   generate(
     content,
     tokenType = EnumTokenTypes.LOGIN,
-    expiresIn = expiresInLogin
+    expiresIn = signOptions.expiresIn
   ) {
-    content.type = tokenType;
+    content.type = tokenType
 
-    return jwt.sign(content, SECRET, {
-      expiresIn,
-    });
+    return jwt.sign(content, privateKey, { ...signOptions, expiresIn })
   },
 
   decode(token) {
     try {
-      const content = jwt.verify(token, SECRET);
+      const content = jwt.verify(token, publicKey, signOptions)
 
-      return content;
+      return content
     } catch (err) {
-      return null;
+      return null
     }
-  },
-};
+  }
+}
