@@ -53,6 +53,14 @@ services:
     networks:
       - splitbook_backend
 
+  browserless:
+    image: browserless/chrome
+    container_name: splitbook-broweserless
+    environment:
+      - MAX_CONCURENT_SESSIONS=10
+    ports:
+      - 3030:3000
+
 volumes:
   postgresql_data:
     driver: local
