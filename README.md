@@ -17,3 +17,4 @@ docker-compose up # Run instances (API / PostgreSQL / Redis)
 ```
 
 If it's the first time, run `docker exec -it splitbook-api yarn db:seed` to populate database.
+To rollback database, run `docker exec -it splitbook-api yarn db:rollback`.

@@ -1,12 +1,13 @@
-const knex = require('../database');
-const { softDelete, softUpdate } = require('../utils/DatabaseOperations');
-const { generateCode } = require('../utils/PhysicalBookUtils');
+const knex = require('../database')
+const { softDelete, softUpdate } = require('../utils/DatabaseOperations')
+const { generateCode } = require('../utils/PhysicalBookUtils')
 const {
   createPagination,
-  getFiltersFromObject,
-} = require('../utils/PaginatorUtils');
-const Config = require('../utils/ConfigUtils');
-const IpUtils = require('../utils/IpUtils');
+  getFiltersFromObject
+} = require('../utils/PaginatorUtils')
+const Config = require('../utils/ConfigUtils')
+const IpUtils = require('../utils/IpUtils')
+const { wait } = require('../redis')
 
 module.exports = {
   /*
@@ -27,15 +28,15 @@ module.exports = {
       book_isbn,
       available,
       state_id,
-      location_id,
-    } = req.query;
+      location_id
+    } = req.query
 
     const filter = getFiltersFromObject({
       book_isbn,
       available,
       state_id,
-      location_id,
-    });
+      location_id
+    })
 
     try {
       const pagination = await createPagination(
@@ -50,7 +51,7 @@ module.exports = {
             'book_locations.location',
             'book_states.state',
             'books.name',
-            'books.publishing_company',
+            'books.publishing_company'
           ],
           searchColumns: [
             'book_isbn',
@@ -58,28 +59,28 @@ module.exports = {
             'physical_books.id',
             'book_states.state',
             'books.name',
-            'books.publishing_company',
+            'books.publishing_company'
           ],
           leftJoins: [
             [
               'book_locations',
               'book_locations.id',
-              'physical_books.location_id',
+              'physical_books.location_id'
             ],
             ['book_states', 'book_states.id', 'physical_books.state_id'],
-            ['books', 'books.isbn', 'physical_books.book_isbn'],
-          ],
+            ['books', 'books.isbn', 'physical_books.book_isbn']
+          ]
         }
-      );
+      )
 
-      return res.json(pagination);
+      return res.json(pagination)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async get(req, res) {
-    const { id } = req.params;
+    const { id } = req.params
 
     let physicalBook = await knex('physical_books')
       .where('physical_books.id', id)
@@ -99,10 +100,10 @@ module.exports = {
       )
       .leftJoin('book_states', 'book_states.id', 'physical_books.state_id')
       .whereNull('physical_books.deleted_at')
-      .first();
+      .first()
 
     if (physicalBook) {
-      physicalBook.cover = IpUtils.getImagesAddress(physicalBook.cover);
+      physicalBook.cover = IpUtils.getImagesAddress(physicalBook.cover)
 
       let students = await knex('requisitions_physical_book')
         .select(
@@ -137,49 +138,44 @@ module.exports = {
           'school_years.id',
           'school_enrollments.school_year_id'
         )
-        .orderBy('school_years.school_year', 'asc');
+        .orderBy('school_years.school_year', 'asc')
 
-      students = students.map((student) => {
-        student.photo = IpUtils.getImagesAddress(student.photo);
-        return student;
-      });
+      students = students.map(student => {
+        student.photo = IpUtils.getImagesAddress(student.photo)
+        return student
+      })
 
-      return res.json({ ...physicalBook, students });
+      return res.json({ ...physicalBook, students })
     }
 
-    return res.status(404).json({ error: 'Physical Book not Found' });
+    return res.status(404).json({ error: 'Physical Book not Found' })
   },
 
   async store(req, res, next) {
-    const {
-      book_isbn,
-      available,
-      state_id,
-      location_id,
-      description,
-    } = req.body;
+    const { book_isbn, available, state_id, location_id, description } =
+      req.body
 
-    const { quantity } = req.query;
+    const { quantity } = req.query
 
     const book = await knex('books')
-      .select('code')
+      .select('code', 'physical_books_quantity')
       .where('isbn', book_isbn)
       .whereNull('deleted_at')
-      .first();
+      .first()
 
     if (book) {
       const defaultBookStateId = await Config.getConfig(
         Config.EnumConfigs.DEFAULT_BOOK_STATE_ID.key
-      );
+      )
 
-      const trx = await knex.transaction();
+      const trx = await knex.transaction()
 
-      let physicalBooks = [];
+      let physicalBooks = []
 
       for (let i = 0; i < quantity; i++) {
-        const { code } = book;
+        const { code } = book
 
-        const id = `${code}-${generateCode()}`;
+        const id = `${code}-${generateCode()}`
 
         try {
           const [physicalBook] = await trx('physical_books')
@@ -189,46 +185,52 @@ module.exports = {
               available,
               state_id: state_id || defaultBookStateId,
               location_id,
-              description,
+              description
             })
-            .returning('*');
+            .returning('*')
 
-          physicalBooks = [...physicalBooks, physicalBook];
+          physicalBooks = [...physicalBooks, physicalBook]
         } catch (err) {
-          await trx.rollback();
-          return res.status(406).json(err);
+          await trx.rollback()
+          return res.status(406).json(err)
         }
       }
 
-      await trx.commit();
+      const newPhysicalBooksQuantity = quantity + book.physical_books_quantity
 
-      return res.json(physicalBooks);
+      await trx('books')
+        .where('isbn', book_isbn)
+        .update('physical_books_quantity', newPhysicalBooksQuantity)
+
+      await trx.commit()
+
+      return res.json(physicalBooks)
     }
 
-    return res.status(406).json({ error: 'Physical Book not found.' });
+    return res.status(406).json({ error: 'Physical Book not found.' })
   },
 
   async update(req, res) {
-    const { id } = req.params;
-    const { available, state_id, location_id, description } = req.body;
+    const { id } = req.params
+    const { available, state_id, location_id, description } = req.body
 
     try {
       const { statusCode, data } = await softUpdate('physical_books', id, {
         available,
         state_id,
         location_id,
-        description,
-      });
+        description
+      })
 
-      return res.status(statusCode).json(data);
+      return res.status(statusCode).json(data)
     } catch (err) {
-      return res.status(406).json(err);
+      return res.status(406).json(err)
     }
   },
 
   async delete(req, res) {
-    const { id } = req.params;
-
-    return res.status(await softDelete('physical_books', id)).send();
-  },
-};
+    const { id } = req.params
+    // TODO: Decrementar a quantidade de livros fisicos existentes
+    return res.status(await softDelete('physical_books', id)).send()
+  }
+}
