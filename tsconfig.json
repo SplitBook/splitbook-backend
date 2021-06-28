@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "allowJs": true,
+    "outDir": "./dist",
+    "rootDir": "./src-typescript",
+    "removeComments": true,
+    "typeRoots": ["./node_modules/@types", "./src-typescript/@types"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@controllers/*": ["./src-typescript/controllers/*"],
+      "@config/*": ["./src-typescript/config/*"]
+    }
+  }
+}

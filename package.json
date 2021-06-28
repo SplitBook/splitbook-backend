@@ -10,8 +10,8 @@
     "db:seed": "knex seed:run",
     "db:rollback": "knex migrate:rollback",
     "dev": "npm-run-all -p dev:*",
-    "dev:server": "nodemon src/server.js",
-    "dev:queue": "nodemon src/queue.js"
+    "dev:server": "tsnd -r tsconfig-paths/register --respawn --ignore-watch node_modules src-typescript/server.ts",
+    "dev:queue": "tsnd -r tsconfig-paths/register --respawn --ignore-watch node_modules src-typescript/queue.ts"
   },
   "author": "Nuno Alves",
   "license": "MIT",
@@ -34,8 +34,17 @@
     "uuid": "^8.1.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/jsonwebtoken": "^8.5.2",
+    "@types/knex": "^0.16.1",
+    "@types/multer": "^1.4.6",
+    "@types/node": "^15.12.5",
     "bull-board": "^1.7.0",
     "nodemon": "^2.0.2",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.3.4"
   }
 }
