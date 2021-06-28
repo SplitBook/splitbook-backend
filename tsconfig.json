@@ -12,12 +12,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "paths": {
-      "@controllers/*": ["./src-typescript/controllers/*"],
-      "@config/*": ["./src-typescript/config/*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./src-typescript/**/*.ts"]
 }

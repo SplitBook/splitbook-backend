@@ -10,8 +10,8 @@
     "db:seed": "knex seed:run",
     "db:rollback": "knex migrate:rollback",
     "dev": "npm-run-all -p dev:*",
-    "dev:server": "tsnd -r tsconfig-paths/register --respawn --ignore-watch node_modules src-typescript/server.ts",
-    "dev:queue": "tsnd -r tsconfig-paths/register --respawn --ignore-watch node_modules src-typescript/queue.ts"
+    "dev:server": "tsnd --respawn --ignore-watch node_modules src-typescript/server.ts",
+    "dev:queue": "tsnd --respawn --ignore-watch node_modules src-typescript/queue.ts"
   },
   "author": "Nuno Alves",
   "license": "MIT",
@@ -53,7 +53,6 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
     "ts-node-dev": "^1.1.6",
-    "tsconfig-paths": "^3.9.0",
     "typescript": "^4.3.4"
   }
 }
