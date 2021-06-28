@@ -1,7 +1,8 @@
 import cors from 'cors'
 import express, { Express } from 'express'
-import { routes } from './routes/routes'
+
 import { authenticatedRoutes } from './routes/authenticated-routes'
+import { routes } from './routes/routes'
 
 export class App {
   application: Express

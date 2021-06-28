@@ -18,5 +18,6 @@
       "@controllers/*": ["./src-typescript/controllers/*"],
       "@config/*": ["./src-typescript/config/*"]
     }
-  }
+  },
+  "include": ["./src-typescript/**/*.ts"]
 }
