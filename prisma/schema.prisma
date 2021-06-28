@@ -1,0 +1,383 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  userId    String?  @map(name: "user_id") @db.VarChar(36)
+  charge    String   @default("Docente")
+  createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  active    Boolean? @default(true)
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@map(name: "account")
+}
+
+model AdoptedBook {
+  id               Int               @id @default(autoincrement())
+  resumeId         Int?              @map(name: "resume_id")
+  bookIsbn         String?           @map(name: "book_isbn") @db.VarChar(255)
+  createdAt        DateTime          @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt        DateTime          @updatedAt @map(name: "updated_at")
+  active           Boolean?          @default(true)
+  book             Book?             @relation(fields: [bookIsbn], references: [isbn])
+  resume           Resume?           @relation(fields: [resumeId], references: [id])
+  bookRequisitions BookRequisition[]
+
+
+  @@unique([bookIsbn, resumeId], name: "uq_adopted_books")
+  @@map(name: "adopted_book")
+}
+
+model BookLocation {
+  id             Int            @id @default(autoincrement())
+  location       String         @db.VarChar(255)
+  createdAt      DateTime       @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @map(name: "updated_at")
+  active         Boolean?       @default(true)
+  physical_books PhysicalBook[]
+
+
+  @@map(name: "book_location")
+}
+
+model BookRequisition {
+  id                       Int                       @id @default(autoincrement())
+  adoptedBookId            Int?                      @map("adopted_book_id")
+  requisitionId            Int?                      @map("requsition_id")
+  createdAt                DateTime                  @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt                DateTime                  @updatedAt @map(name: "updated_at")
+  active                   Boolean?                  @default(true)
+  adopted_book             AdoptedBook?              @relation(fields: [adoptedBookId], references: [id])
+  requisition              Requisition?              @relation(fields: [requisitionId], references: [id])
+  requisitionsPhysicalBook RequisitionPhysicalBook[]
+
+
+  @@unique([adoptedBookId, requisitionId], name: "uq_book_requisitions")
+  @@map(name: "book_requisition")
+}
+
+model Book {
+  isbn                  String         @id @db.VarChar(255)
+  name                  String         @db.VarChar(255)
+  publishingCompany     String?        @map(name: "publishing_company") @db.VarChar(255)
+  cover                 String?        @db.VarChar(255)
+  subjectId             Int?           @map(name: "subject_id")
+  code                  String         @db.VarChar(5)
+  physicalBooksQuantity Int            @default(0) @map(name: "physical_books_quantity")
+  createdAt             DateTime       @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt             DateTime       @updatedAt @map(name: "updated_at")
+  active                Boolean?       @default(true)
+  school_subject        SchoolSubject? @relation(fields: [subjectId], references: [id])
+  adoptedBooks          AdoptedBook[]
+  physicalBooks         PhysicalBook[]
+
+  @@map(name: "book")
+}
+
+model BookState {
+  id            Int            @id @default(autoincrement())
+  state         String         @db.VarChar(255)
+  createdAt     DateTime       @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @map(name: "updated_at")
+  active        Boolean?       @default(true)
+  deliveries    Delivery[]
+  physicalBooks PhysicalBook[]
+  returns       Return[]
+
+  @@map(name: "book_state")
+}
+
+model Class {
+  schoolYearId      Int                @map(name: "school_year_id")
+  classId           Int                @map(name: "class_id")
+  headClassId       Int?               @map(name: "head_class_id")
+  createdAt         DateTime           @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @map(name: "updated_at")
+  active            Boolean?           @default(true)
+  general_class     GeneralClass       @relation(fields: [classId], references: [id])
+  teacher           Teacher?           @relation(fields: [headClassId], references: [id])
+  school_years      SchoolYear         @relation(fields: [schoolYearId], references: [id])
+  resumes           Resume[]
+  schoolEnrollments SchoolEnrollment[]
+
+
+  @@id([schoolYearId, classId])
+  @@map(name: "class")
+}
+
+model Config {
+  key    String   @id @db.VarChar(255)
+  value  String   @db.VarChar(255)
+  active Boolean? @default(true)
+
+  @@map(name: "config")
+}
+
+model Delivery {
+  id                        Int                     @id @default(autoincrement())
+  requisitionPhysicalBookId Int                     @map(name: "requisition_physica_book_id")
+  bookStateId               Int                     @map(name: "book_state_id")
+  reportId                  String                  @map(name: "report_id") @db.VarChar(36)
+  createdAt                 DateTime                @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime                @updatedAt @map(name: "updated_at")
+  active                    Boolean?                @default(true)
+  book_state                BookState               @relation(fields: [bookStateId], references: [id])
+  report                    Report                  @relation(fields: [reportId], references: [id])
+  requisition_physical_book RequisitionPhysicalBook @relation(fields: [requisitionPhysicalBookId], references: [id])
+
+
+  @@unique([requisitionPhysicalBookId], name: "uq_deliveries")
+  @@map(name: "delivery")
+}
+
+model GeneralClass {
+  id        Int      @id @default(autoincrement())
+  class     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  active    Boolean? @default(true)
+  classes   Class[]
+
+
+  @@unique([class], name: "uq_general_classes")
+  @@map(name: "general_class")
+}
+
+model Guardian {
+  id                Int                @id @default(autoincrement())
+  name              String             @db.VarChar(255)
+  userId            String?            @db.VarChar(36)
+  charge            String             @default("Encarregado de Educação")
+  createdAt         DateTime           @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @map(name: "updated_at")
+  active            Boolean?           @default(true)
+  user              User?              @relation(fields: [userId], references: [id])
+  schoolEnrollments SchoolEnrollment[]
+
+  @@map(name: "guardian")
+}
+
+model PhysicalBook {
+  id                       String                    @id @db.VarChar(12)
+  bookIsbn                 String?                   @map(name: "book_isbn") @db.VarChar(255)
+  available                Boolean?                  @default(true)
+  stateId                  Int?                      @map(name: "state_id")
+  locationId               Int?                      @map(name: "location_id")
+  description              String?
+  createdAt                DateTime                  @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt                DateTime                  @updatedAt @map(name: "updated_at")
+  active                   Boolean?                  @default(true)
+  book                     Book?                     @relation(fields: [bookIsbn], references: [isbn])
+  book_location            BookLocation?             @relation(fields: [locationId], references: [id])
+  book_state               BookState?                @relation(fields: [stateId], references: [id])
+  requisitionsPhysicalBook RequisitionPhysicalBook[]
+
+  @@map(name: "physical_book")
+}
+
+model Report {
+  id            String      @id @db.VarChar(36)
+  requisitionId Int         @map("requisition_id")
+  type          String      @db.VarChar(255)
+  fileSigned    String?     @map(name: "file_signed") @db.VarChar(255)
+  file          String?     @db.VarChar(255)
+  reportDate    DateTime?   @default(dbgenerated("CURRENT_TIMESTAMP(6)")) @map(name: "report_date") @db.Date
+  valid         Boolean?    @default(false)
+  isFileSigned  Boolean?    @default(false) @map(name: "is_file_signed")
+  description   String?
+  createdAt     DateTime    @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt     DateTime    @updatedAt @map(name: "updated_at")
+  active        Boolean?    @default(true)
+  requisition   Requisition @relation(fields: [requisitionId], references: [id])
+  deliveries    Delivery[]
+  returns       Return[]
+
+  @@map(name: "report")
+}
+
+model Requisition {
+  id                 Int               @id @default(autoincrement())
+  schoolEnrollmentId Int               @map(name: "school_enrollment_id")
+  stateId            Int               @map(name: "stateId")
+  reason             String?
+  createdAt          DateTime          @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt          DateTime          @updatedAt @map(name: "updated_at")
+  active             Boolean?          @default(true)
+  school_enrollment  SchoolEnrollment  @relation(fields: [schoolEnrollmentId], references: [id])
+  requisition_state  RequisitionState  @relation(fields: [stateId], references: [id])
+  bookRequisitions   BookRequisition[]
+  reports            Report[]
+
+
+  @@unique([schoolEnrollmentId], name: "uq_requisitions")
+  @@map(name: "requisition")
+}
+
+model RequisitionPhysicalBook {
+  id                Int             @id @default(autoincrement())
+  physicalBookId    String          @map(name: "physical_book_id") @db.VarChar(12)
+  bookRequisitionId Int             @map(name: "book_requisition_id")
+  deliveryDate      DateTime?       @map(name: "delivery_date") @db.Date
+  returnDate        DateTime?       @map(name: "return_date") @db.Date
+  createdAt         DateTime        @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt         DateTime        @updatedAt @map(name: "updated_at")
+  active            Boolean?        @default(true)
+  book_requisition  BookRequisition @relation(fields: [bookRequisitionId], references: [id])
+  physical_book     PhysicalBook    @relation(fields: [physicalBookId], references: [id])
+  deliveries        Delivery[]
+  returns           Return[]
+
+
+  @@unique([bookRequisitionId], name: "uq_requisitions_physical_book")
+  @@map(name: "requisition_physical_book")
+}
+
+model RequisitionState {
+  id           Int           @id @default(autoincrement())
+  state        String        @db.VarChar(255)
+  createdAt    DateTime      @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt    DateTime      @updatedAt @map(name: "updatedAt")
+  active       Boolean?      @default(true)
+  requisitions Requisition[]
+
+
+  @@unique([state], name: "uq_requisition_states")
+  @@map(name: "requisition_state")
+}
+
+model Resume {
+  id              Int            @id @default(autoincrement())
+  schoolSubjectId Int?           @map(name: "school_subject_id")
+  classId         Int?           @map(name: "class_id")
+  schoolYearId    Int?           @map(name: "school_year_id")
+  createdAt       DateTime       @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt       DateTime       @updatedAt @map(name: "updated_at")
+  active          Boolean?       @default(true)
+  school_subject  SchoolSubject? @relation(fields: [schoolSubjectId], references: [id])
+  class           Class?         @relation(fields: [schoolYearId, classId], references: [schoolYearId, classId])
+  AdoptedBooks    AdoptedBook[]
+
+
+  @@unique([schoolSubjectId, classId, schoolYearId], name: "uq_resumes")
+  @@map(name: "resume")
+}
+
+model Return {
+  id                        Int                     @id @default(autoincrement())
+  requisitionPhysicalBookId Int                     @map(name: "requisition_physical_book_id")
+  bookStateId               Int                     @map(name: "book_state_id")
+  reportId                  String                  @map(name: "report_id") @db.VarChar(36)
+  createdAt                 DateTime                @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedt                  DateTime                @updatedAt @map(name: "updated_at")
+  active                    Boolean?                @default(true)
+  book_state                BookState               @relation(fields: [bookStateId], references: [id])
+  reports                   Report                  @relation(fields: [reportId], references: [id])
+  requisitionsPhysicalBook  RequisitionPhysicalBook @relation(fields: [requisitionPhysicalBookId], references: [id])
+
+
+  @@unique([requisitionPhysicalBookId], name: "uq_returns")
+  @@map(name: "return")
+}
+
+model SchoolEnrollment {
+  id           Int           @id @default(autoincrement())
+  studentId    Int           @map(name: "student_id")
+  guardianId   Int           @map(name: "guardian_id")
+  schoolYearId Int           @map(name: "school_year_id")
+  classId      Int           @map(name: "class_id")
+  createdAt    DateTime      @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt    DateTime      @map(name: "updated_at")
+  active       Boolean?      @default(true)
+  guardians    Guardian      @relation(fields: [guardianId], references: [id])
+  class        Class         @relation(fields: [schoolYearId, classId], references: [schoolYearId, classId])
+  students     Student       @relation(fields: [studentId], references: [id])
+  requisitions Requisition[]
+
+
+  @@unique([studentId, schoolYearId], name: "uq_school_enrollments")
+  @@map(name: "school_enrollment")
+}
+
+model SchoolSubject {
+  id            Int      @id @default(autoincrement())
+  schoolSubject String   @map(name: "school_subject") @db.VarChar(255)
+  createdAt     DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @updatedAt @map(name: "updated_at")
+  active        Boolean? @default(true)
+  books         Book[]
+  resumes       Resume[]
+
+  @@map(name: "school_subject")
+}
+
+model SchoolYear {
+  id         Int      @id @default(autoincrement())
+  schoolYear String   @map(name: "school_year") @db.VarChar(9)
+  createdAt  DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map(name: "updated_at")
+  active     Boolean? @default(true)
+  classes    Class[]
+
+
+  @@unique([schoolYear], name: "uq_school_years")
+  @@map(name: "school_year")
+}
+
+model Student {
+  id                Int                @id @default(autoincrement())
+  name              String             @db.VarChar(255)
+  number            String             @db.VarChar(7)
+  photo             String?            @db.VarChar(255)
+  bornDate          DateTime?          @map(name: "born_date") @db.Date
+  createdAt         DateTime           @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @map(name: "updated_at")
+  active            Boolean?           @default(true)
+  schoolEnrollments SchoolEnrollment[]
+
+
+  @@unique([number], name: "uq_students")
+  @@map(name: "student")
+}
+
+model Teacher {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  userId    String?  @map(name: "user_id") @db.VarChar(36)
+  charge    String   @default("Professor")
+  createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  active    Boolean? @default(true)
+  user      User?    @relation(fields: [userId], references: [id])
+  classes   Class[]
+
+  @@map(name: "teacher")
+}
+
+model User {
+  id             String     @id @db.VarChar(36)
+  username       String     @db.VarChar(255)
+  email          String     @db.VarChar(255)
+  password       String     @db.VarChar(255)
+  emailConfirmed Boolean?   @default(false) @map(name: "email_confirmed")
+  phone          String?    @db.VarChar(255)
+  photo          String?    @db.VarChar(255)
+  bornDate       DateTime?  @map(name: "born_date") @db.Date
+  createdAt      DateTime   @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt      DateTime   @map(name: "updated_at")
+  active         Boolean?   @default(true)
+  accounts       Account[]
+  guardians      Guardian[]
+  teachers       Teacher[]
+
+
+  @@unique([email], name: "uq_users")
+  @@map(name: "user")
+}
