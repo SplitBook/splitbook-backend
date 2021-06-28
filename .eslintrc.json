@@ -19,6 +19,7 @@
     "prettier/prettier": "error",
     "no-useless-constructor": "off",
     "space-before-function-paren": "off",
-    "simple-import-sort/imports": "error"
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   }
 }
